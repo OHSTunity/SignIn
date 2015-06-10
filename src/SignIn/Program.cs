@@ -5,11 +5,10 @@ using System.Linq;
 using System.Web;
 using Starcounter;
 using PolyjuiceNamespace;
-using Simplified.Ring3;
 
 namespace SignIn {
-    class Program {
-         static void Main() {
+    public class Program {
+         public static void Main() {
              CommitHooks hooks = new CommitHooks();
              MainHandlers handlers = new MainHandlers();
 

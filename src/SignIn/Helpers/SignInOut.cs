@@ -3,10 +3,11 @@ using System.Security.Cryptography;
 using System.Web;
 using Starcounter;
 using Starcounter.Internal;
-using Simplified.Ring2;
-using Simplified.Ring3;
-using Simplified.Ring5;
+using Concepts.Ring3;
+using Concepts.Ring1;
 using Concepts.Ring8.Polyjuice;
+using Concepts.Ring8.Tunity;
+using Tunity.Common;
 
 namespace SignIn {
     public class SignInOut {
@@ -15,8 +16,8 @@ namespace SignIn {
         internal static string AdminUsername = "admin";
         internal static string AdminPassword = "admin";
 
-        static public SystemUserSession GetCurrentSystemUserSession() {
-            return Db.SQL<SystemUserSession>("SELECT o FROM Simplified.Ring5.SystemUserSession o WHERE o.SessionIdString = ?", Session.Current.SessionIdString).First;
+        static public UserSession GetCurrentSystemUserSession() {
+            return Db.SQL<UserSession>("SELECT o FROM Concepts.Ring8.Tunity.UserSession o WHERE o.SessionIdString = ?", Session.Current.SessionIdString).First;
         }
 
         /// <summary>
@@ -27,11 +28,11 @@ namespace SignIn {
         /// <param name="SignInAuthToken"></param>
         /// <param name="Message"></param>
         /// <returns></returns>
-        static public SystemUserSession SignInSystemUser(string UserId, string Password, string SignInAuthToken, out string Message) {
+        static public UserSession SignInSystemUser(string UserId, string Password, string SignInAuthToken, out string Message) {
             Message = null;
 
             if (!string.IsNullOrEmpty(UserId)) {
-                SystemUserSession userSession = SignInSystemUser(UserId, Password);
+                UserSession userSession = SignInSystemUser(UserId, Password);
                 
                 if (userSession != null) {
                     return userSession;
@@ -51,21 +52,21 @@ namespace SignIn {
             return SignInSystemUser(SignInAuthToken);
         }
 
-        static public SystemUserSession SignInSystemUser(SystemUser systemUser) {
+        static public UserSession SignInSystemUser(TunityUser systemUser) {
             if (systemUser == null) {
                 return null;
             }
 
-            SystemUserSession userSession = null;
+            UserSession userSession = null;
 
             Db.Transact(() => {
-                SystemUserTokenKey token = new SystemUserTokenKey();
+                TunitySessionCookie cookie = new TunitySessionCookie();
+                
+                cookie.Created = cookie.LastUsed = DateTime.UtcNow;
+                cookie.Name = CreateAuthToken(systemUser.Username);
+                cookie.User = systemUser;
 
-                token.Created = token.LastUsed = DateTime.UtcNow;
-                token.Token = CreateAuthToken(systemUser.Username);
-                token.User = systemUser;
-
-                userSession = AssureSystemUserSession(token);
+                userSession = AssureSystemUserSession(cookie);
             });
 
             return userSession;
@@ -76,30 +77,29 @@ namespace SignIn {
         /// </summary>
         /// <param name="UserId"></param>
         /// <param name="Password"></param>
-        static private SystemUserSession SignInSystemUser(string UserId, string Password) {
+        static private UserSession SignInSystemUser(string userId, string password) {
 
-            string hashedPassword;
-            SystemUser systemUser = null;
+            UserSession userSession = null;
+            TunityUser systemUser = TunityDbHelper.FromName<TunityUser>(userId);
 
-            SystemUserPassword.GeneratePasswordHash(UserId.ToLower(), Password, out hashedPassword);
-            systemUser = Db.SQL<SystemUser>("SELECT o FROM Simplified.Ring3.SystemUser o WHERE o.Username=? AND o.Password=?", UserId, hashedPassword).First;
+           if (systemUser != null) {
+               if (PasswordHash.ValidatePassword(password, systemUser.Password))
+               {
+                   Db.Transact(() =>
+                   {
+                       TunitySessionCookie cookie = new TunitySessionCookie();
+                       cookie.Created = cookie.LastUsed = DateTime.UtcNow;
+                       cookie.Name = CreateAuthToken(systemUser.Username);
+                       cookie.User = systemUser;
 
-            if (systemUser == null) {
-                return null;
+                       userSession = AssureSystemUserSession(cookie);
+                   });
+               }
             }
 
-            SystemUserSession userSession = null;
+
             
-            Db.Transact(() => {
-                SystemUserTokenKey token = new SystemUserTokenKey();
-
-                token.Created = token.LastUsed = DateTime.UtcNow;
-                token.Token = CreateAuthToken(systemUser.Username);
-                token.User = systemUser;
-
-                userSession = AssureSystemUserSession(token);
-            });
-
+           
             return userSession;
         }
 
@@ -125,8 +125,8 @@ namespace SignIn {
         /// Sign-in user
         /// </summary>
         /// <param name="AuthToken"></param>
-        static public SystemUserSession SignInSystemUser(string AuthToken) {
-            SystemUserTokenKey oldToken = Db.SQL<SystemUserTokenKey>("SELECT o FROM Simplified.Ring5.SystemUserTokenKey o WHERE o.Token=?", AuthToken).First;
+        static public UserSession SignInSystemUser(string AuthToken) {
+            TunitySessionCookie oldToken = TunityDbHelper.FromName<TunitySessionCookie>(AuthToken);
             
             if (oldToken == null) {
                 return null;
@@ -152,7 +152,7 @@ namespace SignIn {
                 return null;
             }
 
-            SystemUserSession session = null;
+            UserSession session = null;
 
             Db.Transact(() => {
                 session = AssureSystemUserSession(oldToken);
@@ -166,22 +166,22 @@ namespace SignIn {
         /// </summary>
         /// <param name="Token"></param>
         /// <returns></returns>
-        static private SystemUserSession AssureSystemUserSession(SystemUserTokenKey Token) {
-            SystemUserSession userSession = null;
+        static private UserSession AssureSystemUserSession(TunitySessionCookie cookie) {
+           UserSession userSession = null;
 
             bool bSessionCreated = false;
 
             Db.Transact(() => {
-                userSession = Db.SQL<SystemUserSession>("SELECT o FROM Simplified.Ring5.SystemUserSession o WHERE o.SessionIdString=?", Session.Current.SessionIdString).First;
+                userSession = Db.SQL<UserSession>("SELECT o FROM Concepts.Ring8.Tunity.UserSession o WHERE o.SessionIdString=?", Session.Current.SessionIdString).First;
 
                 if (userSession == null) {
-                    userSession = new SystemUserSession();
+                    userSession = new UserSession();
                     userSession.Created = DateTime.UtcNow;
                     userSession.SessionIdString = Session.Current.SessionIdString;
                     bSessionCreated = true;
                 }
 
-                userSession.Token = Token;
+                userSession.Token = cookie;
                 userSession.Touched = DateTime.UtcNow;
             });
 
@@ -192,8 +192,8 @@ namespace SignIn {
             return userSession;
         }
 
-        static private void DeleteToken(SystemUserTokenKey Token) {
-            QueryResultRows<SystemUserSession> sessions = Db.SQL<SystemUserSession>("SELECT o FROM Simplified.Ring5.SystemUserSession o WHERE o.Token=?", Token);
+        static private void DeleteToken(TunitySessionCookie Token) {
+            QueryResultRows<UserSession> sessions = Db.SQL<UserSession>("SELECT o FROM Concepts.Ring8.Tunity.UserSession o WHERE o.Token=?", Token);
 
             foreach (var session in sessions) {
                 session.Delete();
@@ -203,10 +203,10 @@ namespace SignIn {
         }
 
         static public bool SignOutSystemUser() {
-            SystemUserSession session = GetCurrentSystemUserSession();
+            UserSession session = GetCurrentSystemUserSession();
 
             if (session != null) {
-                return SignOutSystemUser(session.Token.Token);
+                return SignOutSystemUser(session.Token.Name);
             }
 
             return false;
@@ -222,7 +222,7 @@ namespace SignIn {
                 return false;
             }
 
-            SystemUserTokenKey token = Db.SQL<Simplified.Ring5.SystemUserTokenKey>("SELECT o FROM Simplified.Ring5.SystemUserTokenKey o WHERE o.Token=?", AuthToken).First;
+            TunitySessionCookie token = TunityDbHelper.FromName<TunitySessionCookie>(AuthToken);
 
             if (token == null) {
                 return false;
@@ -231,9 +231,9 @@ namespace SignIn {
             bool bUserWasSignedOut = false;
 
             Db.Transact(() => {
-                QueryResultRows<SystemUserSession> result = Db.SQL<SystemUserSession>("SELECT o FROM Simplified.Ring5.SystemUserSession o WHERE o.Token=?", token);
+                QueryResultRows<UserSession> result = Db.SQL<UserSession>("SELECT o FROM Concepts.Ring8.Tunity.UserSession o WHERE o.Token=?", token);
 
-                foreach (SystemUserSession userSession in result) {
+                foreach (UserSession userSession in result) {
                     string sessoinId = userSession.SessionIdString;
 
                     userSession.Delete();
@@ -252,65 +252,28 @@ namespace SignIn {
         /// Assure that there is at least one system user beloning to the admin group 
         /// </summary>
         internal static void AssureAdminSystemUser() {
-            SystemUserGroup group = Db.SQL<SystemUserGroup>("SELECT o FROM Simplified.Ring3.SystemUserGroup o WHERE o.Name = ?", AdminGroupName).First;
-            SystemUser user = Db.SQL<SystemUser>("SELECT o FROM Simplified.Ring3.SystemUser o WHERE o.Username = ?", AdminUsername).First;
 
-            if (group != null && user != null && IsMemberOfGroup(user, group)) {
-                return;
-            }
-
-            // There is no system user beloning to the admin group
-            Db.Transact(() => {
-                if (group == null) {
-                    group = new SystemUserGroup();
-                    group.Name = AdminGroupName;
-                    group.Description = AdminGroupDescription;
-                }
-
-                if (user == null) {
-                    Person person = new Person() {
-                        FirstName = AdminUsername,
-                        LastName = AdminUsername
-                    };
-
-                    user = new SystemUser() {
-                        WhatIs = person,
-                        Username = AdminUsername
-                    };
-
-                    // Set password
-                    string hash;
-                    SystemUserPassword.GeneratePasswordHash(user.Username.ToLower(), AdminPassword, out hash);
-
-                    user.Password = hash;
-
-                    // Add ability to also sign in with email
-                    EmailAddress email = new EmailAddress();
-                    EmailAddressRelation relation = new EmailAddressRelation();
-
-                    relation.ToWhat = user;
-                    relation.WhatIs = email;
-
-                    email.EMail = AdminUsername + "@starcounter.com";
-                }
-
-                // Add the admin group to the system admin user
-                SystemUserGroupMember member = new Simplified.Ring3.SystemUserGroupMember();
-
-                member.WhatIs = user;
-                member.ToWhat = group;
+            Db.Transact(() =>
+            {
+           
+                AssureHelper.Assure("admin", delegate(TunityUser user)
+                {
+                    user.Password = PasswordHash.CreateHash("admin");
+                    user.SuperUser = true;
+                    user.Hidden = true;
+                    if (user.WhoIs == null)
+                    {
+                        Person p = new Person()
+                        {
+                            FirstName = "Tunity",
+                            Surname = "Administrator"
+                        };
+                        user.WhoIs = p;
+                    }
+                });
             });
         }
 
-        internal static bool IsMemberOfGroup(SystemUser User, SystemUserGroup Group) {
-            if (User == null || Group == null) {
-                return false;
-            }
-
-            SystemUserGroupMember group = Db.SQL<SystemUserGroupMember>("SELECT o FROM Simplified.Ring3.SystemUserGroupMember o WHERE o.SystemUser = ? AND o.SystemUserGroup = ?", User, Group).First;
-
-            return group != null;
-        }
         #endregion
 
         #region Commit Hook replacement

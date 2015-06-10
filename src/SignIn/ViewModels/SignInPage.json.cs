@@ -1,6 +1,7 @@
 using Concepts.Ring8.Polyjuice;
-using Simplified.Ring5;
+using Concepts.Ring8.Tunity;
 using Starcounter;
+using Tunity.Common;
 
 namespace SignIn {
     partial class SignInPage : Page {
@@ -13,7 +14,7 @@ namespace SignIn {
             }
 
             string message;
-            SystemUserSession session = SignInOut.SignInSystemUser(Username, Password, null, out message);
+            UserSession session = SignInOut.SignInSystemUser(Username, Password, null, out message);
 
             if (session == null) {
                 this.SetAnonymousState(true, message);
@@ -28,20 +29,20 @@ namespace SignIn {
         }
 
         public void FromCookie(string SignInAuthToken) {
-            SystemUserTokenKey token = Db.SQL<SystemUserTokenKey>("SELECT t FROM Simplified.Ring5.SystemUserTokenKey t WHERE t.Token = ?", SignInAuthToken).First;
+            TunitySessionCookie token =  TunityDbHelper.FromName<TunitySessionCookie>(SignInAuthToken);
 
             if (token == null) {
                 return;
             }
 
-            SystemUserSession session = SignInOut.SignInSystemUser(token.Token);
+            UserSession session = SignInOut.SignInSystemUser(token.Name);
 
             if (session != null) {
                 this.SetAuthorizedState(session);
             }
         }
 
-        public void SetAuthorizedState(SystemUserSession Session) {
+        public void SetAuthorizedState(UserSession Session) {
             this.Message = string.Empty;
 
             if (Session.Token.User.WhoIs != null) {
@@ -59,7 +60,7 @@ namespace SignIn {
                 this.ImageUrl = Utils.GetGravatarUrl(string.Empty);
             }
 
-            this.SignInAuthToken = Session.Token.Token;
+            this.SignInAuthToken = Session.Token.Name;
             this.IsSignedIn = true;
 
             this.UpdateSignInForm();

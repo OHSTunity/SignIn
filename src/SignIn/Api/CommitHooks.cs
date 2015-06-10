@@ -4,18 +4,18 @@ using Starcounter.Internal;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
-using Simplified.Ring5;
+using Concepts.Ring8.Tunity;
 
 namespace SignIn {
     internal class CommitHooks {
-        public static string LocalAppUrl = "/SignIn/__db/__" + StarcounterEnvironment.DatabaseNameLower + "/societyobjects/systemusersession";
+        public static string LocalAppUrl = "/signin/__db/__" + StarcounterEnvironment.DatabaseNameLower + "/societyobjects/systemusersession";
         public static string MappedTo = "/polyjuice/signin";
 
         public void Register() {
             // User signed in event
             Handle.POST(CommitHooks.LocalAppUrl, (Request request) => {
                 string sessionId = request.Body;
-                SystemUserSession userSession = Db.SQL<SystemUserSession>("SELECT o FROM Simplified.Ring5.SystemUserSession o WHERE o.SessionIdString = ?", sessionId).First;
+                UserSession userSession = Db.SQL<UserSession>("SELECT o FROM Concepts.Ring8.Tunity.UserSession o WHERE o.SessionIdString = ?", sessionId).First;
                 SignInPage page = GetSignInPage();
 
                 if (userSession != null && page != null) {
