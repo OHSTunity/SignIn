@@ -1,0 +1,90 @@
+:host {
+	color: rgb(255, 255, 255);
+	font-family: robotodraft;
+	display: inline-flex;
+  	flex-direction: column;
+	height: auto;
+	line-height: 32.5px;
+	text-align: center;
+	width: auto;
+}
+
+#popupTarget {
+	height: 1px;
+	width: 1px;
+}
+
+.avatar_background {
+  	background-color: {{color}};
+  	width:{{size}}px;
+  	height:{{size}}px;
+  	margin-right:2px;
+  	border-radius: 15px;	
+	-webkit-user-select: none;
+	border: 2px solid rgba(0,0,0,0.25);
+	border-radius: 15px;
+	color: rgb(68, 68, 68);
+	display: block;
+	float: left;
+	margin-bottom: 1px;
+	margin-left: 2px;
+	margin-right: 2px;
+	margin-top: 1px;
+	/*overflow: hidden;*/
+	position: relative;
+	text-decoration: none solid rgb(68, 68, 68);
+	text-decoration-color: rgb(68, 68, 68);
+	text-decoration-line: none;
+	text-decoration-style: solid;
+	z-index: 0;
+}
+
+.avatar_background img {	
+  	border-radius: 15px;	
+}
+
+.avatar_background[draggable=true]
+{
+	cursor:-webkit-grab;
+	-webkit-user-drag: element;
+}
+
+.avatar_background.responsible {
+	/*
+	border: 2px solid rgba(0,0,0,0.4);
+	box-shadow: rgba(0,0,0,0.6) 2px 2px 3px;
+	*/
+}
+
+#popup {
+  background-color: white;
+  font-size: 12px;
+  font-weight: 500;
+  border: #999 1px solid;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.deleteme:hover
+{
+	color: red;
+    cursor: not-allowed;
+}
+
+.avatar_initials
+{
+	color: #fff;
+	
+	display: block;
+	font-size: {{size/2}}px;
+	font-weight: bold;
+	left: 0px;
+	/*overflow-x: hidden;
+	overflow-y: hidden;*/
+	position: absolute;
+	text-align: center;
+	top: 0px;
+	line-height:{{size}}px;
+  	width:{{size}}px;
+  	height:{{size}}px;
+}

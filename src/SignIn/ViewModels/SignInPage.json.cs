@@ -52,7 +52,7 @@ namespace SignIn {
                     this.ImageUrl = Session.Token.User.WhoIs.ImageURL;
                 }
                 else {
-                    this.ImageUrl = Utils.GetGravatarUrl(string.Empty);
+                    this.ImageUrl = Concepts.Ring8.Tunity.Avatar.GetValueString(Session.Token.User.WhoIs);//Utils.GetGravatarUrl(string.Empty);
                 }
             }
             else {

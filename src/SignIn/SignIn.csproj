@@ -103,6 +103,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="wwwroot\SignIn\elements\so-signin\so-signin.html" />
+    <Content Include="wwwroot\SignIn\elements\tu-avatar\tu-signin-avatar.css" />
+    <Content Include="wwwroot\SignIn\elements\tu-avatar\tu-signin-avatar.html" />
     <Content Include="wwwroot\SignIn\viewmodels\SignInFormPage.html" />
     <Content Include="wwwroot\SignIn\viewmodels\SignInPage.html" />
   </ItemGroup>

@@ -1,0 +1,155 @@
+
+<link href="/sys/polymer/polymer.html" rel="import">
+
+<polymer-element name="tu-signin-avatar" attributes="initials value responsible pid deleteable size dropdown moreAlternative moreTap">
+    
+
+
+    <template>
+
+        <link href="tu-signin-avatar.css" rel="stylesheet">
+        <div class="avatar_background {{responsible? 'responsible': ''}}" on-click="{{onClicked}}" on-tap="{{onTapped}}" id="avatardrag" layout horizontal center center-justified>                
+                <template if ="{{type == 'gravatar'}}">
+                    <img height="{{size}}" src="http://www.gravatar.com/avatar/{{gravatar}}&s={{size}}" title="{{fullname}}"/>
+                </template>
+                <template if ="{{!(type == 'gravatar') || forceInitials}}">
+                    <span class="avatar_initials" title="{{fullname}}">{{initials}}</span>
+                </template>
+            </div>
+
+
+
+     </template>
+    <script type="text/javascript">
+        'use strict';
+
+
+        Polymer('tu-signin-avatar', {
+            fullname:"Nobody Here",
+            initials:"n/a",
+            forceInitials:false,
+            pid:"",
+            publish:{
+                value:{
+                    value:"",
+                    reflect:true,
+                }
+            },
+            deleteable: false,
+            responsible: false,
+
+            moreAlternative: "",
+            moreTap:"",
+
+            dropdown: false,
+
+            size:32,
+            color: "rgba(0,0,0,0.3)",
+            gravatar: "",
+            type:"color",
+
+            _open: false,
+
+            ready: function () {
+
+                var that = this;
+                this.$.avatardrag.addEventListener('dragstart', function (ev) {
+                    ev.dataTransfer.setData('person', that.pid);
+                    ev.stopPropagation();
+                });
+               
+
+            },
+            onTapped: function(ev) {
+            	if (this.dropdown)
+                {
+                    this._opened = true;
+                    ev.stopImmediatePropagation();
+                }
+            },
+            onClicked: function(ev) {
+                if (this.dropdown)
+                {
+                    ev.stopImmediatePropagation();
+                }
+            },onClosed:function(ev) {
+              //First when closed can we manipulate values
+              if (this.oSelected)
+              {
+                 if (this.oSelected.value == "moreTap")
+                  {
+                    this.moreTap++;
+                    this._opened = false;
+                  }
+                  else
+                  {
+                    //this.value = this.oSelected.value;
+                  }
+                  this.oSelected.tapIt();
+                  this.oSelected = false;
+              }
+            },
+            optionSelected: function(ev) {
+                this.oSelected = ev.detail;
+                //we need to start by closing core-overlay to replace component
+                this._opened = false;
+                
+            },
+            valueChanged: function(e)
+            {
+                var res = this.value.split("{;}");
+                for (var i = 0; i < res.length; i++)
+                {
+                    var parts = res[i].split("{:}");
+                    if (parts.length > 1)
+                    {
+                        switch(parts[0])
+                        {
+                            case "name":
+                                this.parseName(parts[1]);
+                                break;
+                            case "type":
+                                this.parseType(parts[1]);
+                                break;
+                            case "value":
+                                this.parseValue(parts[1]);
+                                break;
+                        }
+                    }
+                }
+            },
+            parseName: function (thename) {
+                this.fullname = thename;
+                var res = thename.split(" ");
+                if(res.length >= 2)
+                {
+                    this.initials = res[0].substring(0, 1) + res[res.length-1].substring(0, 1);
+                }
+                else
+                {
+                    this.initials = thename.substring(0, 2);
+                }
+            },
+
+            parseType:function(thetype) {
+                this.type = thetype;
+            },
+            parseValue:function(thevalue) {
+                switch(this.type)
+                {
+                    case "gravatar":
+                        this.gravatar = thevalue;
+                        break;
+                    case "color":
+                        this.color = thevalue;
+                        break;
+                }
+            },
+
+            responsibleChanged: function(e)
+            {
+            }
+
+        });
+    </script>
+</polymer-element>
