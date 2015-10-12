@@ -1,8 +1,9 @@
 <!-- Copyright (c) 2015 Polyjuice. All rights reserved. -->
-<link rel="import" href="/sys/core-icon-button/core-icon-button.html" />
+<link rel="import" href="/sys/iron-icons/iron-icons.html" />
+<link rel="import" href="/sys/paper-icon-button/paper-icon-button.html" />
 <link rel="import" href="/sys/juicy-popover/src/juicy-popover.html" />
 
-<polymer-element name="so-signin" attributes="IsSignedIn FullName ImageUrl Username Password Message">
+<dom-module id="so-signin">
     <template>
         <style>
             :host {
@@ -106,35 +107,35 @@
         </style>
         <div id="signin">
             <!-- User signed in -->
-            <template if="{{IsSignedIn}}">
+            <template is="dom-if" if="{{isSignedIn}}">
                 <div class="detailed">
                     <juicy-popover position="bottom left" handleselector="tu-signin-avatar.handle" expandableselector=".expandable">
-                        <tu-signin-avatar class="handle" size="22" value="{{ImageUrl}}"></tu-signin-avatar>
+                        <tu-signin-avatar class="handle" size="22" value="{{imageUrl}}"></tu-signin-avatar>
                         <div class="expandable popup_window">
-                            <tu-signin-avatar value="{{ImageUrl}}" size="32"></tu-signin-avatar>
-                            <p style="margin-left:2px;">{{FullName}}</p>
-                            <button on-click="{{signOut}}">Sign out</button>
+                            <tu-signin-avatar value="{{imageUrl}}" size="32"></tu-signin-avatar>
+                            <p style="margin-left:2px;">{{fullName}}</p>
+                            <button on-click="signOut">Sign out</button>
                         </div>
                     </juicy-popover>
-                    <div class="full-name">{{FullName}}</div>
+                    <div class="full-name">{{fullName}}</div>
                 </div>
             </template>
             <!-- User NOT signed in -->
-            <template if="{{!IsSignedIn}}">
-                <juicy-popover position="bottom left" handleselector="core-icon-button.handle" expandableselector=".expandable">
-                    <core-icon-button class="handle" icon="account-circle" on-click="{{focusPopover}}"></core-icon-button>
+            <template is="dom-if" if="{{!isSignedIn}}">
+                <juicy-popover position="bottom left" handleselector="paper-icon-button.handle" expandableselector=".expandable">
+                    <paper-icon-button class="handle" icon="account-circle" on-click="focusPopover"></paper-icon-button>
                     <div class="expandable popup_window">
                         <div>
-                            <input type="text" placeholder="Username / email" value="{{Username}}" id="txtUsername" on-keypress="{{enterUsername}}" />
+                            <input type="text" placeholder="Username / email" value="{{username::change}}" id="txtUsername" on-keypress="enterUsername" />
                         </div>
                         <div>
-                            <input type="password" placeholder="Password" value="{{Password}}" id="txtPassword" on-keypress="{{enterPassword}}" />
+                            <input type="password" placeholder="Password" value="{{password::change}}" id="txtPassword" on-keypress="enterPassword" />
                         </div>
                         <div>
-                            <button on-click="{{signIn}}">Sign in</button>
+                            <button on-click="signIn">Sign in</button>
                         </div>
-                        <template if="{{Message}}">
-                            <div class="errorText">{{Message}}</div>
+                        <template is="dom-if" if="{{message}}">
+                            <div class="errorText">{{message}}</div>
                         </template>
                     </div>
                 </juicy-popover>
@@ -143,9 +144,16 @@
     </template>
 
     <script>
-        "use strict";
-
-        Polymer('so-signin', {
+        Polymer({
+            is: 'so-signin',
+            properties: {
+                isSignedIn: { type: Boolean, value: false },
+                fullName: { type: String },
+                imageUrl: { type: String },
+                username: { type: String, notify: true },
+                password: { type: String, notify: true },
+                message: { type: String }
+            },
             ready: function () {
                 this.puppet = document.querySelector("puppet-client");
             },
@@ -154,7 +162,9 @@
                 this.isDomReady = true;
             },
             signIn: function () {
-                this.puppet.network.changeState("/signin/signin/" + this.Username + "/" + this.Password);
+                setTimeout(function () {
+                    this.puppet.network.changeState("/signin/signin/" + this.username + "/" + this.password);
+                }.bind(this));
             },
             signOut: function () {
                 this.puppet.network.changeState("/signin/signout");
@@ -174,4 +184,4 @@
             }
         });
     </script>
-</polymer-element>
+</dom-module>

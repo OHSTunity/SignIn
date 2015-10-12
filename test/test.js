@@ -26,14 +26,14 @@ describe('SignIn app', function () {
             var workspace = null;
 
             for (var i = 0; i < data.workspaces.length; i++) {
-                if (data.workspaces[i].appName == "UserAdmin") {
+                if (data.workspaces[i].AppName == "UserAdmin") {
                     workspace = data.workspaces[i];
                     break;
                 }
             }
 
             assert(workspace, "There should be UserAdmin workspace");
-            assert(workspace.master.UserAdmin.RedirectUrl, "RedirectUrl should be set because of unauthorised request");
+            assert(workspace.UserAdmin.RedirectUrl, "RedirectUrl should be set because of unauthorised request");
         })
         .expect(200, done);
     });
@@ -73,15 +73,15 @@ describe('SignIn app', function () {
             var workspace = null;
 
             for (var i = 0; i < data.workspaces.length; i++) {
-                if (data.workspaces[i].appName == "UserAdmin") {
+                if (data.workspaces[i].AppName == "UserAdmin") {
                     workspace = data.workspaces[i];
                     break;
                 }
             }
 
             assert(workspace, "There should be UserAdmin workspace");
-            assert(!workspace.master.UserAdmin.RedirectUrl, "RedirectUrl should be blank for authorised request");
-            assert(workspace.master.UserAdmin.Items, "There should be some items");
+            assert(!workspace.UserAdmin.RedirectUrl, "RedirectUrl should be blank for authorised request");
+            assert(workspace.UserAdmin.Items, "There should be some items");
         })
         .expect(200, done);
     });

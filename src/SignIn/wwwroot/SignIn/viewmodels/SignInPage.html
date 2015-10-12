@@ -7,5 +7,8 @@
     }
 </style>
 <template>
-    <so-signin issignedin="{{IsSignedIn}}" fullname="{{FullName}}" imageurl="{{ImageUrl}}" username="{{Username$}}" password="{{Password$}}" message="{{Message}}"></so-signin>    
+    <template is="dom-bind">
+        <so-signin is-signed-in="{{model.IsSignedIn}}" full-name="{{model.FullName}}" image-url="{{model.ImageUrl}}" username="{{model.Username$}}" password="{{model.Password$}}" message="{{model.Message}}"></so-signin>
+        <dom-bind-notifier observed-object="{{model}}" path="model" deep></dom-bind-notifier>
+    </template>
 </template>

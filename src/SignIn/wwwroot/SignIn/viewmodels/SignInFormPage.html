@@ -1,45 +1,62 @@
-﻿<link rel="stylesheet" href="/sys/bootswatch/paper/bootstrap.css" />
+﻿<!--<link rel="stylesheet" href="/sys/bootswatch/paper/bootstrap.css" />-->
 <link rel="import" href="/sys/puppet-redirect/src/puppet-redirect.html" />
 <template>
-    <script>
-        function txtUsernameKeypress(s, e) {
-            if (e.which == 13) {
-                document.getElementById("txtPassword").focus();
-            }
-        }
-
-        function txtPasswordKeypress(s, e) {
-            if (e.which == 13) {
-                document.querySelector('puppet-client').network.changeState('/signin/signin/' + getModel(s).Username$ + '/' + getModel(s).Password$);
-            }
-        }
-    </script>
-    <h2>Sign-in</h2>
-    <template if="{{IsSignedIn == false}}">
-        <template if="{{Message}}">
-            <p class="alert alert-danger">{{Message}}</p>
+    <template is="dom-bind">
+        <h2>Sign-in</h2>
+        <template is="dom-if" if="{{!model.IsSignedIn}}">
+            <template is="dom-if" if="{{model.Message}}">
+                <p class="alert alert-danger">{{model.Message}}</p>
+            </template>
+            <div class="form-horizontal">
+                <label class="control-label" for="txtUsername">Username</label>
+            </div>
+            <div>
+                <input id="txtUsername" type="text" value="{{model.Username$::change}}" placeholder="Username" class="form-control" on-keypress="txtUsernameKeypress" />
+            </div>
+            <div class="form-horizontal">
+                <label class="control-label" for="txtPassword">Password</label>
+            </div>
+            <div>
+                <input id="txtPassword" type="password" value="{{model.Password$::change}}" placeholder="Password" class="form-control" on-keypress="txtPasswordKeypress" />
+            </div>
+            <div>
+                <button class="btn btn-primary" on-click="signIn">Sign in</button>
+            </div>
         </template>
-        <div class="form-horizontal">
-            <label class="control-label" for="txtUsername">Username</label>
-        </div>
-        <div>
-            <input id="txtUsername" type="text" value="{{ Username$ }}" placeholder="Username" class="form-control" onkeypress="txtUsernameKeypress(this, event)" />
-        </div>
-        <div class="form-horizontal">
-            <label class="control-label" for="txtPassword">Password</label>
-        </div>
-        <div>
-            <input id="txtPassword" type="password" value="{{ Password$ }}" placeholder="Password" class="form-control" onkeypress="txtPasswordKeypress(this, event)" />
-        </div>
-        <div>
-            <button class="btn btn-primary" onclick="document.querySelector('puppet-client').network.changeState('/signin/signin/' + getModel(this).Username$ + '/' + getModel(this).Password$)">Sign in</button>
-        </div>
+        <template is="dom-if" if="{{model.IsSignedIn}}">
+            <p class="alert alert-success">You are already signed in!</p>
+            <div>
+                <button class="btn btn-primary" on-click="signOut">Sign out</button>
+            </div>
+        </template>
+        <link is="puppet-redirect" history url$="{{model.RedirectUrl}}" />
+        <dom-bind-notifier observed-object="{{model}}" path="model" deep></dom-bind-notifier>
     </template>
-    <template if="{{IsSignedIn == true}}">
-        <p class="alert alert-success">You are already signed in!</p>
-        <div>
-            <button class="btn btn-primary" onclick="document.querySelector('puppet-client').network.changeState('/signin/signout')">Sign out</button>
-        </div>
-    </template>
-    <link is="puppet-redirect" history url="{{ RedirectUrl }}" />
+    <script>
+        (function () {
+            // use shimed currentScript if provided
+            var template = (document._currentScript ||  document.currentScript).previousElementSibling;
+            template.txtUsernameKeypress = function (e) {
+                if (e.which == 13) {
+                    template.parentNode.querySelector("#txtPassword").focus();
+                }
+            };
+
+            template.txtPasswordKeypress = function (e) {
+                if (e.which == 13) {
+                    template.signIn();
+                }
+            };
+
+            template.signIn = function () {
+                setTimeout(function () {
+                    document.querySelector('puppet-client').network.changeState('/signin/signin/' + template.model.Username$ + '/' + template.model.Password$);
+                });
+            };
+
+            template.signOut = function () {
+                document.querySelector('puppet-client').network.changeState('/signin/signout');
+            };
+        })();
+    </script>
 </template>

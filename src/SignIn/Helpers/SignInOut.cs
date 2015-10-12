@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.Web;
+using System.Security.Cryptography;
 using Starcounter;
 using Starcounter.Internal;
 using Concepts.Ring3;
 using Concepts.Ring1;
-using Concepts.Ring8.Polyjuice;
 using Concepts.Ring8.Tunity;
 using Tunity.Common;
 
@@ -186,7 +185,7 @@ namespace SignIn {
             });
 
             if (bSessionCreated) {
-                InvokeSignInCommitHook(userSession.SessionIdString);
+                //InvokeSignInCommitHook(userSession.SessionIdString);
             }
 
             return userSession;
@@ -237,7 +236,7 @@ namespace SignIn {
                     string sessoinId = userSession.SessionIdString;
 
                     userSession.Delete();
-                    InvokeSignOutCommitHook(sessoinId);
+                    //InvokeSignOutCommitHook(sessoinId);
                     bUserWasSignedOut = true;
                 }
 
@@ -275,7 +274,7 @@ namespace SignIn {
         }
 
         #endregion
-
+        /*
         #region Commit Hook replacement
 
         /// <summary>
@@ -300,5 +299,56 @@ namespace SignIn {
             }
         }
         #endregion
+        /*
+=======
+            if (group != null && user != null && SystemUser.IsMemberOfGroup(user, group)) {
+                return;
+            }
+
+            // There is no system user beloning to the admin group
+            Db.Transact(() => {
+                if (group == null) {
+                    group = new SystemUserGroup();
+                    group.Name = AdminGroupName;
+                    group.Description = AdminGroupDescription;
+                }
+
+                if (user == null) {
+                    Person person = new Person() {
+                        FirstName = AdminUsername,
+                        LastName = AdminUsername
+                    };
+
+                    user = new SystemUser() {
+                        WhatIs = person,
+                        Username = AdminUsername
+                    };
+
+                    // Set password
+                    string hash;
+                    string salt = Convert.ToBase64String(SystemUser.GenerateSalt(16));
+                    SystemUser.GeneratePasswordHash(user.Username.ToLower(), AdminPassword, salt, out hash);
+
+                    user.Password = hash;
+                    user.PasswordSalt = salt;
+
+                    // Add ability to also sign in with email
+                    EmailAddress email = new EmailAddress();
+                    EmailAddressRelation relation = new EmailAddressRelation();
+
+                    relation.Somebody = person;
+                    relation.WhatIs = email;
+
+                    email.EMail = AdminUsername + "@starcounter.com";
+                }
+
+                // Add the admin group to the system admin user
+                SystemUserGroupMember member = new Simplified.Ring3.SystemUserGroupMember();
+
+                member.WhatIs = user;
+                member.ToWhat = group;
+            });
+        }
+>>>>>>> StarcounterSamples/master*/
     }
 }

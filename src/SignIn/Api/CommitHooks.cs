@@ -7,7 +7,7 @@ using Concepts.Ring8.Tunity;
 
 namespace SignIn {
     internal class CommitHooks {
-        public static string LocalAppUrl = "/signin/__db/__" + StarcounterEnvironment.DatabaseNameLower + "/societyobjects/systemusersession";
+        /*public static string LocalAppUrl = "/signin/__db/__" + StarcounterEnvironment.DatabaseNameLower + "/societyobjects/systemusersession";
         public static string MappedTo = UriMapping.MappingUriPrefix + "/signin";
 
         public void Register() {
@@ -23,28 +23,39 @@ namespace SignIn {
 
                 return (ushort)System.Net.HttpStatusCode.OK;
             });
+=======
 
-            // User signed out event
-            Handle.DELETE(CommitHooks.LocalAppUrl, () => {
-                SignInPage page = GetSignInPage();
+namespace SignIn {
+    internal class CommitHooks {*/
+        public void Register() {
+            Hook<UserSession>.CommitInsert += (s, a) => {
+                this.RefreshSignInState();
+            };
 
-                if (page != null) {
-                    page.SetAnonymousState();
-                }
+            Hook<UserSession>.CommitDelete += (s, a) => {
+                this.RefreshSignInState();
+            };
 
-                return (ushort)System.Net.HttpStatusCode.OK;
-            });
-
-            UriMapping.Map(CommitHooks.LocalAppUrl, CommitHooks.MappedTo, "POST");
-            UriMapping.Map(CommitHooks.LocalAppUrl, CommitHooks.MappedTo, "DELETE");
+            Hook<UserSession>.CommitUpdate += (s, a) => {
+                this.RefreshSignInState();
+            };
         }
 
-        private SignInPage GetSignInPage() {
-            if (Session.Current != null && Session.Current.Data is SignInPage) {
-                return Session.Current.Data as SignInPage;
+        protected void RefreshSignInState() {
+            SignInPage page = GetSignInPage();
+            if (page != null) {
+                page.RefreshState();
+            }
+        }
+
+        protected SignInPage GetSignInPage() {
+            SessionContainer container = null;
+
+            if (Session.Current != null && Session.Current.Data is SessionContainer) {
+                container = Session.Current.Data as SessionContainer;
             }
 
-            return null;
+            return container != null ? container.SignIn : null;
         }
     }
 }

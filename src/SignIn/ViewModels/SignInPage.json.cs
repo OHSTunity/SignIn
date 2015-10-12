@@ -1,4 +1,3 @@
-using Concepts.Ring8.Polyjuice;
 using Concepts.Ring8.Tunity;
 using Starcounter;
 using Tunity.Common;
@@ -86,6 +85,16 @@ namespace SignIn {
             this.IsSignedIn = false;
 
             this.UpdateSignInForm();
+        }
+
+        public void RefreshState() {
+            UserSession session = SignInOut.GetCurrentSystemUserSession();
+
+            if (session != null) {
+                this.SetAuthorizedState(session);
+            } else {
+                this.SetAnonymousState();
+            }
         }
 
         public void UpdateSignInForm() {

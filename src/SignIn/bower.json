@@ -1,24 +1,23 @@
 {
-  "name": "SignIn",
-  "version": "0.0.0",
-  "authors": [
-    "andwah <anders.wahlgren@societyobjects.com>",
-    "miyconst <const.miyang@gmail.com>"
-  ],
-  "description": "SignIn App Powered by Starcounter",
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "sys",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "polymer": "~0.3.5",
-    "model-operations": "Polyjuice/model-operations#~0.0.1",
-    "core-ajax": "polymer/core-ajax#~0.3.5",
-    "core-icon-button": "Polymer/core-icon-button#~0.4.0"
-  }
+    "name": "SignIn",
+    "version": "3.0.0",
+    "authors": [
+        "andwah <anders.wahlgren@societyobjects.com>",
+        "miyconst <const.miyang@gmail.com>"
+    ],
+    "description": "SignIn App Powered by Starcounter",
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "sys",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "polymer": "Polymer/polymer#^1.0.0",
+        "juicy-popover": "Juicy/juicy-popover#~0.0.0",
+        "paper-icon-button": "PolymerElements/paper-icon-button#~1.0.3"
+    }
 }

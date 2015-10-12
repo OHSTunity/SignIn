@@ -5,7 +5,6 @@ using System.Linq;
 using System.Web;
 using Starcounter;
 
-
 namespace SignIn {
     internal class MainHandlers {
         protected string AuthCookieName = "soauthtoken";
@@ -26,6 +25,8 @@ namespace SignIn {
 
             Handle.GET("/signin/user", HandleUser);
             Handle.GET<string, string>("/signin/signin/{?}/{?}", HandleSignIn);
+            Handle.GET("/signin/signin/", HandleSignIn);
+            Handle.GET("/signin/signin", HandleSignIn);
             Handle.GET("/signin/signout", HandleSignOut);
             Handle.GET("/signin/signinuser", HandleSignInUser);
             Handle.GET<string>("/signin/signinuser?{?}", HandleSignIn);
@@ -57,10 +58,14 @@ namespace SignIn {
         }
 
         protected SessionContainer GetSessionContainer() {
-            SessionContainer container = Session.Current.Data as SessionContainer;
+            SessionContainer container = null;
 
-            if (container == null && Session.Current.Data != null) {
-                throw new Exception("Invalid object in session!");
+            if (Session.Current != null) {
+                container = Session.Current.Data as SessionContainer;
+
+                if (container == null && Session.Current.Data != null) {
+                    throw new Exception("Invalid object in session!");
+                }
             }
 
             if (container == null) {
@@ -71,13 +76,17 @@ namespace SignIn {
             return container;
         }
 
+        protected Response HandleSignIn() {
+            return HandleSignIn(null, null);
+        }
+
         protected Response HandleSignIn(string Username, string Password) {
             SessionContainer container = this.GetSessionContainer();
 
             container.SignIn.SignIn(Username, Password);
             SetAuthCookie(container.SignIn);
 
-            return container.SignInForm;
+            return container.SignInForm != null ? (Json)container.SignInForm : (Json)container.SignIn;
         }
 
         protected Response HandleSignIn(string Query) {
@@ -111,7 +120,7 @@ namespace SignIn {
             container.SignIn.SignOut();
             SetAuthCookie(container.SignIn);
 
-            return container.SignInForm;
+            return container.SignInForm != null ? (Json)container.SignInForm : (Json)container.SignIn;
         }
 
         protected Response HandleUser() {
