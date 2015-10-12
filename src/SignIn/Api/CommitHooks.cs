@@ -1,5 +1,4 @@
-﻿using PolyjuiceNamespace;
-using Starcounter;
+﻿using Starcounter;
 using Starcounter.Internal;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -9,7 +8,7 @@ using Concepts.Ring8.Tunity;
 namespace SignIn {
     internal class CommitHooks {
         public static string LocalAppUrl = "/signin/__db/__" + StarcounterEnvironment.DatabaseNameLower + "/societyobjects/systemusersession";
-        public static string MappedTo = "/polyjuice/signin";
+        public static string MappedTo = UriMapping.MappingUriPrefix + "/signin";
 
         public void Register() {
             // User signed in event
@@ -36,8 +35,8 @@ namespace SignIn {
                 return (ushort)System.Net.HttpStatusCode.OK;
             });
 
-            Polyjuice.Map(CommitHooks.LocalAppUrl, CommitHooks.MappedTo, "POST");
-            Polyjuice.Map(CommitHooks.LocalAppUrl, CommitHooks.MappedTo, "DELETE");
+            UriMapping.Map(CommitHooks.LocalAppUrl, CommitHooks.MappedTo, "POST");
+            UriMapping.Map(CommitHooks.LocalAppUrl, CommitHooks.MappedTo, "DELETE");
         }
 
         private SignInPage GetSignInPage() {

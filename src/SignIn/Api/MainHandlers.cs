@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using Starcounter;
-using PolyjuiceNamespace;
 
 
 namespace SignIn {
@@ -41,7 +40,7 @@ namespace SignIn {
                 return 200;
             });*/
 
-            Polyjuice.Map("/signin/user", "/polyjuice/user");
+            UriMapping.Map("/signin/user", UriMapping.MappingUriPrefix + "/user");
         }
 
         protected void SetAuthCookie(SignInPage Page) {
