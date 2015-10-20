@@ -3,21 +3,23 @@
   <link rel="import" href="/sys/iron-flex-layout/iron-flex-layout.html">
 <dom-module id="tu-signin-avatar">
   <style>
-    /* TODO(polyup): For speed, consider reworking these styles with .classes
-                     and #ids rather than [attributes].
-    */
-    [layout] {
-      @apply(--layout);
-    }
-    [layout][horizontal] {
-      @apply(--layout-horizontal);
-    }
-    [layout][center] {
-      @apply(--layout-center);
-    }
-    [layout][center-justified] {
-      @apply(--layout-center-justified);
-    }
+      .vertical {
+          @apply(--layout);
+          @apply(--layout-vertical);
+      }
+
+      .horizontal {
+          @apply(--layout);
+          @apply(--layout-horizontal);
+      }
+
+      .wrap {
+          @apply(--layout-wrap);
+      }
+
+      .center {
+          @apply(--layout-center);
+      }
     :host {
 	        color: rgb(255, 255, 255);
 	        font-family: robotodraft;
@@ -35,11 +37,8 @@
         }
 
         .avatar_background {
-  	        background-color: {{color}};
-  	        width:{{size}}px;
-  	        height:{{size}}px;
   	        margin-right:2px;
-  	        border-radius: 15px;	
+  	        border-radius: 25%;	
 	        -webkit-user-select: none;
 	        border: 2px solid rgba(0,0,0,0.25);
 	        border-radius: 15px;
@@ -60,7 +59,7 @@
         }
 
         .avatar_background img {	
-  	        border-radius: 15px;	
+  	        border-radius: 25%;	
         }
 
         .avatar_background[draggable=true]
@@ -110,12 +109,13 @@
         }
   </style>
   <template>
-        <div on-click="onClicked" on-tap="onTapped" id="avatardrag" layout="" horizontal="" center="" center-justified="" class$="{{_computeClass(responsible)}}">                
+        <div on-click="onClicked" on-tap="onTapped" id="avatardrag" 
+            class="horizontal center center-justified" class$="{{_computeClass(responsible)}}">                
                 <template is="dom-if" if="{{_computeIf(type)}}">
-                    <img height="{{size}}" src="{{_computeSrc(gravatar, size)}}" title="{{fullname}}">
+                    <img id="theImg" height="{{size}}" src="{{_computeSrc(gravatar, size)}}" title="{{fullname}}">
                 </template>
                 <template is="dom-if" if="{{_computeIf2(forceInitials, type)}}">
-                    <span class="avatar_initials" title="{{fullname}}">{{initials}}</span>
+                    <span id="theInitials" class="avatar_initials" title="{{fullname}}">{{initials}}</span>
                 </template>
         </div>
   </template>
@@ -183,7 +183,8 @@
               size: {
                   type: Number,
                   value: 32,
-                  notify: true
+                  notify: true,
+                  observer: 'sizeChanged'
               },
               type: {
                   type: String,
@@ -226,6 +227,19 @@
                   //this.value = this.oSelected.value;
                   this.oSelected.tapIt();
                   this.oSelected = false;
+              }
+          },
+          sizeChanged: function () {
+              this.$.avatardrag.style.width = this.size > 0 ? this.size + "px" : "inherit";
+              this.$.avatardrag.style.height = this.size > 0 ? this.size + "px" : "inherit";
+              if (this.$.theImg) {
+                  this.$.theImg.style.width = this.size > 0 ? this.size + "px" : "inherit";
+                  this.$.theImg.style.height = this.size > 0 ? this.size + "px" : "inherit";
+              }
+              if (this.$.theInitials) {
+                  this.$.theInitials.style.width = this.size > 0 ? this.size + "px" : "inherit";
+                  this.$.theInitials.style.height = this.size > 0 ? this.size + "px" : "inherit";
+                  this.$.theInitials.style.fontSize = this.size > 0 ? this.size / 2 + "px" : "inherit";
               }
           },
           optionSelected: function (ev) {
@@ -277,7 +291,7 @@
           responsibleChanged: function (_, e) {
           },
           _computeClass: function (responsible) {
-              return 'avatar_background ' + responsible ? 'responsible' : '';
+              return 'avatar_background ' + (responsible ? 'responsible' : '');
           },
           _computeIf: function (type) {
               return type == 'gravatar';
