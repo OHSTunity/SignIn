@@ -6,7 +6,6 @@ using Starcounter.Internal;
 using Concepts.Ring3;
 using Concepts.Ring1;
 using Concepts.Ring8.Tunity;
-using Tunity.Common;
 
 namespace SignIn {
     public class SignInOut {
