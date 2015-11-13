@@ -6,5 +6,6 @@
     "IsSignedIn": false,
     "Message": "",
     "FullName": "",
-    "ImageUrl": ""
+    "ImageUrl": "",
+	"RedirectUrl": ""
 }

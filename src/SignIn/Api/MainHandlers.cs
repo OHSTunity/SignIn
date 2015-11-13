@@ -86,7 +86,7 @@ namespace SignIn {
             container.SignIn.SignIn(Username, Password);
             SetAuthCookie(container.SignIn);
 
-            return container;
+            return container.SignInForm != null ? (Json)container.SignInForm : (Json)container.SignIn;;
         }
 
         protected Response HandleSignIn(string Query) {

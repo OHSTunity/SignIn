@@ -22,6 +22,8 @@ namespace SignIn {
         }
 
         public void SignOut() {
+            if (IsSignedIn)
+                this.RedirectUrl = "current";
             SignInOut.SignOutSystemUser();
             this.SetAnonymousState();
         }
@@ -109,14 +111,16 @@ namespace SignIn {
                 return;
             }
 
-            page.IsSignedIn = this.IsSignedIn;
-            page.Message = this.Message;
-
-            if (page.IsSignedIn) {
+            if (this.IsSignedIn)
+            {
                 page.Username = string.Empty;
                 page.Password = string.Empty;
                 page.RedirectUrl = page.OriginUrl;
             }
+
+
+            page.IsSignedIn = this.IsSignedIn;
+            page.Message = this.Message;
         }
     }
 }
