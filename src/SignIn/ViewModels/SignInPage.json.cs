@@ -15,6 +15,7 @@ namespace SignIn {
             UserSession session = SignInOut.SignInSystemUser(Username, Password, null, out message);
 
             if (session == null) {
+                this.FailedLoginCount++;
                 this.SetAnonymousState(true, message);
             } else {
                 this.SetAuthorizedState(session);
@@ -121,6 +122,7 @@ namespace SignIn {
 
             page.IsSignedIn = this.IsSignedIn;
             page.Message = this.Message;
+            page.FailedLoginCount = this.FailedLoginCount;
         }
     }
 }
