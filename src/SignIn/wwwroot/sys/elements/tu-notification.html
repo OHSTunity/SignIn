@@ -1,0 +1,159 @@
+<link href="/tu-common/elements/button/tu-icon.html" rel="import">
+<link href="/tu-common/elements/button/tu-icon-button.html" rel="import">
+<link rel="import" href="/tu-common/css/tu-layout.html">
+<dom-module id="tu-notification">
+  	<template>
+		<style include="tu-layout">
+			:host {
+				font-weight: normal;
+				line-height: 1.2em;
+				position: relative;
+			 }
+
+			.notification {
+				cursor: pointer;
+				padding: 5px;
+				padding-right: 10px;
+			}
+
+			.notification.unread {
+			  background-color: #eef;
+			}
+
+			.notification:hover {
+				background-color: #ddd;
+			}
+			.readButton {
+			  position: absolute;
+			  right: 0px;
+			  top: 2px;
+			}
+
+			.fullIcon tu-icon
+			{
+			  color: #FFF;
+			}
+
+			.fullIcon {
+			  width: 40px;
+			  min-width: 40px;
+			  height: 40px;
+			  min-height: 40px;
+			  position: relative;
+			}
+
+			.time {
+			  color: #999;
+			}
+
+			.time tu-icon
+			{
+			  margin-right: 3px;
+			}
+
+			#icon
+			{
+			   width: 30px;
+			   min-width: 30px;
+			   height: 30px;
+			   border-radius: 10px;
+			   margin-right: 10px;
+			   background-color: #333;
+			}
+
+			#icon.comment
+			{
+			  background-color: #A55;
+			}
+
+			#icon.todoresponsible
+			{
+			  background-color: #5A5;
+			}
+
+			#icon.todoparticipant
+			{
+			  background-color: #5A5
+			}
+			#icon.activityresponsible
+			{
+			  background-color: #55A;
+			}
+
+			#icon.activityparticipant
+			{
+			  background-color: #55A
+			}
+		</style>
+	    <div on-click="activate" class$="{{_computeClass(data.Viewed$)}}">
+	        <div class="fullIcon">
+	            <!--<tu-avatar size="40" value="{{data.Avatar}}"></tu-avatar>-->
+	            <div id="icon" layout="" horizontal="" center="" center-justified="" class$="{{type}}">
+	                 <tu-icon size="18" icon="{{icon}}" style="color:#fff"></tu-icon>
+	            </div>
+	        </div>
+	        <div class="vertical">
+	            <span>
+	              <template is="imported-template" content$="{{data.Message}}"></template>
+	            </span>
+	            <div class="time horizontal center">
+	                <tu-icon size="12" icon="clock-o" style="color:#777"></tu-icon>
+	                <span>{{time}}</span>
+	            </div>
+	        </div>
+	        <template is="dom-if" if="{{!data.Viewed$}}">
+	          <tu-icon-button title="mark as read" style="color:#555" size="10" class="readButton" icon="crosshairs" on-click="markRead"></tu-icon-button>
+	        </template>
+	    </div>
+	</template>
+  	<script>
+    Polymer({
+      is: 'tu-notification',
+      properties: {
+        data: {
+			type: Object,
+			notify: true
+		},
+        icon: {
+          type: String,
+          value: 'check'
+        },
+      },
+	  observers: [
+		'timeChanged(data.NotificationTime)',
+		'typeChanged(data.Type)'
+	  ],
+      timeChanged: function () {
+        this.time = moment(this.data.NotificationTime).calendar();
+      },
+      typeChanged: function () {
+        this.type = this.data.Type.toLowerCase();
+        switch (this.type) {
+        case 'comment':
+          this.icon = 'comment';
+          break;
+        case 'todoresponsible':
+        case 'activityresponsible':
+          this.icon = 'user';
+          break;
+        case 'todoparticipant':
+        case 'activityparticipant':
+          this.icon = 'users';
+          break;
+        }
+        ;
+      },
+      markRead: function (ev) {
+        this.set('data.Viewed$', true);
+        ev.stopImmediatePropagation();
+      },
+      activate: function () {
+        this.data.Activated$++;
+        this.fire('option-selected', this);
+      },
+      _computeClass: function (viewed) {
+        return 'notification horizontal center ' + (viewed ? '' : 'unread');
+      }
+    });
+  </script>
+</dom-module>

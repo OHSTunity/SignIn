@@ -1,0 +1,206 @@
+<link href="tu-notification.html" rel="import">
+<link href="/tu-common/elements/dropdown/tu-dropdown.html" rel="import">
+<link rel="import" href="/tu-common/css/tu-layout.html">
+<dom-module id="tu-notifications-popup">
+  	<link rel="import" type="css" href="/sys/font-awesome/css/font-awesome.css">
+  	<template>
+	  	<style include="tu-layout">
+			:host {
+				position: relative;
+			}
+
+			.unreadCount {
+			  font-weight:normal;
+			  cursor: pointer;
+			}
+
+			.unreadCount.bold {
+			  font-weight:bold;
+			}
+
+
+			#popup {
+			  background-color: white;
+			  font-size: 12px;
+			  font-weight: normal;
+			  border: rgba(0,0,0,0.3) 1px solid;
+			  border-radius: 1px;
+			  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3), 0 3px 8px rgba(0, 0, 0, 0.2);
+			  width:400px;
+			  overflow-y:auto;
+			}
+
+			.popupHeader {
+			  min-height: 25px;
+			  padding: 0px 5px 0px 5px;
+			  border-bottom: 1px solid #aaa;
+			  background-color: #CFD8DC;
+			  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+			 }
+
+			.popupBody {
+			  flex: 1;
+			  overflow-x:hidden;
+			  overflow-y:auto;
+			}
+
+			.popupFooter {
+			  padding: 0px 5px 0px 5px;
+			  min-height: 25px;
+			  border-top: 1px solid #aaa;
+			  background-color: #CFD8DC;
+			  box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.4);
+			 }
+
+			.notification {
+			  border-bottom: 1px solid #aaa;
+			}
+
+			.relatedTarget {
+			  width: 1px;
+			  height: 1px;
+			}
+
+			core-overlay {
+			  left:0px;
+			  top: 0px;
+			}
+
+			#default {
+			  font-style: italic;
+			  font-size: 12px;
+			  color: grey;
+			  font-weight: 500
+			}
+
+			#more {
+			  border-top: #999 1px solid;
+			}
+
+			#contents {
+			  margin-left: 8px;
+			  margin-right: 4px;
+			  white-space: nowrap;
+			}
+
+			.input-div {
+			  display: inline-flex;
+			  align-items: center;
+			  font-size: 16px;
+			  font-weight: 500;
+			  color: #777;
+			  cursor: pointer;
+			}
+
+			.input-div.unreadExist {
+			 color: #ddd;
+			}
+
+			.input-div:hover {
+			  border-radius: 1px;
+			  background-color: rgba(0,0,0,0.2);
+			}
+
+			.input-div i {
+			  font-size: 20px;
+			  padding: 2px 5px 5px 5px;
+			}
+
+			.input-div span {
+			  padding: 2px;
+			}
+
+			[data-counter]:after {
+			  content: attr(data-counter);
+			  position: absolute;
+			  top: -5px;
+			  right: -10px;
+			  padding: 2px 5px 3px 5px;
+			  border: 0.5px solid rgba(255,255,255,0.5);
+			  border-radius: 50px;
+			  background: red;
+			  background-clip: padding-box;
+			  color: white;
+			  text-decoration: none;
+			  font-size: 0.5em;
+			  border: 1px solid rgba(0,0,0,.5);
+			  opacity: .9;
+			  font-family: 'Lato', robotodraft;
+			  font-weight: bold;
+			}
+	  	</style>
+		<tu-dropdown>
+		    <div class="vertical dropdown-trigger" title="{{_computeTitle(data.UnreadCount)}}">
+		      <div id="button" class$="{{_computeClass(data.UnreadCount)}}">
+		        <template is="dom-if" if="{{_computeIf(data.UnreadCount)}}">
+		          <i class="fa fa-bell-o" style="color:#FFF" data-counter$="{{data.UnreadCount}}"></i>
+		        </template>
+		        <template is="dom-if" if="{{_computeIf2(data.UnreadCount)}}">
+		            <i class="fa fa-bell-o" style="color:#FFF"></i>
+		        </template>
+		      </div>
+		    </div>
+
+        	<div id="popup" class="vertical dropdown-content">
+	            <div class="vertical">
+	              <div class="popupHeader horizontal center">
+	                <span style="font-size:14px;font-weight:bold">Notifications</span>
+	                <div style="width:10px"></div>
+	                <span id="unreadCount" class="unreadCount" on-tap="toggleUnread">(<span>{{data.UnreadCount}}</span> unread)</span>
+	                <div class="flex"></div>
+	                <span style="text-decoration:underline;cursor:pointer;color:#00c" on-click="readAll">Mark all as read</span>
+	              </div>
+	              <div class="popupBody">
+	                <template is="dom-repeat" items="{{data.Rows}}" as="noti">
+	                  <div class="notification">
+	                    <tu-notification data="{{noti}}"></tu-notification>
+	                  </div>
+	                </template>
+	              </div>
+	              <div class="popupFooter"> </div>
+	            </div>
+        	</div>
+    	</tu-dropdown>
+	</template>
+  	<script>
+    Polymer({
+      is: 'tu-notifications-popup',
+      properties: {
+		data: {
+  			type: Object,
+  			notify: true
+  		},
+      },
+	  observers: [
+		'showOnlyUnreadChanged(data.ShowOnlyUnread$)'
+	  ],
+      ready: function () {
+      },
+      toggleUnread: function () {
+        this.set('data.ShowOnlyUnread$', !this.data.ShowOnlyUnread$);
+      },
+	  showOnlyUnreadChanged: function() {
+		  if (this.data.ShowOnlyUnread$) {
+            Polymer.dom(this.$.unreadCount).classList.add('bold');
+          } else {
+            Polymer.dom(this.$.unreadCount).classList.remove('bold');
+          }
+	  },
+      readAll: function () {
+        this.set('data.ReadAll$', ++this.data.ReadAll$);
+      },
+      _computeTitle: function (count) {
+        return 'Notifications (' + count + ' unread)';
+      },
+      _computeClass: function (count) {
+        return count > 0 ? 'unreadExist' : '';
+      },
+      _computeIf: function (count) {
+        return count > 0;
+      },
+      _computeIf2: function (count) {
+        return count <= 0;
+      }
+    });
+  	</script>
+</dom-module>

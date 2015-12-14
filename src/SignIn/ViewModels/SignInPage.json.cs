@@ -12,7 +12,7 @@ namespace SignIn {
             }
 
             string message;
-            UserSession session = SignInOut.SignInSystemUser(Username, Password, null, out message);
+            UserSession session = SignInOut.SignInTunityUser(Username, Password, null, out message);
 
             if (session == null) {
                 this.FailedLoginCount++;
@@ -25,7 +25,7 @@ namespace SignIn {
         public void SignOut() {
             if (IsSignedIn)
                 this.RedirectUrl = "current";
-            SignInOut.SignOutSystemUser();
+            SignInOut.SignOutTunityUser();
             this.SetAnonymousState();
         }
 
@@ -36,7 +36,7 @@ namespace SignIn {
                 return;
             }
 
-            UserSession session = SignInOut.SignInSystemUser(token.Name);
+            UserSession session = SignInOut.SignInTunityUser(token.Name);
 
             if (session != null) {
                 this.SetAuthorizedState(session);
@@ -57,7 +57,7 @@ namespace SignIn {
                 }
             }
             else {
-                this.FullName = Session.Token.User.Username;
+                this.FullName = Session.Token.User.FullName;
                 this.ImageUrl = Utils.GetGravatarUrl(string.Empty);
             }
 
@@ -90,7 +90,7 @@ namespace SignIn {
         }
 
         public void RefreshState() {
-            UserSession session = SignInOut.GetCurrentSystemUserSession();
+            UserSession session = SignInOut.GetCurrentTunityUserSession();
 
             if (session != null) {
                 this.SetAuthorizedState(session);

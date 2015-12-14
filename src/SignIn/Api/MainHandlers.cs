@@ -13,7 +13,7 @@ namespace SignIn {
             //Testing JWT
             /*Handle.GET("/signin/jwt/{?}/{?}", (string Username, string Password) => {
                 string message;
-                SystemUserSession session = SignInOut.SignInSystemUser(Username, Password, null, out message);
+                TunityUserSession session = SignInOut.SignInTunityUser(Username, Password, null, out message);
 
                 if (session != null) {
                     string jwt = JWT.JsonWebToken.Encode(new { Username = Username, Issuer = "Polyjuice.SignIn" }, session.Token.User.Password, JWT.JwtHashAlgorithm.HS256);
@@ -30,16 +30,6 @@ namespace SignIn {
             Handle.GET("/signin/signout", HandleSignOut);
             Handle.GET("/signin/signinuser", HandleSignInUser);
             Handle.GET<string>("/signin/signinuser?{?}", HandleSignIn);
-
-            //Test handler
-            /*Handle.GET("/signin/deleteadminuser", () => {
-                Db.Transact(() => {
-                    Db.SlowSQL("DELETE FROM Simplified.Ring3.SystemUserGroupMember WHERE SystemUser.Username = ?", SignInOut.AdminUsername);
-                    Db.SlowSQL("DELETE FROM Simplified.Ring3.SystemUser WHERE Username = ?", SignInOut.AdminUsername);
-                });
-
-                return 200;
-            });*/
 
             UriMapping.Map("/signin/user", UriMapping.MappingUriPrefix + "/user");
         }
@@ -148,11 +138,11 @@ namespace SignIn {
                 string jwt = Handle.IncomingRequest.HeadersDictionary["x-jwt"];
                 Dictionary<string, string> payload = JWT.JsonWebToken.DecodeToObject<Dictionary<string, string>>(jwt, string.Empty, false);
                 string username = payload["Username"];
-                SystemUser user = Db.SQL<SystemUser>("SELECT su FROM Simplified.Ring3.SystemUser su WHERE su.Username = ?", username).First;
+                TunityUser user = Db.SQL<TunityUser>("SELECT su FROM Simplified.Ring3.TunityUser su WHERE su.Username = ?", username).First;
 
                 try {
                     JWT.JsonWebToken.DecodeToObject<Dictionary<string, string>>(jwt, user.Password, true);
-                    page.SetAuthorizedState(SignInOut.SignInSystemUser(user));
+                    page.SetAuthorizedState(SignInOut.SignInTunityUser(user));
                 } catch (JWT.SignatureVerificationException) { 
                 }
             }*/

@@ -1,0 +1,77 @@
+<link href="tu-notification.html" rel="import">
+<link rel="import" href="/tu-common/css/tu-layout.html">
+<dom-module id="tu-notifications">
+  	<link rel="import" type="css" href="/sys/font-awesome/css/font-awesome.css">
+  	<template>
+	  	<style include="tu-layout">
+			.holder {
+				padding: 30px;
+			}
+			tu-table {
+				box-sizing: border-box;
+				max-width: 500px;
+			}
+	  	</style>
+		<div class="holder">
+			<tu-table state="{{data.Table}}" hidefilter notselectable>
+				<tu-table-header class="horizontal center">
+					<span>Notifications</span>
+					<span id="unreadCount" class="unreadCount" on-tap="toggleUnread">(<span>{{data.UnreadCount}}</span> unread)</span>
+					<div  class="flex"></div>
+					<span style="text-decoration:underline;cursor:pointer;color:#00c" on-click="readAll">Mark all as read</span>
+				</tu-table-header>
+				<tu-table-view icon="list" name="table" title="Table view">
+					<tu-table-column name="notification">Notification</tu-table-column>
+				</tu-table-view>
+				<template is="dom-repeat" items="{{data.Rows}}" as="r" id="rows">
+					<tu-table-row>
+						<tu-table-cell column="notification">
+							<tu-notification data="{{r}}"></tu-notification>
+						</tu-table-cell>
+					</tu-table-row>
+				</template>
+			</tu-table>
+		</div>
+	</template>
+  	<script>
+    Polymer({
+      is: 'tu-notifications',
+      properties: {
+		data: {
+  			type: Object,
+  			notify: true
+  		},
+      },
+	  observers: [
+		'showOnlyUnreadChanged(data.ShowOnlyUnread$)'
+	  ],
+      ready: function () {
+      },
+      toggleUnread: function () {
+        this.set('data.ShowOnlyUnread$', !this.data.ShowOnlyUnread$);
+      },
+	  showOnlyUnreadChanged: function() {
+		  if (this.data.ShowOnlyUnread$) {
+            Polymer.dom(this.$.unreadCount).classList.add('bold');
+          } else {
+            Polymer.dom(this.$.unreadCount).classList.remove('bold');
+          }
+	  },
+      readAll: function () {
+        this.set('data.ReadAll$', ++this.data.ReadAll$);
+      },
+      _computeTitle: function (count) {
+        return 'Notifications (' + count + ' unread)';
+      },
+      _computeClass: function (count) {
+        return count > 0 ? 'unreadExist' : '';
+      },
+      _computeIf: function (count) {
+        return count > 0;
+      },
+      _computeIf2: function (count) {
+        return count <= 0;
+      }
+    });
+  	</script>
+</dom-module>

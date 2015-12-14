@@ -15,7 +15,7 @@ namespace SignIn {
              hooks.Register();
              handlers.Register();
 
-             SignInOut.AssureAdminSystemUser();
+             SignInOut.AssureAdminTunityUser();
          }
     }
 }
