@@ -104,6 +104,9 @@
                 margin-right:0px;
                 display:block;
             }
+            .fpassword {
+                color: grey;
+            }
         </style>
         <div id="signin">
             <!-- User signed in -->
@@ -137,6 +140,7 @@
                         <template is="dom-if" if="{{message}}">
                             <div class="errorText">{{message}}</div>
                         </template>
+                         <a class="fpassword" href="/tunity_users/forgot_password">Forgot password</a>
                     </div>
                 </juicy-popover>
             </template>
