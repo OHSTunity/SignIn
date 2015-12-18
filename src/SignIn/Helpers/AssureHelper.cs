@@ -54,6 +54,24 @@ namespace SignIn
             return result;
         }
 
+        public static dynamic AssureTunityUser<T>(String name, Action<T> func) where T : Concepts.Ring8.Tunity.TunityUser, new()
+        {
+            string query = string.Format("SELECT a FROM {0} a WHERE a.Name=?", typeof(T).FullName);
+            T result = Db.SQL<T>(query, name).First;
+            if (result == null)
+            {
+                result = new T() { Name = name };
+                func(result);
+                return result;
+            }
+            else if (String.IsNullOrWhiteSpace(result.Password))
+            {
+                func(result);
+                return result;
+            }
+            return result;
+        }
+
         /// For desciption of BuildOn part see private method below. This one only adds authentication to that one.
         /// </summary>
         /// <returns></returns>

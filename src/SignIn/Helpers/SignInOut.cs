@@ -250,11 +250,12 @@ namespace SignIn {
 
             Db.Transact(() =>
             {
-           
-                AssureHelper.Assure("admin", delegate(TunityUser user)
+
+                AssureHelper.AssureTunityUser("admin", delegate(TunityUser user)
                 {
                     user.Password = PasswordHash.CreateHash("admin");
                     user.SuperUser = true;
+                    user.HeadAdmin = true;
                     user.Hidden = true;
                     if (user.WhoIs == null)
                     {
