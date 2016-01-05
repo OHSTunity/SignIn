@@ -31,17 +31,12 @@
 	        width: auto;
         }
 
-        #popupTarget {
-	        height: 1px;
-	        width: 1px;
-        }
-
         .avatar_background {
   	        margin-right:2px;
-  	        border-radius: 50%;	
+  	        border-radius: 50%;
 	        -webkit-user-select: none;
 	        border: 2px solid rgba(255,255,255,0.7);
-	       
+
 	        color: rgb(68, 68, 68);
 	        display: block;
 	        float: left;
@@ -58,8 +53,8 @@
 	        z-index: 0;
         }
 
-        .avatar_background img {	
-  	        border-radius: 49%;	
+        .avatar_background img {
+  	        border-radius: 49%;
         }
 
         .avatar_background[draggable=true]
@@ -75,15 +70,6 @@
 	        */
         }
 
-        #popup {
-          background-color: white;
-          font-size: 12px;
-          font-weight: 500;
-          border: #999 1px solid;
-          border-radius: 25%;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), 0 3px 8px rgba(0, 0, 0, 0.2);
-        }
-
         .deleteme:hover
         {
 	        color: red;
@@ -93,7 +79,7 @@
         .avatar_initials
         {
 	        color: #fff;
-	
+
 	        display: block;
 	        font-size: {{size/2}}px;
 	        font-weight: bold;
@@ -109,8 +95,8 @@
         }
   </style>
   <template>
-        <div on-click="onClicked" on-tap="onTapped" id="avatardrag" 
-            class="horizontal center center-justified" class$="{{_computeClass(responsible)}}">                
+        <div on-click="onClicked" on-tap="onTapped" id="avatardrag"
+            class="horizontal center center-justified" class$="{{_computeClass(responsible)}}">
                 <template is="dom-if" if="{{_computeIf(type)}}">
                     <img id="theImg" height="{{size}}" src="{{_computeSrc(gravatar, size)}}" title="{{fullname}}">
                 </template>
@@ -305,4 +291,3 @@
       });
   </script>
 </dom-module>
-
