@@ -8,5 +8,6 @@
     "FullName": "",
     "ImageUrl": "",
 	"RedirectUrl": "",
-	"FailedLoginCount":0 
+	"FailedLoginCount":0,
+	"DoSignIn": 0, 
 }

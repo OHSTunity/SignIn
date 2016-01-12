@@ -76,7 +76,10 @@ namespace SignIn {
             container.SignIn.SignIn(Username, Password);
             SetAuthCookie(container.SignIn);
 
-            return container.SignInForm != null ? (Json)container.SignInForm : (Json)container.SignIn;;
+            if (container.SignInForm == null)
+                container.SignInForm = new SignInFormPage();
+
+            return container.SignInForm;
         }
 
         protected Response HandleSignIn(string Query) {
@@ -110,7 +113,10 @@ namespace SignIn {
             container.SignIn.SignOut();
             SetAuthCookie(container.SignIn);
 
-            return container;
+            if (container.SignInForm == null)
+                container.SignInForm = new SignInFormPage();
+
+            return container.SignInForm;
         }
 
         protected Response HandleUser() {

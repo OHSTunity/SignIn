@@ -18,6 +18,7 @@ namespace SignIn {
                 this.FailedLoginCount++;
                 this.SetAnonymousState(true, message);
             } else {
+                this.RedirectUrl = "current";
                 this.SetAuthorizedState(session);
             }
         }
@@ -27,6 +28,17 @@ namespace SignIn {
                 this.RedirectUrl = "current";
             SignInOut.SignOutTunityUser();
             this.SetAnonymousState();
+        }
+
+
+        void Handle(Input.DoSignIn input)
+        {
+           /*  SessionContainer container = this.GetSessionContainer();
+
+            container.SignIn.SignIn(Username, Password);
+            SetAuthCookie(container.SignIn);
+
+            return container.SignInForm != null ? (Json)container.SignInForm : null;*/
         }
 
         public void FromCookie(string SignInAuthToken) {
