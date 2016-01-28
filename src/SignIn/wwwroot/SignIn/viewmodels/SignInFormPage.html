@@ -185,6 +185,9 @@
 
             template.signIn = function () {
                 setTimeout(function () {
+                    Raven.setUserContext({
+                        username: template.model.Username$
+                    });
                     document.querySelector('puppet-client').network.changeState('/signin/signin/' + template.model.Username$ + '/' + template.model.Password$);
                 });
             };

@@ -169,6 +169,10 @@
             },
             signIn: function () {
                 setTimeout(function () {
+                    Raven.setUserContext({
+                        username: this.username
+                    });
+
                     this.puppet.network.changeState("/signin/signin/" + this.username + "/" + this.password);
                 }.bind(this));
             },
