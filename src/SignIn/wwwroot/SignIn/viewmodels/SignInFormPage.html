@@ -2,7 +2,7 @@
 <link rel="import" href="/sys/puppet-redirect/puppet-redirect.html" />
 <template>
     <style>
-          div#login-box
+          div#loginBox
           {
               width: 400px;
               margin: 10% auto;
@@ -136,11 +136,11 @@
 
      </style>
     <template is="dom-bind">
-        <div class$="{{calculateClass(model.Message, model.FailedLoginCount)}}" id="login-box">
+        <div class$="{{calculateClass(model.Message, model.FailedLoginCount)}}" id="loginBox">
             <template is="dom-if" if="{{!model.IsSignedIn}}">
                 <div id="logologin"></div>
                  <template is="dom-if" if="{{model.Message}}">
-                    <p class="alert alert-danger">{{model.Message}}</p>
+                    <p class="alert alert-danger" style="display:none;">{{model.Message}}</p>
                 </template>
 
                 <input id="txtUsername" type="text" value="{{model.Username$::change}}" placeholder="Username" class="form-control" on-keypress="txtUsernameKeypress" />
@@ -185,11 +185,23 @@
             };
 
             template.calculateClass = function (d, count) {
-                return d ? "shake": "noshake";
+                //element.classList.remove("run-animation");
+                var that = this;
+                this.$.loginBox.classList.remove("shake");
+                
+                if(d != "")
+                {
+                  setTimeout(function(){that.$.loginBox.classList.add("shake");}, 10);
+                }
+
+                return d ? "shake"+count: "noshake";
             },
 
             template.signIn = function () {
                 setTimeout(function () {
+                    Raven.setUserContext({
+                        username: template.model.Username$
+                    });
                     document.querySelector('puppet-client').network.changeState('/signin/signin/' + template.model.Username$ + '/' + template.model.Password$);
                 });
             };
