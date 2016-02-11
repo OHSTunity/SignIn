@@ -65,6 +65,7 @@ namespace SignIn {
                 cookie.User = systemUser;
 
                 userSession = AssureTunityUserSession(cookie);
+                systemUser.Lastlogin = DateTime.Now;
             });
 
             return userSession;
@@ -90,6 +91,7 @@ namespace SignIn {
                        cookie.Name = CreateAuthToken(systemUser.Name);
                        cookie.User = systemUser;
 
+                       systemUser.Lastlogin = DateTime.Now;
                        userSession = AssureTunityUserSession(cookie);
                    });
                }
