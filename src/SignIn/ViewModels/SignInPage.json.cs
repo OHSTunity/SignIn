@@ -1,5 +1,6 @@
 using Concepts.Ring8.Tunity;
 using Starcounter;
+using System;
 
 namespace SignIn {
     partial class SignInPage : Page {
@@ -123,12 +124,16 @@ namespace SignIn {
             if (page == null) {
                 return;
             }
-
+            page.Redirecting = false;
             if (this.IsSignedIn)
             {
                 page.Username = string.Empty;
                 page.Password = string.Empty;
                 page.RedirectUrl = page.OriginUrl;
+                if (!String.IsNullOrEmpty(page.RedirectUrl) && !String.Equals(page.RedirectUrl, "current"))
+                {
+                    page.Redirecting = true;
+                }
             }
 
 
