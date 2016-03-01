@@ -161,7 +161,7 @@
                 message: { type: String }
             },
             ready: function () {
-                this.puppet = document.querySelector("puppet-client");
+                this.puppet = puppet.puppet;
             },
             isDomReady: false,
             domReady: function () {
@@ -169,27 +169,29 @@
             },
             signIn: function () {
                 setTimeout(function () {
-                    Raven.setUserContext({
-                        username: this.username
-                    });
-
-                    this.puppet.network.changeState("/signin/signin/" + this.username + "/" + this.password);
+                    setTimeout(function () {
+                        this.puppet.network.changeState("/signin/signin/" + this.username + "/" + this.password);
+                    }.bind(this));
                 }.bind(this));
             },
             signOut: function () {
-                this.puppet.network.changeState("/signin/signout");
+                puppet.network.changeState("/signin/signout");
             },
             focusPopover: function () {
-                this.shadowRoot.getElementById("txtUsername").focus();
+
+               // document.getElementById("txtUsername").focus();
             },
             enterUsername: function (e) {
                 if (e.which == 13) {
-                    this.shadowRoot.getElementById("txtPassword").focus();
+                 //   document.getElementById("txtPassword").focus();
                 }
             },
             enterPassword: function (e) {
                 if (e.which == 13) {
-                    this.signIn();
+                    this.blur();
+                    setTimeout(function () {
+                        this.signIn();
+                    }, 10);
                 }
             }
         });
