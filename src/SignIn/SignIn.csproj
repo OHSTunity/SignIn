@@ -47,18 +47,22 @@
   <ItemGroup>
     <Reference Include="SocietyObjects.Concepts.Ring1, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(StarcounterBin)\EditionLibraries\SocietyObjects.Concepts.Ring1.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SocietyObjects.Concepts.Ring2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(StarcounterBin)\EditionLibraries\SocietyObjects.Concepts.Ring2.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SocietyObjects.Concepts.Ring3, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(StarcounterBin)\EditionLibraries\SocietyObjects.Concepts.Ring3.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SocietyObjects.Concepts.Ring4, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(StarcounterBin)\EditionLibraries\SocietyObjects.Concepts.Ring4.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Starcounter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d2df1e81d0ca3abf">
