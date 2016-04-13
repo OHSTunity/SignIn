@@ -86,7 +86,6 @@
     <Compile Include="Api\MainHandlers.cs" />
     <Compile Include="Helpers\AssureHelper.cs" />
     <Compile Include="Helpers\PasswordHash.cs" />
-    <Compile Include="Helpers\SessionContainer.cs" />
     <Compile Include="Helpers\SignInJwt.cs" />
     <Compile Include="Helpers\SignInOut.cs" />
     <Compile Include="Helpers\TunityDbHelper.cs" />
@@ -131,6 +130,10 @@
     <ProjectReference Include="..\..\..\Tunity-3\Concepts.Ring8.Tunity\Concepts.Ring8.Tunity.csproj">
       <Project>{023591a6-3fe7-46d6-816e-970781bc5ca4}</Project>
       <Name>Concepts.Ring8.Tunity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Tunity-3\Tunity.Common\Tunity.Common.csproj">
+      <Project>{aad408c8-78ed-491e-9184-ad2fb8bf2773}</Project>
+      <Name>Tunity.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

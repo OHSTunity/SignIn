@@ -1,26 +1,37 @@
 using Concepts.Ring8.Tunity;
 using Starcounter;
+using Tunity.Common;
+using Starcounter.Internal;
 using System;
 
 namespace SignIn {
-    partial class SignInPage : Page {
+    partial class SignInPage : Page, IBound<UserSession>
+    {
         public string SignInAuthToken { get; set; }
 
         public void SignIn(string Username, string Password) {
             if (string.IsNullOrEmpty(Username)) {
-                this.SetAnonymousState(false, "Please input your username!");
+                this.SetAnonymousState("Please input your username!");
                 return;
             }
-
+            
             string message;
             UserSession session = SignInOut.SignInTunityUser(Username, Password, null, out message);
 
             if (session == null) {
                 this.FailedLoginCount++;
-                this.SetAnonymousState(true, message);
+                this.SetAnonymousState(message);
             } else {
                 this.RedirectUrl = "current";
                 this.SetAuthorizedState(session);
+            }
+        }
+
+        public TunityUser UserCB
+        {
+            get
+            {
+                return Data != null ? Data.Token.User : null;
             }
         }
 
@@ -31,16 +42,6 @@ namespace SignIn {
             this.SetAnonymousState();
         }
 
-
-        void Handle(Input.DoSignIn input)
-        {
-           /*  SessionContainer container = this.GetSessionContainer();
-
-            container.SignIn.SignIn(Username, Password);
-            SetAuthCookie(container.SignIn);
-
-            return container.SignInForm != null ? (Json)container.SignInForm : null;*/
-        }
 
         public void FromCookie(string SignInAuthToken) {
             TunitySessionCookie token =  TunityDbHelper.FromName<TunitySessionCookie>(SignInAuthToken);
@@ -56,49 +57,36 @@ namespace SignIn {
             }
         }
 
-        public void SetAuthorizedState(UserSession Session) {
-            this.Message = string.Empty;
-
-            if (Session.Token.User.WhoIs != null) {
-                this.FullName = Session.Token.User.WhoIs.FullName;
-
-                if (!string.IsNullOrEmpty(Session.Token.User.WhoIs.ImageURL)) {
-                    this.ImageUrl = Session.Token.User.WhoIs.ImageURL;
-                }
-                else {
-                    this.ImageUrl = Concepts.Ring8.Tunity.Avatar.GetValueString(Session.Token.User.WhoIs);//Utils.GetGravatarUrl(string.Empty);
-                }
+        public void SetAuthorizedState(UserSession session) {
+            if (!Db.Equals(Data, session.Token.User))
+            {
+                Session.ScheduleTask(session.SessionIdString, (Session s, String sessionId) =>
+                {
+                    try
+                    {
+                        this.Message = string.Empty;
+                        Data = session;
+                        SessionStarted = DateTime.Now.ToString();
+                        this.SignInAuthToken = session.Token.Name;
+                        this.IsSignedIn = true;
+                        this.UpdateSignInForm();
+                        s.CalculatePatchAndPushOnWebSocket();
+                    }
+                    catch { }
+                });
             }
-            else {
-                this.FullName = Session.Token.User.FullName;
-                this.ImageUrl = Utils.GetGravatarUrl(string.Empty);
-            }
-
-            this.SignInAuthToken = Session.Token.Name;
-            this.IsSignedIn = true;
-
-            this.UpdateSignInForm();
         }
 
         public void SetAnonymousState() {
-            this.SetAnonymousState(false);
+            this.SetAnonymousState(String.Empty);
         }
 
-        public void SetAnonymousState(bool KeepUsernameAndPassword) {
-            this.SetAnonymousState(KeepUsernameAndPassword, string.Empty);
-        }
 
-        public void SetAnonymousState(bool KeepUsernameAndPassword, string Message) {
-            if (!KeepUsernameAndPassword) {
-                this.Username = string.Empty;
-                this.Password = string.Empty;
-            }
-
-            this.SignInAuthToken = string.Empty;
-            this.FullName = string.Empty;
+        public void SetAnonymousState(string Message) {
+            Data = null;
+            SessionStarted = DateTime.Now.ToString();
             this.Message = Message;
             this.IsSignedIn = false;
-
             this.UpdateSignInForm();
         }
 
@@ -113,33 +101,42 @@ namespace SignIn {
         }
 
         public void UpdateSignInForm() {
-            SessionContainer container = Session.Current.Data as SessionContainer;
 
-            if (container == null) {
-                return;
-            }
-
-            SignInFormPage page = container.SignInForm;
-
+            SignInFormPage page = Tunity.Common.Root.Current.GetApplication<SignInFormPage>();
             if (page == null) {
                 return;
             }
             page.Redirecting = false;
             if (this.IsSignedIn)
             {
-                page.Username = string.Empty;
-                page.Password = string.Empty;
                 page.RedirectUrl = page.OriginUrl;
                 if (!String.IsNullOrEmpty(page.RedirectUrl) && !String.Equals(page.RedirectUrl, "current"))
                 {
                     page.Redirecting = true;
                 }
             }
-
-
             page.IsSignedIn = this.IsSignedIn;
             page.Message = this.Message;
             page.FailedLoginCount = this.FailedLoginCount;
+        }
+
+        [SignInPage_json.UserInfo]
+        partial class UserInfoJson : Json, IBound<TunityUser>
+        {
+            protected override void OnData()
+            {
+                base.OnData();
+                if (Data != null)
+                {
+                    Tools = Self.GET(UriMapping.MappingUriPrefix + "/user-shortcuts/" + Data.DbIDString, () =>
+                    {
+                        var p = new Page();
+                        return p;
+                    });
+                }
+                else
+                    Tools = null;
+            }
         }
     }
 }

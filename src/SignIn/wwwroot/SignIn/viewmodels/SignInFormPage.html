@@ -1,47 +1,47 @@
-﻿
-<link rel="import" href="/sys/puppet-redirect/puppet-redirect.html" />
+﻿<link rel="import" href="/sys/puppet-redirect/puppet-redirect.html" />
 <template>
-    <style>
-          div#loginBox
-          {
-              width: 400px;
-              margin: 10% auto;
-              /* border: 1px solid #222; */
-              border-radius: 5px;
-              /* background-color: #0D75AB; */
-              display: flex;
-              flex-direction: column;
-              /* box-shadow: 5px 5px 5px #999; */
-              align-items: center;
-              padding: 30px;
-              background-color: #4c444b;
-              /*
-              background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHhtbG5zOnhsaW5rPSdodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rJyB3aWR0aD0nMjQ1Ljk5OTk5OTk5OTk5OTk3JyBoZWlnaHQ9JzEyNi4wMDAwMDAwMDAwMDAwMScgdmlld0JveD0nMCAwIDQ5LjE5OTk5OTk5OTk5OTk5NiAyNS4yMDAwMDAwMDAwMDAwMDMnPgoJPGRlZnM+CgkJPHBhdGggaWQ9J3MnIGZpbGw9JyNmZmZmZmYnIGQ9J00wLDBsNCAybC00LDJ6Jy8+Cgk8L2RlZnM+Cgk8ZyBpZD0nYic+Cgk8dXNlIHg9Jy00JyB5PSctMicgdHJhbnNmb3JtPSdtYXRyaXgoLTEgMCAwIDEgMCAwKScgZmlsbC1vcGFjaXR5PScwLjA1MjAwMDAwMDAwMDAwMDAwNScgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9JzAnIHk9JzAuMScgZmlsbC1vcGFjaXR5PScwLjA3OCcgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9Jy00JyB5PScyLjInIHRyYW5zZm9ybT0nbWF0cml4KC0xIDAgMCAxIDAgMCknIGZpbGwtb3BhY2l0eT0nMC4wNzgnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PScwJyB5PSc0LjMnIGZpbGwtb3BhY2l0eT0nMC4wNzgnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PSctNCcgeT0nNi40JyB0cmFuc2Zvcm09J21hdHJpeCgtMSAwIDAgMSAwIDApJyBmaWxsLW9wYWNpdHk9JzAuMTA0MDAwMDAwMDAwMDAwMDEnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PScwJyB5PSc4LjUnIGZpbGwtb3BhY2l0eT0nMC4wNTIwMDAwMDAwMDAwMDAwMDUnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PSctNCcgeT0nMTAuNicgdHJhbnNmb3JtPSdtYXRyaXgoLTEgMCAwIDEgMCAwKScgZmlsbC1vcGFjaXR5PScwLjA1MjAwMDAwMDAwMDAwMDAwNScgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9JzQuMScgeT0nLTInIGZpbGwtb3BhY2l0eT0nMC4wNzgnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PSctOC4xJyB5PScwLjEnIHRyYW5zZm9ybT0nbWF0cml4KC0xIDAgMCAxIDAgMCknIGZpbGwtb3BhY2l0eT0nMC4xMDQwMDAwMDAwMDAwMDAwMScgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9JzQuMScgeT0nMi4yJyBmaWxsLW9wYWNpdHk9JzAuMDc4JyB4bGluazpocmVmPScjcycgLz4KCTx1c2UgeD0nLTguMScgeT0nNC4zJyB0cmFuc2Zvcm09J21hdHJpeCgtMSAwIDAgMSAwIDApJyBmaWxsLW9wYWNpdHk9JzAuMDUyMDAwMDAwMDAwMDAwMDA1JyB4bGluazpocmVmPScjcycgLz4KCTx1c2UgeD0nNC4xJyB5PSc2LjQnIGZpbGwtb3BhY2l0eT0nMC4wMjYwMDAwMDAwMDAwMDAwMDInIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PSctOC4xJyB5PSc4LjUnIHRyYW5zZm9ybT0nbWF0cml4KC0xIDAgMCAxIDAgMCknIGZpbGwtb3BhY2l0eT0nMC4wNTIwMDAwMDAwMDAwMDAwMDUnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PSc0LjEnIHk9JzEwLjYnIGZpbGwtb3BhY2l0eT0nMC4wNzgnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PSctMTIuMicgeT0nLTInIHRyYW5zZm9ybT0nbWF0cml4KC0xIDAgMCAxIDAgMCknIGZpbGwtb3BhY2l0eT0nMC4wNTIwMDAwMDAwMDAwMDAwMDUnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PSc4LjInIHk9JzAuMScgZmlsbC1vcGFjaXR5PScwLjA1MjAwMDAwMDAwMDAwMDAwNScgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9Jy0xMi4yJyB5PScyLjInIHRyYW5zZm9ybT0nbWF0cml4KC0xIDAgMCAxIDAgMCknIGZpbGwtb3BhY2l0eT0nMC4wNzgnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PSc4LjInIHk9JzQuMycgZmlsbC1vcGFjaXR5PScwLjA1MjAwMDAwMDAwMDAwMDAwNScgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9Jy0xMi4yJyB5PSc2LjQnIHRyYW5zZm9ybT0nbWF0cml4KC0xIDAgMCAxIDAgMCknIGZpbGwtb3BhY2l0eT0nMC4wMjYwMDAwMDAwMDAwMDAwMDInIHhsaW5rOmhyZWY9JyNzJyAvPgkKCTx1c2UgeD0nOC4yJyB5PSc4LjUnIGZpbGwtb3BhY2l0eT0nMC4wNTIwMDAwMDAwMDAwMDAwMDUnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PSctMTIuMicgeT0nMTAuNicgdHJhbnNmb3JtPSdtYXRyaXgoLTEgMCAwIDEgMCAwKScgZmlsbC1vcGFjaXR5PScwLjA1MjAwMDAwMDAwMDAwMDAwNScgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9JzEyLjI5OTk5OTk5OTk5OTk5OScgeT0nLTInIGZpbGwtb3BhY2l0eT0nMC4wNTIwMDAwMDAwMDAwMDAwMDUnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PSctMTYuMjk5OTk5OTk5OTk5OTk3JyB5PScwLjEnIHRyYW5zZm9ybT0nbWF0cml4KC0xIDAgMCAxIDAgMCknIGZpbGwtb3BhY2l0eT0nMC4wNTIwMDAwMDAwMDAwMDAwMDUnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PScxMi4yOTk5OTk5OTk5OTk5OTknIHk9JzIuMicgZmlsbC1vcGFjaXR5PScwLjAyNjAwMDAwMDAwMDAwMDAwMicgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9Jy0xNi4yOTk5OTk5OTk5OTk5OTcnIHk9JzQuMycgdHJhbnNmb3JtPSdtYXRyaXgoLTEgMCAwIDEgMCAwKScgZmlsbC1vcGFjaXR5PScwLjA3OCcgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9JzEyLjI5OTk5OTk5OTk5OTk5OScgeT0nNi40JyBmaWxsLW9wYWNpdHk9JzAuMDc4JyB4bGluazpocmVmPScjcycgLz4KCTx1c2UgeD0nLTE2LjI5OTk5OTk5OTk5OTk5NycgeT0nOC41JyB0cmFuc2Zvcm09J21hdHJpeCgtMSAwIDAgMSAwIDApJyBmaWxsLW9wYWNpdHk9JzAuMDI2MDAwMDAwMDAwMDAwMDAyJyB4bGluazpocmVmPScjcycgLz4KCTx1c2UgeD0nMTIuMjk5OTk5OTk5OTk5OTk5JyB5PScxMC42JyBmaWxsLW9wYWNpdHk9JzAuMDUyMDAwMDAwMDAwMDAwMDA1JyB4bGluazpocmVmPScjcycgLz4KCTx1c2UgeD0nLTIwLjQnIHk9Jy0yJyB0cmFuc2Zvcm09J21hdHJpeCgtMSAwIDAgMSAwIDApJyBmaWxsLW9wYWNpdHk9JzAuMDc4JyB4bGluazpocmVmPScjcycgLz4JCgk8dXNlIHg9JzE2LjQnIHk9JzAuMScgZmlsbC1vcGFjaXR5PScwLjEwNDAwMDAwMDAwMDAwMDAxJyB4bGluazpocmVmPScjcycgLz4KCTx1c2UgeD0nLTIwLjQnIHk9JzIuMicgdHJhbnNmb3JtPSdtYXRyaXgoLTEgMCAwIDEgMCAwKScgZmlsbC1vcGFjaXR5PScwLjAyNjAwMDAwMDAwMDAwMDAwMicgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9JzE2LjQnIHk9JzQuMycgZmlsbC1vcGFjaXR5PScwLjA1MjAwMDAwMDAwMDAwMDAwNScgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9Jy0yMC40JyB5PSc2LjQnIHRyYW5zZm9ybT0nbWF0cml4KC0xIDAgMCAxIDAgMCknIGZpbGwtb3BhY2l0eT0nMC4wNzgnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PScxNi40JyB5PSc4LjUnIGZpbGwtb3BhY2l0eT0nMC4wMjYwMDAwMDAwMDAwMDAwMDInIHhsaW5rOmhyZWY9JyNzJyAvPgoJPHVzZSB4PSctMjAuNCcgeT0nMTAuNicgdHJhbnNmb3JtPSdtYXRyaXgoLTEgMCAwIDEgMCAwKScgZmlsbC1vcGFjaXR5PScwLjA3OCcgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9JzIwLjUnIHk9Jy0yJyBmaWxsLW9wYWNpdHk9JzAuMDUyMDAwMDAwMDAwMDAwMDA1JyB4bGluazpocmVmPScjcycgLz4KCTx1c2UgeD0nLTI0LjQ5OTk5OTk5OTk5OTk5NicgeT0nMC4xJyB0cmFuc2Zvcm09J21hdHJpeCgtMSAwIDAgMSAwIDApJyBmaWxsLW9wYWNpdHk9JzAuMDUyMDAwMDAwMDAwMDAwMDA1JyB4bGluazpocmVmPScjcycgLz4JCgk8dXNlIHg9JzIwLjUnIHk9JzIuMicgZmlsbC1vcGFjaXR5PScwLjEwNDAwMDAwMDAwMDAwMDAxJyB4bGluazpocmVmPScjcycgLz4KCTx1c2UgeD0nLTI0LjQ5OTk5OTk5OTk5OTk5NicgeT0nNC4zJyB0cmFuc2Zvcm09J21hdHJpeCgtMSAwIDAgMSAwIDApJyBmaWxsLW9wYWNpdHk9JzAuMDUyMDAwMDAwMDAwMDAwMDA1JyB4bGluazpocmVmPScjcycgLz4JCgk8dXNlIHg9JzIwLjUnIHk9JzYuNCcgZmlsbC1vcGFjaXR5PScwLjA3OCcgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9Jy0yNC40OTk5OTk5OTk5OTk5OTYnIHk9JzguNScgdHJhbnNmb3JtPSdtYXRyaXgoLTEgMCAwIDEgMCAwKScgZmlsbC1vcGFjaXR5PScwLjA1MjAwMDAwMDAwMDAwMDAwNScgeGxpbms6aHJlZj0nI3MnIC8+Cgk8dXNlIHg9JzIwLjUnIHk9JzEwLjYnIGZpbGwtb3BhY2l0eT0nMC4wNTIwMDAwMDAwMDAwMDAwMDUnIHhsaW5rOmhyZWY9JyNzJyAvPgoJPC9nPgoJPHVzZSB4PSctMjQuNDk5OTk5OTk5OTk5OTk2JyB5PScxMi42MDAwMDAwMDAwMDAwMDEnIHRyYW5zZm9ybT0nbWF0cml4KC0xIDAgMCAxIDAgMCknIHhsaW5rOmhyZWY9JyNiJyAvPgoJPHVzZSB4PSctNDkuMDk5OTk5OTk5OTk5OTk0JyB5PSctOC40JyB0cmFuc2Zvcm09J21hdHJpeCgtMSAwIDAgLTEgMCAwKScgeGxpbms6aHJlZj0nI2InIC8+Cgk8dXNlIHg9JzI0LjU5OTk5OTk5OTk5OTk5OCcgeT0nLTE2LjgnIHRyYW5zZm9ybT0nbWF0cml4KDEgMCAwIC0xIDAgMCknIHhsaW5rOmhyZWY9JyNiJyAvPgoJPHVzZSB4PScyNC41OTk5OTk5OTk5OTk5OTgnIHk9Jy0yOS40MDAwMDAwMDAwMDAwMDInIHRyYW5zZm9ybT0nbWF0cml4KDEgMCAwIC0xIDAgMCknIHhsaW5rOmhyZWY9JyNiJyAvPgo8L3N2Zz4K');
-              */
-              border: 1px solid rgba(0,0,0,0.25);
-          }
+  <style>
+    #loginBackground {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      bottom: 0px;
+      right: 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #loginBox {
+      width: 400px;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+      background-color: #4c444b;
+      border: 1px solid rgba(0,0,0,0.25);
+    }
 
 
-        #logologin
-        {
-            width:260px;
-            height:56px;
-            background: url(/SignIn/images/piller_logo_fff.png);
-            background-size: cover;
-            margin-bottom:30px;
-            transition: background 300ms ease-in 0s;
-        }
-        #logologin:hover
-        {
+    #logologin {
+      width:260px;
+      height:56px;
+      background: url(/SignIn/images/piller_logo_fff.png);
+      background-size: cover;
+      margin-bottom:30px;
+      transition: background 300ms ease-in 0s;
+    }
 
-            background: url(/SignIn/images/piller_logo_fff_c.png);
-            background-size: cover;
-        }
+    #logologin:hover {
+      background: url(/SignIn/images/piller_logo_fff_c.png);
+      background-size: cover;
+    }
 
 
-        .with-margin {
-            padding: 10px;
-        }
+    .with-margin {
+      padding: 10px;
+    }
 
         #remember_me {
             margin-right: 5px;
@@ -136,6 +136,7 @@
 
      </style>
     <template is="dom-bind">
+      <div id="loginBackground">
         <div class$="{{calculateClass(model.Message, model.FailedLoginCount)}}" id="loginBox">
             <template is="dom-if" if="{{!model.IsSignedIn}}">
                 <div id="logologin"></div>
@@ -143,8 +144,8 @@
                     <p class="alert alert-danger" style="display:none;">{{model.Message}}</p>
                 </template>
 
-                <input id="txtUsername" type="text" value="{{model.Username$::change}}" placeholder="Username" class="form-control" on-keypress="txtUsernameKeypress" />
-                <input id="txtPassword" type="password" value="{{model.Password$::change}}" placeholder="Password" class="form-control" on-keypress="txtPasswordKeypress" />
+                <input id="txtUsername" type="text" value="{{_username::change}}" placeholder="Username" class="form-control" on-keypress="txtUsernameKeypress" />
+                <input id="txtPassword" type="password" value="{{_password::change}}" placeholder="Password" class="form-control" on-keypress="txtPasswordKeypress" />
 <!--
                 <tu-input class="with-margin" autofocus="autofocus" type="text" name="username" width="100%" value="{{UserName$}}" icon="none" placeholder="Login name"></tu-input>
                 <tu-input class="with-margin" type="password" name="pwd" value="{{Password$}}" icon="none" placeholder="Password"></tu-input>
@@ -166,7 +167,7 @@
             </template>
         </div>
         <link is="puppet-redirect" history url$="{{model.RedirectUrl}}" />
-        <dom-bind-notifier observed-object="{{model}}" path="model" deep></dom-bind-notifier>
+      </div>
     </template>
     <script>
         (function () {
@@ -188,7 +189,7 @@
                 //element.classList.remove("run-animation");
                 var that = this;
                 this.$.loginBox.classList.remove("shake");
-                
+
                 if(d != "")
                 {
                   setTimeout(function(){that.$.loginBox.classList.add("shake");}, 10);
@@ -199,8 +200,7 @@
 
             template.signIn = function () {
                 setTimeout(function () {
-                    
-                    document.querySelector('puppet-client').network.changeState('/signin/signin/' + template.model.Username$ + '/' + template.model.Password$);
+                    document.querySelector('puppet-client').network.changeState('/signin/signin/' + template._username + '/' + template._password);
                 });
             };
 

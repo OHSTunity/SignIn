@@ -1,5 +1,4 @@
 ﻿<link rel="import" href="/SignIn/elements/so-signin/so-signin.html" />
-<link rel="import" href="/SignIn/elements/tu-avatar/tu-signin-avatar.html" />
 <link rel="import" href="/sys/puppet-redirect/puppet-redirect.html" />
 <style>
     .pj-launcher-user {
@@ -9,8 +8,7 @@
 </style>
 <template>
     <template is="dom-bind">
-        <so-signin is-signed-in="{{model.IsSignedIn}}" full-name="{{model.FullName}}" image-url="{{model.ImageUrl}}" username="{{model.Username$}}" password="{{model.Password$}}" message="{{model.Message}}"></so-signin>
+        <so-signin data="{{model}}"></so-signin>
         <link is="puppet-redirect" history url$="{{model.RedirectUrl}}" />
-        <dom-bind-notifier observed-object="{{model}}" path="model" deep></dom-bind-notifier>
     </template>
 </template>

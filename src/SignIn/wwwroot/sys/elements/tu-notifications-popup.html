@@ -1,8 +1,7 @@
 <link href="tu-notification.html" rel="import">
-<link href="/tu-common/elements/dropdown/tu-dropdown.html" rel="import">
 <link rel="import" href="/tu-common/css/tu-layout.html">
 <dom-module id="tu-notifications-popup">
-  	
+
   	<template>
 	  	<style include="tu-layout">
 			:host {
@@ -129,8 +128,8 @@
 			  font-weight: bold;
 			}
 	  	</style>
-		<tu-dropdown>
-		    <div class="vertical dropdown-trigger" title="{{_computeTitle(data.UnreadCount)}}">
+		<tu-popup>
+		    <div class="vertical popup-trigger" title="{{_computeTitle(data.UnreadCount)}}">
 		      <div id="button" class$="{{_computeClass(data.UnreadCount)}}">
 		        <template is="dom-if" if="{{_computeIf(data.UnreadCount)}}">
 		          <i class="fa fa-bell-o" style="color:#FFF" data-counter$="{{data.UnreadCount}}"></i>
@@ -141,7 +140,7 @@
 		      </div>
 		    </div>
 
-        	<div id="popup" class="vertical dropdown-content">
+        	<div id="popup" class="vertical popup-content">
 	            <div class="vertical">
 	              <div class="popupHeader horizontal center">
 	                <span style="font-size:14px;font-weight:bold">Notifications</span>
@@ -160,7 +159,7 @@
 	              <div class="popupFooter"> </div>
 	            </div>
         	</div>
-    	</tu-dropdown>
+    	</tu-popup>
 	</template>
   	<script>
     Polymer({

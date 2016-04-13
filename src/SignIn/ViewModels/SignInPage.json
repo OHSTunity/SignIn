@@ -1,13 +1,20 @@
 {
     "Uri": "",
     "Html": "/SignIn/viewmodels/SignInPage.html",
-    "Username$": "",
-    "Password$": "",
-    "IsSignedIn": false,
-    "Message": "",
-    "FullName": "",
-    "ImageUrl": "",
-	"RedirectUrl": "",
+
 	"FailedLoginCount":0,
-	"DoSignIn": 0, 
+    "Message": "",
+
+	"IsSignedIn": false,
+	"RedirectUrl": "",
+
+	SessionStarted:"",
+
+	UserInfo: {
+		FullName: "",
+		AvatarString: "",
+		Lastlogin:"",
+		Tools:{},
+	},
+	$UserInfo: { bind: "UserCB" },
 }

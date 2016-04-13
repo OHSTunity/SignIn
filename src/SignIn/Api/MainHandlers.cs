@@ -4,24 +4,18 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using Starcounter;
+using Tunity.Common;
 
-namespace SignIn {
-    internal class MainHandlers {
+namespace SignIn
+{
+    internal class MainHandlers
+    {
         protected string AuthCookieName = "soauthtoken";
 
-        public void Register() {
-            //Testing JWT
-            /*Handle.GET("/signin/jwt/{?}/{?}", (string Username, string Password) => {
-                string message;
-                TunityUserSession session = SignInOut.SignInTunityUser(Username, Password, null, out message);
+        public void Register()
+        {
 
-                if (session != null) {
-                    string jwt = JWT.JsonWebToken.Encode(new { Username = Username, Issuer = "Polyjuice.SignIn" }, session.Token.User.Password, JWT.JwtHashAlgorithm.HS256);
-                    Handle.AddOutgoingHeader("x-jwt", jwt);
-                }
-
-                return 200;
-            });*/
+            Tunity.Common.MainCommon.Register("signin");
 
             Handle.GET("/signin/user", HandleUser);
             Handle.GET<string, string>("/signin/signin/{?}/{?}", HandleSignIn);
@@ -34,126 +28,127 @@ namespace SignIn {
             UriMapping.Map("/signin/user", UriMapping.MappingUriPrefix + "/user");
         }
 
-        protected void SetAuthCookie(SignInPage Page) {
+        protected void SetAuthCookie(SignInPage Page)
+        {
             Cookie cookie = new Cookie(AuthCookieName, Page.SignInAuthToken);
-
             Handle.AddOutgoingCookie(cookie.Name, cookie.GetFullValueString());
         }
 
-        protected Response GetNoSessionResult() {
-            return new Response() {
+        protected Response GetNoSessionResult()
+        {
+            return new Response()
+            {
                 StatusCode = (ushort)System.Net.HttpStatusCode.InternalServerError,
                 Body = "No Current Session"
             };
         }
 
-        protected SessionContainer GetSessionContainer() {
-            SessionContainer container = null;
 
-            if (Session.Current != null) {
-                container = Session.Current.Data as SessionContainer;
-
-                if (container == null && Session.Current.Data != null) {
-                    throw new Exception("Invalid object in session!");
-                }
-            }
-
-            if (container == null) {
-                container = new SessionContainer();
-                Session.Current.Data = container;
-            }
-
-            return container;
-        }
-
-        protected Response HandleSignIn() {
+        protected Response HandleSignIn()
+        {
             return HandleSignIn(null, null);
         }
 
-        protected Response HandleSignIn(string Username, string Password) {
-            SessionContainer container = this.GetSessionContainer();
+        protected Response HandleSignIn(string Username, string Password)
+        {
+            SignInPage page = Self.GET<Master>("/signin/user").PersistantApp as SignInPage;
+            page.SignIn(Username, Password);
+            SetAuthCookie(page);
 
-            container.SignIn.SignIn(Username, Password);
-            SetAuthCookie(container.SignIn);
-
-            if (container.SignInForm == null)
-                container.SignInForm = new SignInFormPage();
-
-            return container.SignInForm;
+            Root root = Root.Current;
+            var sifp = root.GetApplication<SignInFormPage>();
+            if (sifp == null)
+            {
+                Db.Scope(() =>
+                    {
+                        sifp = new SignInFormPage();
+                        root.SetApplication(sifp);
+                    });
+            }
+            return sifp;
         }
 
-        protected Response HandleSignIn(string Query) {
-            SignInPage master = Self.GET<Page>("/signin/user") as SignInPage;
-            SignInFormPage page = new SignInFormPage();
+        protected Response HandleSignIn(string Query)
+        {
+            SignInPage page = Self.GET<Master>("/signin/user").PersistantApp as SignInPage;
+            var sifp = Root.Current.GetApplication<SignInFormPage>();
+            if (sifp == null)
+            {
+                Db.Scope(() =>
+                    {
+                        sifp = new SignInFormPage();
+                        Root.Current.SetApplication(sifp);
+                    });
+            }
             string decodedQuery = HttpUtility.UrlDecode(Query);
             NameValueCollection queryCollection = HttpUtility.ParseQueryString(decodedQuery);
-            SessionContainer container = this.GetSessionContainer();
 
-            page.OriginUrl = queryCollection.Get("originurl");
-            container.SignInForm = page;
-            master.UpdateSignInForm();
+            page.RedirectUrl = queryCollection.Get("originurl");
+            page.UpdateSignInForm();
 
-            return page;
+            return sifp;
         }
 
-        protected Response HandleSignInUser() {
-            SignInPage master = Self.GET<Page>("/signin/user") as SignInPage;
-            SignInFormPage page = new SignInFormPage();
-            SessionContainer container = this.GetSessionContainer();
+        protected Response HandleSignInUser()
+        {
+            SignInPage page = Self.GET<Master>("/signin/user").PersistantApp as SignInPage;
+            var sifp = Root.Current.GetApplication<SignInFormPage>();
+            if (sifp == null)
+            {
+                Db.Scope(() =>
+                {
+                    sifp = new SignInFormPage();
+                    Root.Current.SetApplication(sifp);
+                });
+            }
+            page.UpdateSignInForm();
 
-            container.SignInForm = page;
-            master.UpdateSignInForm();
-
-            return page;
+            return sifp;
         }
 
-        protected Response HandleSignOut() {
-            SessionContainer container = this.GetSessionContainer();
+        protected Response HandleSignOut()
+        {
+            SignInPage page = Self.GET<Master>("/signin/user").PersistantApp as SignInPage;
 
-            container.SignIn.SignOut();
-            SetAuthCookie(container.SignIn);
+            page.SignOut();
+            SetAuthCookie(page);
 
-            if (container.SignInForm == null)
-                container.SignInForm = new SignInFormPage();
-
-            return container.SignInForm;
-        }
-
-        protected Response HandleUser() {
-            SessionContainer container = this.GetSessionContainer();
-
-            if (container.SignIn != null) {
-                return container.SignIn;
+            var sifp = Root.Current.GetApplication<SignInFormPage>();
+            if (sifp == null)
+            {
+                Db.Scope(() =>
+                {
+                    sifp = new SignInFormPage();
+                    Root.Current.SetApplication(sifp);
+                });
             }
 
-            List<Cookie> cookies = Handle.IncomingRequest.Cookies.Select(x => new Cookie(x)).ToList();
-            Cookie cookie = cookies.FirstOrDefault(x => x.Name == AuthCookieName);
-            SignInPage page = new SignInPage();
+            return sifp;
+        }
 
-            if (cookie != null) {
-                page.FromCookie(cookie.Value);
-            } else {
-                page.SetAnonymousState();
+        protected Response HandleUser()
+        {
+            Root m = (Root)Self.GET("/signin/root");
+            if (!((m.Utils as Master).PersistantApp is SignInPage))
+            {
+                Db.Scope(() =>
+                {
+                    var page = new SignInPage();
+                    (m.Utils as Master).PersistantApp = page;
+                    List<Cookie> cookies = Handle.IncomingRequest.Cookies.Select(x => new Cookie(x)).ToList();
+                    Cookie cookie = cookies.FirstOrDefault(x => x.Name == AuthCookieName);
+                    if (cookie != null)
+                    {
+                        page.FromCookie(cookie.Value);
+                    }
+                    else
+                    {
+                        page.SetAnonymousState();
+                    }
+                });
             }
+            return m.Utils;
 
-            container.SignIn = page;
-
-            //Testing JWT
-            /*if (Handle.IncomingRequest.HeadersDictionary.ContainsKey("x-jwt")) {
-                System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                string jwt = Handle.IncomingRequest.HeadersDictionary["x-jwt"];
-                Dictionary<string, string> payload = JWT.JsonWebToken.DecodeToObject<Dictionary<string, string>>(jwt, string.Empty, false);
-                string username = payload["Username"];
-                TunityUser user = Db.SQL<TunityUser>("SELECT su FROM Simplified.Ring3.TunityUser su WHERE su.Username = ?", username).First;
-
-                try {
-                    JWT.JsonWebToken.DecodeToObject<Dictionary<string, string>>(jwt, user.Password, true);
-                    page.SetAuthorizedState(SignInOut.SignInTunityUser(user));
-                } catch (JWT.SignatureVerificationException) { 
-                }
-            }*/
-
-            return page;
         }
     }
 }

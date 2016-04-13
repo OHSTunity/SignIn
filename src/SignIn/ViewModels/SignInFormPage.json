@@ -1,8 +1,7 @@
 {
     "Uri": "",
     "Html": "/SignIn/viewmodels/SignInFormPage.html",
-    "Username$": "",
-    "Password$": "",
+
 	"FailedLoginCount":0,
     "IsSignedIn": false,
     "Message": "",
