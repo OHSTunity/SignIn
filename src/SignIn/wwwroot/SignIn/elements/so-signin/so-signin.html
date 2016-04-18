@@ -80,6 +80,17 @@
       div.popup-trigger {
         padding: 5px;
       }
+
+      #popup-header {
+        width: 100%;
+        height: 30px;
+        background-color: var(--bar-background-color,  #4b5c68);
+        color: var(--bar-color, #fff);
+      }
+
+      #popup-header-name {
+        padding-left: 52px;
+      }
     </style>
     <tu-popup id="popup">
 
@@ -90,12 +101,19 @@
           <span>{{data.UserInfo.FullName}}</span>
         </div>
         <div class="popup-content loggedin">
+          <div id="popup-header" class="horizontal center">
+            <span id="popup-header-name">{{data.UserInfo.FullName}}</span>
+            <span class="flex"></span>
+            <template is="dom-repeat" items="{{tools}}">
+              <tu-icon-button title="{{item.Label}}" icon="{{item.Icon}}" on-tap="tapped" tap="{{item.Morph$}}"></tu-icon-button>
+            </template>
+          </div>
           <tu-avatar value="{{data.UserInfo.AvatarString}}" size="50"></tu-avatar>
           <div class="userinfo">
             <span>Last login: <span>{{data.UserInfo.Lastlogin}}</span></span>
             <span>This session: <span>{{sessionTime}}</span></span>
           </div>
-          <tu-button primary on-click="signOut" label="Sign out">Sign out</tu-button>
+          <tu-button primary icon="sign-out" on-click="signOut">Sign out</tu-button>
         </div>
       </template>
 
@@ -137,16 +155,41 @@
                 type: String,
                 value: "",
               },
+              tools: {
+                type: Array,
+                value: new function() {
+                  return [];
+                }
+              }
             },
             observers: [
-              'sessionStartedChanged(data.SessionStarted)'
+              'sessionStartedChanged(data.SessionStarted)',
+              'toolsChanged(data.Tools.*)'
             ],
             ready: function () {
               this.puppet = puppet.puppet;
               this.debounce("sessionTimeCounter", this.updateSessionTime.bind(this), 1000);
             },
+            toolsChanged: function() {
+              var tools = [];
+              var toolData = this.data && this.data.UserInfo? this.data.UserInfo.Tools: null;
+              if (toolData) {
+                for (var name in toolData) {
+                  if (toolData.hasOwnProperty(name) &&
+                    toolData[name].hasOwnProperty("Items")) {
+                    for (var i = 0; i < toolData[name].Items.length; i++) {
+                      tools.push(toolData[name].Items[i]);
+                    }
+                  }
+                }
+              }
+              this.set('tools', tools);
+            },
             sessionStartedChanged: function(value) {
               this.stime = moment(value);
+            },
+            tapped: function() {
+              this.$.popup.close();
             },
             pad: function(num, size) {
               var s = num+"";
