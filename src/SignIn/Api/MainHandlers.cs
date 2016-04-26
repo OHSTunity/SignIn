@@ -15,7 +15,7 @@ namespace SignIn
         public void Register()
         {
 
-            Tunity.Common.MainCommon.Register("signin");
+            Tunity.Common.MainCommon.Register("signin", false);
 
             Handle.GET("/signin/user", HandleUser);
             Handle.GET<string, string>("/signin/signin/{?}/{?}", HandleSignIn);
@@ -51,18 +51,17 @@ namespace SignIn
 
         protected Response HandleSignIn(string Username, string Password)
         {
-            SignInPage page = Self.GET<Master>("/signin/user").PersistantApp as SignInPage;
+            SignInPage page = Self.GET<Master.MasterUtils>("/signin/user").PersistantApp as SignInPage;
             page.SignIn(Username, Password);
             SetAuthCookie(page);
 
-            Root root = Root.Current;
-            var sifp = root.GetApplication<SignInFormPage>();
+            var sifp = Master.Current.GetApplication<SignInFormPage>();
             if (sifp == null)
             {
                 Db.Scope(() =>
                     {
                         sifp = new SignInFormPage();
-                        root.SetApplication(sifp);
+                        Master.Current.SetApplication(sifp);
                     });
             }
             return sifp;
@@ -70,14 +69,15 @@ namespace SignIn
 
         protected Response HandleSignIn(string Query)
         {
-            SignInPage page = Self.GET<Master>("/signin/user").PersistantApp as SignInPage;
-            var sifp = Root.Current.GetApplication<SignInFormPage>();
+            SignInPage page = Self.GET<Master.MasterUtils>("/signin/user").PersistantApp as SignInPage;
+            
+            var sifp = Master.Current.GetApplication<SignInFormPage>();
             if (sifp == null)
             {
                 Db.Scope(() =>
                     {
                         sifp = new SignInFormPage();
-                        Root.Current.SetApplication(sifp);
+                        Master.Current.SetApplication(sifp);
                     });
             }
             string decodedQuery = HttpUtility.UrlDecode(Query);
@@ -91,14 +91,15 @@ namespace SignIn
 
         protected Response HandleSignInUser()
         {
-            SignInPage page = Self.GET<Master>("/signin/user").PersistantApp as SignInPage;
-            var sifp = Root.Current.GetApplication<SignInFormPage>();
+            SignInPage page = Self.GET<Master.MasterUtils>("/signin/user").PersistantApp as SignInPage;
+            
+            var sifp = Master.Current.GetApplication<SignInFormPage>();
             if (sifp == null)
             {
                 Db.Scope(() =>
                 {
                     sifp = new SignInFormPage();
-                    Root.Current.SetApplication(sifp);
+                    Master.Current.SetApplication(sifp);
                 });
             }
             page.UpdateSignInForm();
@@ -108,33 +109,33 @@ namespace SignIn
 
         protected Response HandleSignOut()
         {
-            SignInPage page = Self.GET<Master>("/signin/user").PersistantApp as SignInPage;
+            SignInPage page = Self.GET<Master.MasterUtils>("/signin/user").PersistantApp as SignInPage;
 
             page.SignOut();
             SetAuthCookie(page);
 
-            var sifp = Root.Current.GetApplication<SignInFormPage>();
+            var sifp = Master.Current.GetApplication<SignInFormPage>();
             if (sifp == null)
             {
                 Db.Scope(() =>
                 {
                     sifp = new SignInFormPage();
-                    Root.Current.SetApplication(sifp);
+                    Master.Current.SetApplication(sifp);
                 });
             }
-
+            Master.SendCommand(TunityCommand.REREQUEST_URL);
             return sifp;
         }
 
         protected Response HandleUser()
         {
-            Root m = (Root)Self.GET("/signin/root");
-            if (!((m.Utils as Master).PersistantApp is SignInPage))
+            Master m = (Master)Self.GET("/signin/master");
+            if (!(m.Utils.PersistantApp is SignInPage))
             {
                 Db.Scope(() =>
                 {
                     var page = new SignInPage();
-                    (m.Utils as Master).PersistantApp = page;
+                    m.Utils.PersistantApp = page;
                     List<Cookie> cookies = Handle.IncomingRequest.Cookies.Select(x => new Cookie(x)).ToList();
                     Cookie cookie = cookies.FirstOrDefault(x => x.Name == AuthCookieName);
                     if (cookie != null)
@@ -148,7 +149,6 @@ namespace SignIn
                 });
             }
             return m.Utils;
-
         }
     }
 }

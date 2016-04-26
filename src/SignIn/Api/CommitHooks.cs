@@ -30,7 +30,7 @@ namespace SignIn {
         }
 
         protected SignInPage GetSignInPage() {
-            return Master.Current != null ?  Master.Current.PersistantApp as SignInPage: null;
+            return Master.Current != null ?  Master.Current.Utils.PersistantApp as SignInPage: null;
         }
     }
 }

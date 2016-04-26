@@ -102,7 +102,7 @@ namespace SignIn {
 
         public void UpdateSignInForm() {
 
-            SignInFormPage page = Tunity.Common.Root.Current.GetApplication<SignInFormPage>();
+            SignInFormPage page = Master.Current.GetApplication<SignInFormPage>();
             if (page == null) {
                 return;
             }
