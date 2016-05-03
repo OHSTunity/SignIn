@@ -1,11 +1,10 @@
 {
-    "Uri": "",
-    "Html": "/SignIn/viewmodels/SignInFormPage.html",
-
-	"FailedLoginCount":0,
-    "IsSignedIn": false,
-    "Message": "",
-    "OriginUrl": "",
-    "RedirectUrl": "",
-	"Redirecting":false,	
+  "Uri": "",
+  "Html": "/SignIn/viewmodels/SignInFormPage.html",
+  "Username$": "",
+  "RememberMe$": true,
+  "IsSignedIn": false,
+  "Message": "",
+  "Submit": 0,
+  "SignInClick$": 0
 }

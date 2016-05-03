@@ -4,9 +4,32 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Starcounter;
+using Tunity.Common;
 
 namespace SignIn {
-    public class Utils {
+    public static class Utils {
+
+        public static void RefreshSignInState()
+        {
+            Master m = Master.Current;
+            MasterPage page = m.GetApplication<MasterPage>();
+            if (page != null)
+                page.RefreshSignInState();
+            if (m.Utils.PersistantApp is SignInPage)
+                (m.Utils.PersistantApp as SignInPage).RefreshSignInState();
+        }
+
+        public static void SetMessage(String message)
+        {
+            Master m = Master.Current;
+            SignInFormPage page = m.GetApplication<SignInFormPage>();
+            if (page != null)
+                page.Message = message;
+            if (m.Utils.PersistantApp is SignInPage)
+                (m.Utils.PersistantApp as SignInPage).Message = message;
+            Master.SendUserError(message);
+        }
 
         /// <summary>
         /// Check if Email has the correct syntax
@@ -39,5 +62,21 @@ namespace SignIn {
                 return "http://www.gravatar.com/avatar/" + sBuilder.ToString() + "?s=32&d=mm";
             }
         }
+
+        public static string RandomString(int Size) {
+            string input = "abcdefghijklmnopqrstuvwxyz0123456789";
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+
+            for (int i = 0; i < Size; i++) {
+                ch = input[random.Next(0, input.Length)];
+                builder.Append(ch);
+            }
+
+            return builder.ToString();
+        }
+
+       
     }
 }

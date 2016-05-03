@@ -1,10 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0A4901A9-025E-43C5-88F5-1EF017CBD71D}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		build.bat = build.bat
 		make.bat = make.bat
 		package.bat = package.bat

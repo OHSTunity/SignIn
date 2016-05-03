@@ -9,7 +9,7 @@ using Tunity.Common;
 namespace SignIn {
     internal class CommitHooks {
         public void Register() {
-           /* Hook<UserSession>.CommitInsert += (s, a) => {
+            Hook<UserSession>.CommitInsert += (s, a) => {
                 this.RefreshSignInState();
             };
 
@@ -19,18 +19,11 @@ namespace SignIn {
 
             Hook<UserSession>.CommitUpdate += (s, a) => {
                 this.RefreshSignInState();
-            };*/
+            };
         }
 
         protected void RefreshSignInState() {
-            SignInPage page = GetSignInPage();
-            if (page != null) {
-                page.RefreshState();
-            }
-        }
-
-        protected SignInPage GetSignInPage() {
-            return Master.Current != null ?  Master.Current.Utils.PersistantApp as SignInPage: null;
+            Utils.RefreshSignInState();
         }
     }
 }

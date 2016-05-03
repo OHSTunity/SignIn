@@ -1,3 +1,4 @@
+﻿<link rel="import" href="/SignIn/elements/signin-element.html" />
 <link rel="import" href="/tu-common/css/tu-layout.html">
 <dom-module id="so-signin">
   <template>
@@ -121,7 +122,7 @@
       <template is="dom-if" if="{{!data.IsSignedIn}}">
           <tu-icon-button class="popup-trigger" size="20" icon="user"></tu-icon-button>
           <div class="popup-content notloggedin">
-            <input type="text" placeholder="Username / email" value="{{username::change}}" id="txtUsername" on-keypress="enterUsername" />
+            <input type="text" placeholder="Username / email" value="{{data.Username$::change}}" id="txtUsername" on-keypress="enterUsername" />
             <input type="password" placeholder="Password" value="{{password::change}}" id="txtPassword" on-keypress="enterPassword" />
             <tu-button primary on-click="signIn" label="Sign in"></tu-button>
             <template is="dom-if" if="{{data.Message}}">
@@ -130,8 +131,8 @@
             <a class="fpassword" href="/tunity_users/forgot_password">Forgot password</a>
           </div>
       </template>
-
     </tu-popup>
+    <signin-element username="{{data.Username$}}" password="{{password}}" remember-me="{{data.RememberMe$}}" submit="{{data.Submit}}"></signin-element>
   </template>
 
   <script>
@@ -142,10 +143,6 @@
                 type: Object,
                 value: {},
                 notify: true,
-              },
-              username: {
-                type: String,
-                value: "",
               },
               password: {
                 type: String,
@@ -216,11 +213,11 @@
             signIn: function () {
               this.$.popup.close();
               setTimeout(function () {
-                this.puppet.network.changeState("/signin/signin/" + this.username + "/" + this.password);
+                this.set("data.SignInClick$", this.data.SignInClick$ + 1);
               }.bind(this));
             },
             signOut: function () {
-                puppet.network.changeState("/signin/signout");
+              puppet.network.changeState("/signin/partial/signout");
             },
             focusPopover: function () {
               var el = this.querySelector("txtUsername");
@@ -235,9 +232,7 @@
             enterPassword: function (e) {
                 if (e.which == 13) {
                     this.blur();
-                    setTimeout(function () {
-                        this.signIn();
-                    }, 10);
+                    this.signIn();
                 }
             }
         });

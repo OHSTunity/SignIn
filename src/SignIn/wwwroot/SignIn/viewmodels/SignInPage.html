@@ -1,14 +1,36 @@
 ﻿<link rel="import" href="/SignIn/elements/so-signin/so-signin.html" />
 <link rel="import" href="/sys/puppet-redirect/puppet-redirect.html" />
-<style>
-    .pj-launcher-user {
-        -webkit-flex: 1 0 auto;
-        flex: 1 0 auto;
-    }
-</style>
 <template>
     <template is="dom-bind">
         <so-signin data="{{model}}"></so-signin>
         <link is="puppet-redirect" history url$="{{model.RedirectUrl}}" />
     </template>
+    <script>
+        (function () {
+            var script = document._currentScript || document.currentScript;
+            var template = script.previousElementSibling;
+
+            template.local = {
+                password: ""
+            };
+
+            template.txtKeypress = function (e) {
+                if (e.which != 13) {
+                    return;
+                }
+
+                setTimeout(function () {
+                    template.set("model.SignInClick$", template.model.SignInClick$ + 1);
+                });
+            };
+
+            template.focusPopover = function (e) {
+                e.currentTarget.parentNode.querySelector("input").focus();
+            };
+
+            template.signOut = function (e) {
+                document.querySelector("puppet-client").network.changeState("/signin/partial/signout");
+            };
+        })();
+    </script>
 </template>

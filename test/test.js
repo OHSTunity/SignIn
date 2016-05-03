@@ -33,7 +33,7 @@ describe('SignIn app', function () {
             }
 
             assert(workspace, "There should be UserAdmin workspace");
-            assert(workspace.UserAdmin.RedirectUrl, "RedirectUrl should be set because of unauthorised request");
+            assert(workspace.UserAdmin.RedirectUrl$, "RedirectUrl$ should be set because of unauthorised request");
         })
         .expect(200, done);
     });
@@ -47,7 +47,7 @@ describe('SignIn app', function () {
             var data = JSON.parse(res.text.replace(/,,/gi, ","));
             var user = data.user.SignIn;
             var cookies = res.header['set-cookie'];
-            
+
             for (var i = 0; i < cookies.length; i++) {
                 if (/^Location/gi.test(cookies[i])) {
                     location = cookies[i].replace(/^Location=/gi, '').replace(/;.*$/gi, '').replace(/[%]2F/gi, "/");
@@ -80,7 +80,7 @@ describe('SignIn app', function () {
             }
 
             assert(workspace, "There should be UserAdmin workspace");
-            assert(!workspace.UserAdmin.RedirectUrl, "RedirectUrl should be blank for authorised request");
+            assert(!workspace.UserAdmin.RedirectUrl$, "RedirectUrl$ should be blank for authorised request");
             assert(workspace.UserAdmin.Items, "There should be some items");
         })
         .expect(200, done);

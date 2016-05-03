@@ -92,6 +92,24 @@
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\AccessDeniedPage.json.cs">
+      <DependentUpon>AccessDeniedPage.json</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\AlreadyInPage.json.cs">
+      <DependentUpon>AlreadyInPage.json</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\MasterPage.json.cs">
+      <DependentUpon>MasterPage.json</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\ProfileFormPage.json.cs">
+      <DependentUpon>ProfileFormPage.json</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\RegistrationFormPage.json.cs">
+      <DependentUpon>RegistrationFormPage.json</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\RestorePasswordFormPage.json.cs">
+      <DependentUpon>RestorePasswordFormPage.json</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\SignInFormPage.json.cs">
       <DependentUpon>SignInFormPage.json</DependentUpon>
     </Compile>
@@ -103,6 +121,14 @@
     <Content Include="wwwroot\SignIn\elements\puppet-reload.html" />
     <Content Include="wwwroot\SignIn\elements\so-signin\so-signin.html" />
     <Content Include="wwwroot\SignIn\elements\tu-avatar\tu-signin-avatar.html" />
+    <Content Include="wwwroot\SignIn\elements\signin-element.html" />
+    <Content Include="wwwroot\SignIn\scripts\sha1.js" />
+    <Content Include="wwwroot\SignIn\viewmodels\AccessDeniedPage.html" />
+    <Content Include="wwwroot\SignIn\viewmodels\AlreadyInPage.html" />
+    <Content Include="wwwroot\SignIn\viewmodels\MasterPage.html" />
+    <Content Include="wwwroot\SignIn\viewmodels\ProfileFormPage.html" />
+    <Content Include="wwwroot\SignIn\viewmodels\RegistrationFormPage.html" />
+    <Content Include="wwwroot\SignIn\viewmodels\RestorePasswordFormPage.html" />
     <Content Include="wwwroot\SignIn\viewmodels\SignInFormPage.html" />
     <Content Include="wwwroot\SignIn\viewmodels\SignInPage.html" />
   </ItemGroup>
@@ -116,12 +142,27 @@
       <Generator>MsBuild:Compile</Generator>
     </TypedJSON>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Database\" />
-    <Folder Include="wwwroot\SignIn\images\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
+    <TypedJSON Include="ViewModels\RegistrationFormPage.json">
+      <Generator>MsBuild:Compile</Generator>
+    </TypedJSON>
+    <TypedJSON Include="ViewModels\MasterPage.json">
+      <Generator>MsBuild:Compile</Generator>
+    </TypedJSON>
+    <TypedJSON Include="ViewModels\AlreadyInPage.json">
+      <Generator>MsBuild:Compile</Generator>
+    </TypedJSON>
+    <TypedJSON Include="ViewModels\RestorePasswordFormPage.json">
+      <Generator>MsBuild:Compile</Generator>
+    </TypedJSON>
+    <TypedJSON Include="ViewModels\ProfileFormPage.json">
+      <Generator>MsBuild:Compile</Generator>
+    </TypedJSON>
+    <TypedJSON Include="ViewModels\AccessDeniedPage.json">
+      <Generator>MsBuild:Compile</Generator>
+    </TypedJSON>
     <None Include="weaver.ignore">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

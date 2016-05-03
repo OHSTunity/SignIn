@@ -29,7 +29,7 @@ namespace SignIn
                         Session.Current = new Session(SessionOptions.PatchVersioning);
                     }
 
-                    UserSession session = TunityUser.SignInSystemUser(cookie.Value);
+                    UserSession session = TunityUser.SignInUser(cookie.Value);
 
                     if (session != null)
                     {
@@ -52,7 +52,7 @@ namespace SignIn
                         Cookie cookie = GetSignInCookie();
                         if (cookie != null)
                         {
-                            TunityUser.SignInSystemUser(cookie.Value);
+                            TunityUser.SignInUser(cookie.Value);
                             this.RefreshSignInState();
                         }
                     });
@@ -67,6 +67,8 @@ namespace SignIn
 
             Handle.GET("/signin/signinuser", HandleSignInForm);
             Handle.GET<string>("/signin/signinuser?{?}", HandleSignInForm);
+            
+            
             /*
             Handle.GET("/signin/registration", () =>
             {
@@ -88,8 +90,7 @@ namespace SignIn
                 return master;
             });
 
-            Handle.GET("/signin/profile", () =>
-            {
+            Handle.GET("/signin/profile", () => {
                 MasterPage master = this.GetMaster();
 
                 master.RequireSignIn = true;
@@ -108,8 +109,8 @@ namespace SignIn
             //Test handler
             /*Handle.GET("/signin/deleteadminuser", () => {
                 Db.Transact(() => {
-                    Db.SlowSQL("DELETE FROM Simplified.Ring3.SystemUserGroupMember WHERE SystemUser.Username = ?", SignInOut.AdminUsername);
-                    Db.SlowSQL("DELETE FROM Simplified.Ring3.SystemUser WHERE Username = ?", SignInOut.AdminUsername);
+                    Db.SlowSQL("DELETE FROM Simplified.Ring3.TunityUserGroupMember WHERE TunityUser.Username = ?", SignInOut.AdminUsername);
+                    Db.SlowSQL("DELETE FROM Simplified.Ring3.TunityUser WHERE Username = ?", SignInOut.AdminUsername);
                 });
                 return 200;
             });*/
@@ -138,7 +139,6 @@ namespace SignIn
             });
 
             cookie.Value = session.Token.Name;
-
             Handle.AddOutgoingCookie(cookie.Name, cookie.GetFullValueString());
         }
 
@@ -170,11 +170,23 @@ namespace SignIn
             Handle.AddOutgoingCookie(cookie.Name, cookie.GetFullValueString());
         }
 
+
+
+        protected MasterPage GetMainPage()
+        {
+            MasterPage m = Master.Current.GetApplication<MasterPage>();
+           
+            if (m == null)
+            {
+                m = Master.Current.SetApplication(new MasterPage()) as MasterPage;
+            }
+
+            return m;
+        }
+
         protected void RefreshSignInState()
         {
-            SessionContainer container = this.GetSessionContainer();
-
-            container.RefreshSignInState();
+            Utils.RefreshSignInState();
         }
 
         protected Response HandleSignIn()
@@ -186,44 +198,16 @@ namespace SignIn
         {
             Username = Uri.UnescapeDataString(Username);
 
-            UserSession session = TunityUser.SignInSystemUser(Username, Password);
+            UserSession session = TunityUser.SignInUser(Username, Password);
 
             if (session == null)
             {
-                Master m = (Master)Self.GET("/signin/master");
-               
-                string message = "Invalid username or password!";
-
-                if (container.SignIn != null)
-                {
-                    container.SignIn.Message = message;
-                }
-
-                if (master != null && master.Partial is SignInFormPage)
-                {
-                    SignInFormPage page = master.Partial as SignInFormPage;
-                    page.Message = message;
-                }
+                Utils.SetMessage("Invalid username or password!");
             }
 
             SetAuthCookie(session, RememberMe == "true");
 
-            return this.GetSessionContainer();
-
-            SignInPage page = Self.GET<Master.MasterUtils>("/signin/user").PersistantApp as SignInPage;
-            page.SignIn(Username, Password);
-            SetAuthCookie(page);
-
-            var sifp = Master.Current.GetApplication<SignInFormPage>();
-            if (sifp == null)
-            {
-                Db.Scope(() =>
-                    {
-                        sifp = new SignInFormPage();
-                        Master.Current.SetApplication(sifp);
-                    });
-            }
-            return sifp;
+            return Master.Current;
         }
 
         protected Response HandleSignInForm()
@@ -233,21 +217,21 @@ namespace SignIn
 
         protected Response HandleSignInForm(string OriginalUrl)
         {
-            MasterPage master = this.GetMaster();
+            MasterPage main = this.GetMainPage();
 
-            master.RequireSignIn = false;
-            master.OriginalUrl = OriginalUrl;
-            master.Open("/signin/partial/signin-form");
+            main.RequireSignIn = false;
+            main.OriginalUrl = OriginalUrl;
+            main.Open("/signin/partial/signin-form");
 
-            return master;
+            return main;
         }
 
         protected Response HandleSignOut()
         {
-            SystemUser.SignOutSystemUser();
+            TunityUser.SignOutUser();
             ClearAuthCookie();
 
-            return this.GetSessionContainer();
+            return Master.Current;
         }
 
         protected Cookie GetSignInCookie()
@@ -256,134 +240,6 @@ namespace SignIn
             Cookie cookie = cookies.FirstOrDefault(x => x.Name == AuthCookieName);
 
             return cookie;
-        }
-    }
-
-    internal class MainHandlers
-    {
-        }
-
-        protected void SetAuthCookie(SignInPage Page)
-        {
-            Cookie cookie = new Cookie(AuthCookieName, Page.SignInAuthToken);
-            Handle.AddOutgoingCookie(cookie.Name, cookie.GetFullValueString());
-        }
-
-        protected Response GetNoSessionResult()
-        {
-            return new Response()
-            {
-                StatusCode = (ushort)System.Net.HttpStatusCode.InternalServerError,
-                Body = "No Current Session"
-            };
-        }
-
-
-        protected Response HandleSignIn()
-        {
-            return HandleSignIn(null, null);
-        }
-
-        protected Response HandleSignIn(string Username, string Password)
-        {
-            SignInPage page = Self.GET<Master.MasterUtils>("/signin/user").PersistantApp as SignInPage;
-            page.SignIn(Username, Password);
-            SetAuthCookie(page);
-
-            var sifp = Master.Current.GetApplication<SignInFormPage>();
-            if (sifp == null)
-            {
-                Db.Scope(() =>
-                    {
-                        sifp = new SignInFormPage();
-                        Master.Current.SetApplication(sifp);
-                    });
-            }
-            return sifp;
-        }
-
-        protected Response HandleSignIn(string Query)
-        {
-            SignInPage page = Self.GET<Master.MasterUtils>("/signin/user").PersistantApp as SignInPage;
-            
-            var sifp = Master.Current.GetApplication<SignInFormPage>();
-            if (sifp == null)
-            {
-                Db.Scope(() =>
-                    {
-                        sifp = new SignInFormPage();
-                        Master.Current.SetApplication(sifp);
-                    });
-            }
-            string decodedQuery = HttpUtility.UrlDecode(Query);
-            NameValueCollection queryCollection = HttpUtility.ParseQueryString(decodedQuery);
-
-            page.RedirectUrl = queryCollection.Get("originurl");
-            page.UpdateSignInForm();
-
-            return sifp;
-        }
-
-        protected Response HandleSignInUser()
-        {
-            SignInPage page = Self.GET<Master.MasterUtils>("/signin/user").PersistantApp as SignInPage;
-            
-            var sifp = Master.Current.GetApplication<SignInFormPage>();
-            if (sifp == null)
-            {
-                Db.Scope(() =>
-                {
-                    sifp = new SignInFormPage();
-                    Master.Current.SetApplication(sifp);
-                });
-            }
-            page.UpdateSignInForm();
-
-            return sifp;
-        }
-
-        protected Response HandleSignOut()
-        {
-            SignInPage page = Self.GET<Master.MasterUtils>("/signin/user").PersistantApp as SignInPage;
-
-            page.SignOut();
-            SetAuthCookie(page);
-
-            var sifp = Master.Current.GetApplication<SignInFormPage>();
-            if (sifp == null)
-            {
-                Db.Scope(() =>
-                {
-                    sifp = new SignInFormPage();
-                    Master.Current.SetApplication(sifp);
-                });
-            }
-            Master.SendCommand(TunityCommand.REREQUEST_URL);
-            return sifp;
-        }
-
-        protected Response HandleUser()
-        {
-            Master m = (Master)Self.GET("/signin/master");
-            if (!(m.Utils.PersistantApp is SignInPage))
-            {
-                Db.Scope(() =>
-                {
-                    var page = new SignInPage();
-                    m.Utils.PersistantApp = page;
-                    List<Cookie> cookies = Handle.IncomingRequest.Cookies.Select(x => new Cookie(x)).ToList();
-                    Cookie cookie = cookies.FirstOrDefault(x => x.Name == AuthCookieName);
-                    if (cookie != null)
-                    {
-                        page.FromCookie(cookie.Value);
-                    }
-                    else
-                    {
-                        page.SetAnonymousState();
-                    }
-                });
-            }
-            return m.Utils;
         }
     }
 }

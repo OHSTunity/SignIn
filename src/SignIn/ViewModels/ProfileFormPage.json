@@ -1,0 +1,12 @@
+{
+  "Html": "/SignIn/viewmodels/ProfileFormPage.html",
+  "Message": "",
+  "MessageCss": "",
+  "Username": "",
+  "Email$": "",
+  "OldPassword$": "",
+  "NewPassword$": "",
+  "RepeatPassword$": "",
+  "UpdateClick$": 0,
+  "ChangePasswordClick$": 0
+}

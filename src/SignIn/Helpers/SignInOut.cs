@@ -50,8 +50,8 @@ namespace SignIn {
             return SignInTunityUser(SignInAuthToken);
         }
 
-        static public UserSession SignInTunityUser(TunityUser systemUser) {
-            if (systemUser == null) {
+        static public UserSession SignInTunityUser(TunityUser TunityUser) {
+            if (TunityUser == null) {
                 return null;
             }
 
@@ -61,11 +61,11 @@ namespace SignIn {
                 TunitySessionCookie cookie = new TunitySessionCookie();
                 
                 cookie.Created = cookie.LastUsed = DateTime.UtcNow;
-                cookie.Name = CreateAuthToken(systemUser.Name);
-                cookie.User = systemUser;
+                cookie.Name = CreateAuthToken(TunityUser.Name);
+                cookie.User = TunityUser;
 
                 userSession = AssureTunityUserSession(cookie);
-                systemUser.Lastlogin = DateTime.Now;
+                TunityUser.Lastlogin = DateTime.Now;
             });
 
             return userSession;
@@ -79,19 +79,19 @@ namespace SignIn {
         static private UserSession SignInTunityUser(string userId, string password) {
 
             UserSession userSession = null;
-            TunityUser systemUser = TunityDbHelper.FromName<TunityUser>(userId);
+            TunityUser TunityUser = TunityDbHelper.FromName<TunityUser>(userId);
 
-           if (systemUser != null && systemUser.Active) {
-               if (PasswordHash.ValidatePassword(password, systemUser.Password))
+           if (TunityUser != null && TunityUser.Active) {
+               if (PasswordHash.ValidatePassword(password, TunityUser.Password))
                {
                    Db.Transact(() =>
                    {
                        TunitySessionCookie cookie = new TunitySessionCookie();
                        cookie.Created = cookie.LastUsed = DateTime.UtcNow;
-                       cookie.Name = CreateAuthToken(systemUser.Name);
-                       cookie.User = systemUser;
+                       cookie.Name = CreateAuthToken(TunityUser.Name);
+                       cookie.User = TunityUser;
 
-                       systemUser.Lastlogin = DateTime.Now;
+                       TunityUser.Lastlogin = DateTime.Now;
                        userSession = AssureTunityUserSession(cookie);
                    });
                }
@@ -325,15 +325,21 @@ namespace SignIn {
 
                     // Set password
                     string hash;
+<<<<<<< HEAD
                     string salt = Convert.ToBase64String(TunityUser.GenerateSalt(16));
                     TunityUser.GeneratePasswordHash(user.Username.ToLower(), AdminPassword, salt, out hash);
+=======
+                    string salt = Convert.ToBase64String(TunityUser.GenerateSalt(16));
+                    string password = TunityUser.GenerateClientSideHash(AdminPassword);
+                    TunityUser.GeneratePasswordHash(user.Username.ToLower(), password, salt, out hash);
+>>>>>>> StarcounterSamples/master
 
                     user.Password = hash;
                     user.PasswordSalt = salt;
 
                     // Add ability to also sign in with email
-                    EmailAddress email = new EmailAddress();
-                    EmailAddressRelation relation = new EmailAddressRelation();
+                    Address email = new Address();
+                    AddressRelation relation = new AddressRelation();
 
                     relation.Somebody = person;
                     relation.WhatIs = email;
