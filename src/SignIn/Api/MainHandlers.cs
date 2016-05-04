@@ -20,7 +20,7 @@ namespace SignIn
 
             Application.Current.Use((Request req) =>
             {
-                Cookie cookie = GetSignInCookie();
+               /* Cookie cookie = GetSignInCookie();
 
                 if (cookie != null)
                 {
@@ -36,7 +36,7 @@ namespace SignIn
                         RefreshAuthCookie(session);
                     }
                 }
-
+                */
                 return null;
             });
 
@@ -52,8 +52,10 @@ namespace SignIn
                         Cookie cookie = GetSignInCookie();
                         if (cookie != null)
                         {
-                            TunityUser.SignInUser(cookie.Value);
+                            var us = TunityUser.SignInUser(cookie.Value);
                             this.RefreshSignInState();
+                            if (us != null)
+                                RefreshAuthCookie(us);
                         }
                     });
                 }
@@ -67,8 +69,9 @@ namespace SignIn
 
             Handle.GET("/signin/signinuser", HandleSignInForm);
             Handle.GET<string>("/signin/signinuser?{?}", HandleSignInForm);
-            
-            
+
+            Handle.GET("/signin/partial/signin-form", () => new SignInFormPage(), new HandlerOptions() { SelfOnly = true });
+           
             /*
             Handle.GET("/signin/registration", () =>
             {
@@ -99,7 +102,6 @@ namespace SignIn
                 return master;
             });
 
-            Handle.GET("/signin/partial/signin-form", () => new SignInFormPage(), new HandlerOptions() { SelfOnly = true });
             Handle.GET("/signin/partial/registration-form", () => new RegistrationFormPage(), new HandlerOptions() { SelfOnly = true });
             Handle.GET("/signin/partial/alreadyin-form", () => new AlreadyInPage() { Data = null }, new HandlerOptions() { SelfOnly = true });
             Handle.GET("/signin/partial/restore-form", () => new RestorePasswordFormPage(), new HandlerOptions() { SelfOnly = true });
@@ -207,6 +209,7 @@ namespace SignIn
 
             SetAuthCookie(session, RememberMe == "true");
 
+            RefreshSignInState();
             return Master.Current;
         }
 
@@ -215,22 +218,36 @@ namespace SignIn
             return this.HandleSignInForm(string.Empty);
         }
 
-        protected Response HandleSignInForm(string OriginalUrl)
+        protected Response HandleSignInForm(string query)
         {
             MasterPage main = this.GetMainPage();
 
             main.RequireSignIn = false;
-            main.OriginalUrl = OriginalUrl;
+            main.OriginalUrl = GetOriginalUrl(query);
             main.Open("/signin/partial/signin-form");
 
             return main;
         }
 
+        protected String GetOriginalUrl(String query)
+        {
+            var collection = HttpUtility.ParseQueryString(query);
+            try
+            {
+                return collection.Get("originurl");
+            }
+            catch
+            {
+                return "";
+            }
+        }
+      
         protected Response HandleSignOut()
         {
             TunityUser.SignOutUser();
             ClearAuthCookie();
-
+            RefreshSignInState();
+            Master.SendCommand(TunityCommand.REREQUEST_URL);
             return Master.Current;
         }
 

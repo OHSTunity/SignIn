@@ -1,5 +1,6 @@
 using Starcounter;
 using Concepts.Ring8.Tunity;
+using Tunity.Common;
 
 namespace SignIn {
     partial class MasterPage : Page {
@@ -21,7 +22,8 @@ namespace SignIn {
                 this.Partial = Self.GET(this.url);
             } else if(!string.IsNullOrEmpty(this.OriginalUrl)) {
                 this.Partial = null;
-                this.RedirectUrl = this.OriginalUrl;
+                Master.SendCommand(TunityCommand.MORPH_URL, this.OriginalUrl);
+               // this.RedirectUrl = this.OriginalUrl;
                 this.OriginalUrl = null;
             } else if (user != null) {
                 this.Partial = Self.GET("/signin/partial/alreadyin-form");

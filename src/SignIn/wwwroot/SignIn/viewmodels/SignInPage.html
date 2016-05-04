@@ -5,32 +5,4 @@
         <so-signin data="{{model}}"></so-signin>
         <link is="puppet-redirect" history url$="{{model.RedirectUrl}}" />
     </template>
-    <script>
-        (function () {
-            var script = document._currentScript || document.currentScript;
-            var template = script.previousElementSibling;
-
-            template.local = {
-                password: ""
-            };
-
-            template.txtKeypress = function (e) {
-                if (e.which != 13) {
-                    return;
-                }
-
-                setTimeout(function () {
-                    template.set("model.SignInClick$", template.model.SignInClick$ + 1);
-                });
-            };
-
-            template.focusPopover = function (e) {
-                e.currentTarget.parentNode.querySelector("input").focus();
-            };
-
-            template.signOut = function (e) {
-                document.querySelector("puppet-client").network.changeState("/signin/partial/signout");
-            };
-        })();
-    </script>
 </template>

@@ -23,7 +23,8 @@ namespace SignIn {
         }
 
         protected void RefreshSignInState() {
-            Utils.RefreshSignInState();
+     //       if (Session.Current != null) //Do not refresh if called before launcher has created session!!!!
+            //    Utils.RefreshSignInState();
         }
     }
 }

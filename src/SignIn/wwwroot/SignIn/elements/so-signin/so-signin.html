@@ -217,6 +217,7 @@
               }.bind(this));
             },
             signOut: function () {
+              this.$.popup.close();
               puppet.network.changeState("/signin/partial/signout");
             },
             focusPopover: function () {

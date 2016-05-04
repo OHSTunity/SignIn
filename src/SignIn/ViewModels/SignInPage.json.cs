@@ -26,27 +26,36 @@ namespace SignIn
         {
             if (!Db.Equals(Data, session.Token.User))
             {
-                Session.ScheduleTask(session.SessionIdString, (Session s, String sessionId) =>
-               {
-                   try
-                   {
-                       this.Message = string.Empty;
-                       SessionStarted = DateTime.Now.ToString();
-                       Data = session;
-                       this.IsSignedIn = true;
-                       s.CalculatePatchAndPushOnWebSocket();
-                   }
-                   catch { }
-               });
+              /*  Session.ScheduleTask(session.SessionIdString, (Session s, String sessionId) =>
+                {
+                    try
+                    {*/
+                        this.Message = string.Empty;
+                        SessionStarted = DateTime.Now.ToString();
+                        Data = session;
+                        this.IsSignedIn = true;
+              /*          s.CalculatePatchAndPushOnWebSocket();
+                    }
+                    catch { }
+                });*/
             }
         }
 
         public void SetAnonymousState()
         {
-            this.Username = string.Empty;
-            this.Data = null;
-            this.Message = Message;
-            this.IsSignedIn = false;
+         /*   Session.ScheduleTask(Session.Current.ToAsciiString(), (Session s, String sessionId) =>
+            {
+                try
+                {*/
+                    this.Username = string.Empty;
+                    this.Data = null;
+                    this.Message = Message;
+                    this.IsSignedIn = false;
+          /*          s.CalculatePatchAndPushOnWebSocket();
+                }
+                catch { }
+            });*/
+
         }
 
         public void RefreshSignInState()
@@ -66,7 +75,7 @@ namespace SignIn
         {
             get
             {
-                return Data != null ? Data.Token.User : null;
+                return ((Data != null) && (Data.Token != null)) ? Data.Token.User : null;
             }
         }
 
