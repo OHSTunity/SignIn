@@ -16,7 +16,7 @@ namespace SignIn
 
         public void Register()
         {
-            Tunity.Common.MainCommon.Register("signin", false);
+            Tunity.Common.MainCommon.Register(false);
 
             Application.Current.Use((Request req) =>
             {
