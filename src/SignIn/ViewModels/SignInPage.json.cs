@@ -43,7 +43,7 @@ namespace SignIn
 
         public void SetAnonymousState()
         {
-         /*   Session.ScheduleTask(Session.Current.ToAsciiString(), (Session s, String sessionId) =>
+         /*   Session.ScheduleTask(Session.Current.SessionId, (Session s, String sessionId) =>
             {
                 try
                 {*/

@@ -15,7 +15,7 @@ namespace SignIn {
         internal static string AdminPassword = "admin";
 
         static public UserSession GetCurrentTunityUserSession() {
-            return Db.SQL<UserSession>("SELECT o FROM Concepts.Ring8.Tunity.UserSession o WHERE o.SessionIdString = ?", Session.Current.ToAsciiString()).First;
+            return Db.SQL<UserSession>("SELECT o FROM Concepts.Ring8.Tunity.UserSession o WHERE o.SessionIdString = ?", Session.Current.SessionId).First;
         }
 
         /// <summary>
@@ -169,12 +169,12 @@ namespace SignIn {
             bool bSessionCreated = false;
 
             Db.Transact(() => {
-                userSession = Db.SQL<UserSession>("SELECT o FROM Concepts.Ring8.Tunity.UserSession o WHERE o.SessionIdString=?", Session.Current.ToAsciiString()).First;
+                userSession = Db.SQL<UserSession>("SELECT o FROM Concepts.Ring8.Tunity.UserSession o WHERE o.SessionIdString=?", Session.Current.SessionId).First;
 
                 if (userSession == null) {
                     userSession = new UserSession();
                     userSession.Created = DateTime.UtcNow;
-                    userSession.SessionIdString = Session.Current.ToAsciiString();
+                    userSession.SessionIdString = Session.Current.SessionId;
                     bSessionCreated = true;
                 }
 
