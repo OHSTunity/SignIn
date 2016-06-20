@@ -5,4 +5,12 @@
         <so-signin data="{{model}}"></so-signin>
         <link is="puppet-redirect" history url$="{{model.RedirectUrl}}" />
     </template>
+
+    <script>
+        document.body.classList.remove("tu-splash");
+        setTimeout(function(){
+          document.body.querySelector("#tu-splash").remove();
+        }, 200);
+    </script>
+
 </template>
