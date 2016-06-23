@@ -57,7 +57,7 @@ _ReSharper*
 *.ncrunch*
 .*crunch*.local.xml
 
-# Installshield output folder 
+# Installshield output folder
 [Ee]xpress
 
 # DocProject is a documentation generator add-in
@@ -112,3 +112,13 @@ UpgradeLog*.XML
 node_modules
 
 dist/*
+
+## Emacs backup/tilde file
+*~
+*.bak
+\#*
+\.#*
+
+## DS Store
+.DS_Store
+._.DS_Store
