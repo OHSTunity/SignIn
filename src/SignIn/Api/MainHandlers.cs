@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
@@ -39,6 +40,23 @@ namespace SignIn
                 */
                 return null;
             });
+
+            Handle.GET("/signin/clienttheme/{?}", (Request req, String filename) =>
+            {
+                var path = String.Format("/signin/client/{0}/{1}", TunityConfiguration.Get<String>(TunityConfig.CLIENT_THEME), filename);
+                foreach (var dir in Application.Current.ResourceDirectories)
+                {
+                    var p = dir + path;
+                    if (File.Exists(p))
+                    {
+                        var resp = new Response();
+                        resp.Body = File.ReadAllText(p);
+                        resp.ContentType = "text/css";
+                        return resp;
+                    }
+                }
+                return String.Empty;
+            }, new HandlerOptions() { SkipRequestFilters = true });
 
             Handle.GET("/signin/user", () =>
             {
