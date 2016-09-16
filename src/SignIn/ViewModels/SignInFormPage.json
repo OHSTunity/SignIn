@@ -1,10 +1,10 @@
 {
   "Uri": "",
   "Html": "/SignIn/viewmodels/SignInFormPage.html",
+  "Submit": 0,
+  "SignInClick$": 0,
   "Username$": "",
   "RememberMe$": true,
   "IsSignedIn": false,
-  "Message": "",
-  "Submit": 0,
-  "SignInClick$": 0
+  "Message": ""
 }

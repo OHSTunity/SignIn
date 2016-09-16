@@ -1,14 +1,16 @@
 {
   "Uri": "",
   "Html": "/SignIn/viewmodels/SignInPage.html",
+  "SignInClick$": 0,
+  "Submit": 0,
+  
   "Username$": "",
   "RememberMe$": true,
   "IsSignedIn": false,
   "Message": "",
   "FullName": "",
   "ImageUrl": "",
-  "SignInClick$": 0,
-  "Submit": 0,
+
 
 	SessionStarted:"",
 

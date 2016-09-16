@@ -143,18 +143,18 @@
             <template is="dom-if" if="{{!model.IsSignedIn}}">
                 <div id="logologin"></div>
                  <template is="dom-if" if="{{model.Message}}">
-                    <p class="alert alert-danger" style="display:none;">{{model.Message}}</p>
+                    <p class="alert alert-danger">{{model.Message}}</p>
                 </template>
 
-                <input id="txtUsername" type="text" value="{{model.Username$::change}}" placeholder="Username" class="form-control" on-keypress="txtUsernameKeypress" />
-                <input id="txtPassword" type="password" value="{{local.password::change}}" placeholder="Password" class="form-control" on-keypress="txtPasswordKeypress" />
+                <tu-input class="with-margin" id="txtUsername" type="text" value="{{model.Username$}}" placeholder="Username" class="form-control"></tu-input>
+                <tu-input class="with-margin" id="txtPassword" type="password" value="{{local.password}}" placeholder="Password" class="form-control"></tu-input>
 <!--
                 <tu-input class="with-margin" autofocus="autofocus" type="text" name="username" width="100%" value="{{UserName$}}" icon="none" placeholder="Login name"></tu-input>
                 <tu-input class="with-margin" type="password" name="pwd" value="{{Password$}}" icon="none" placeholder="Password"></tu-input>
                 -->
-                <button class="btn btn-primary" on-click="signIn">Sign in</button>
+                <tu-button class="btn btn-primary" on-click="signIn">Sign in</tu-button>
                 <a class="fpassword" href="/tunity_users/forgot_password">Forgot password</a>
-<!--                <tu-button primary class="with-margin" id="loginbtn" onclick="getModel(this).Login$++" icon="arrow-circle-o-right">Login</tu-button> -->
+<!--                <tu-button primary class="with-margin" id="loginbtn" onclick="getModel(this).Lo gin$++" icon="arrow-circle-o-right">Login</tu-button> -->
             </template>
         </div>
         <signin-element username="{{model.Username$}}" password="{{local.password}}" remember-me="{{model.RememberMe$}}" submit="{{model.Submit}}"></signin-element>
@@ -189,8 +189,10 @@
             };
 
             template.signIn = function () {
+                console.log('click');
                 setTimeout(function () {
                     template.set("model.SignInClick$", template.model.SignInClick$ + 1);
+                    window.tu.puppetDirtyCheck();
                 });
             };
         })();

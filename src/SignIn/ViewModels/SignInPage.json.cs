@@ -11,8 +11,7 @@ namespace SignIn
         void Handle(Input.SignInClick Action)
         {
             this.Message = null;
-            Action.Cancel();
-
+   
             if (string.IsNullOrEmpty(this.Username))
             {
                 this.Message = "Username is required!";
