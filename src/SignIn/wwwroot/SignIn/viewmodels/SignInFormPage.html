@@ -21,23 +21,22 @@
       flex-direction: column;
       align-items: center;
       padding: 30px;
-      background-color: #4c444b;
-      border: 1px solid rgba(0,0,0,0.25);
+      background-image: linear-gradient(-195deg, #1eaef8 25%, #1782fa 65%);
     }
 
 
     #logologin {
-      width:260px;
-      height:56px;
-      background: url(/SignIn/images/piller_logo_fff.png);
-      background-size: cover;
-      margin-bottom:30px;
-      transition: background 300ms ease-in 0s;
+      width: 63px;
+      height: 56px;
+      background: url(/SignIn/images/cl-logo-fff.png);
+      background-size: contain;
+      margin-bottom: 30px;
+      background-repeat: no-repeat;
+      transition: all 300ms ease-in 0s;
     }
 
     #logologin:hover {
-      background: url(/SignIn/images/piller_logo_fff_c.png);
-      background-size: cover;
+      opacity: .5;
     }
 
 
@@ -152,8 +151,9 @@
                 <co-input class="with-margin" autofocus="autofocus" type="text" name="username" width="100%" value="{{UserName$}}" icon="none" placeholder="Login name"></co-input>
                 <co-input class="with-margin" type="password" name="pwd" value="{{Password$}}" icon="none" placeholder="Password"></co-input>
                 -->
-                <co-button class="btn btn-primary" on-click="signIn">Sign in</co-button>
-                <a class="fpassword" href="/colab_users/forgot_password">Forgot password</a>
+                <co-button class="btn btn-primary" icon="login" primary=""  on-click="signIn">Sign in</co-button>
+               
+                <a class="fpassword" style="margin-top:25px;" href="/colab_users/forgot_password">Forgot password</a>
 <!--                <co-button primary class="with-margin" id="loginbtn" onclick="getModel(this).Lo gin$++" icon="arrow-circle-o-right">Login</co-button> -->
             </template>
         </div>
