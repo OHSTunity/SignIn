@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using Starcounter;
-using Tunity.Common;
+using Colab.Common;
 using Concepts.Ring8.Tunity;
 
 namespace SignIn
@@ -16,7 +16,7 @@ namespace SignIn
 
         public void Register()
         {
-            Tunity.Common.MainCommon.Register(false);
+            Colab.Common.MainCommon.Register(false);
 
             Application.Current.Use((Request req) =>
             {
@@ -247,7 +247,7 @@ namespace SignIn
             TunityUser.SignOutUser();
             ClearAuthCookie();
             RefreshSignInState();
-            Master.SendCommand(TunityCommand.REREQUEST_URL);
+            Master.SendCommand(ColabCommand.REREQUEST_URL);
             return Master.Current;
         }
 

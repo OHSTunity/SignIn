@@ -1,8 +1,8 @@
 ﻿<link rel="import" href="/SignIn/elements/signin-element.html" />
-<link rel="import" href="/tu-common/css/tu-layout.html">
+<link rel="import" href="/co-common/css/co-layout.html">
 <dom-module id="so-signin">
   <template>
-    <style include="tu-layout">
+    <style include="co-layout">
       :host {
         display:inline-block;
         vertical-align:middle;
@@ -45,7 +45,7 @@
         min-width: 200px;
       }
 
-      .loggedin tu-avatar {
+      .loggedin co-avatar {
         position: absolute;
         left: 0px;
         top: 5px;
@@ -58,7 +58,7 @@
         flex-direction: column;
         align-items: flex-start;
       }
-      .loggedin tu-button {
+      .loggedin co-button {
         width: 100%;
       }
 
@@ -74,7 +74,7 @@
         width: 100%;
       }
 
-      .notloggedin tu-button {
+      .notloggedin co-button {
         width: 100%;
       }
 
@@ -93,12 +93,12 @@
         padding-left: 52px;
       }
     </style>
-    <tu-popup id="popup">
+    <co-popup id="popup">
 
       <!-- User signed in -->
       <template is="dom-if" if="{{data.IsSignedIn}}">
-        <div class="popup-trigger tu-button-style">
-          <tu-avatar class="handle" size="22" value="{{data.UserInfo.AvatarString}}"></tu-avatar>
+        <div class="popup-trigger co-button-style">
+          <co-avatar class="handle" size="22" value="{{data.UserInfo.AvatarString}}"></co-avatar>
           <span>{{data.UserInfo.FullName}}</span>
         </div>
         <div class="popup-content loggedin">
@@ -106,32 +106,32 @@
             <span id="popup-header-name">{{data.UserInfo.FullName}}</span>
             <span class="flex"></span>
             <template is="dom-repeat" items="{{tools}}">
-              <tu-icon-button title="{{item.Label}}" icon="{{item.Icon}}" on-tap="tapped" tap="{{item.Morph$}}"></tu-icon-button>
+              <co-icon-button title="{{item.Label}}" icon="{{item.Icon}}" on-tap="tapped" tap="{{item.Morph$}}"></co-icon-button>
             </template>
           </div>
-          <tu-avatar value="{{data.UserInfo.AvatarString}}" size="50"></tu-avatar>
+          <co-avatar value="{{data.UserInfo.AvatarString}}" size="50"></co-avatar>
           <div class="userinfo">
             <span>Last login: <span>{{data.UserInfo.Lastlogin}}</span></span>
             <span>This session: <span>{{sessionTime}}</span></span>
           </div>
-          <tu-button primary icon="sign-out" on-click="signOut">Sign out</tu-button>
+          <co-button primary icon="sign-out" on-click="signOut">Sign out</co-button>
         </div>
       </template>
 
       <!-- User NOT signed in -->
       <template is="dom-if" if="{{!data.IsSignedIn}}">
-          <tu-icon-button class="popup-trigger" size="20" icon="user"></tu-icon-button>
+          <co-icon-button class="popup-trigger" size="20" icon="user"></co-icon-button>
           <div class="popup-content notloggedin">
             <input type="text" placeholder="Username / email" value="{{data.Username$::change}}" id="txtUsername" on-keypress="enterUsername" />
             <input type="password" placeholder="Password" value="{{password::change}}" id="txtPassword" on-keypress="enterPassword" />
-            <tu-button primary on-click="signIn" label="Sign in"></tu-button>
+            <co-button primary on-click="signIn" label="Sign in"></co-button>
             <template is="dom-if" if="{{data.Message}}">
               <div class="errorText">{{data.Message}}</div>
             </template>
-            <a class="fpassword" href="/tunity_users/forgot_password">Forgot password</a>
+            <a class="fpassword" href="/colab_users/forgot_password">Forgot password</a>
           </div>
       </template>
-    </tu-popup>
+    </co-popup>
     <signin-element username="{{data.Username$}}" password="{{password}}" remember-me="{{data.RememberMe$}}" submit="{{data.Submit}}"></signin-element>
   </template>
 

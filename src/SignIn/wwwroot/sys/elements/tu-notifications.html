@@ -1,41 +1,41 @@
-<link href="tu-notification.html" rel="import">
-<link rel="import" href="/tu-common/css/tu-layout.html">
-<dom-module id="tu-notifications">
+<link href="co-notification.html" rel="import">
+<link rel="import" href="/co-common/css/co-layout.html">
+<dom-module id="co-notifications">
   	
   	<template>
-	  	<style include="tu-layout">
+	  	<style include="co-layout">
 			.holder {
 				padding: 30px;
 			}
-			tu-table {
+			co-table {
 				box-sizing: border-box;
 				max-width: 500px;
 			}
 	  	</style>
 		<div class="holder">
-			<tu-table state="{{data.Table}}" hidefilter notselectable>
-				<tu-table-header class="horizontal center">
+			<co-table state="{{data.Table}}" hidefilter notselectable>
+				<co-table-header class="horizontal center">
 					<span>Notifications</span>
 					<span id="unreadCount" class="unreadCount" on-tap="toggleUnread">(<span>{{data.UnreadCount}}</span> unread)</span>
 					<div  class="flex"></div>
 					<span style="text-decoration:underline;cursor:pointer;color:#00c" on-click="readAll">Mark all as read</span>
-				</tu-table-header>
-				<tu-table-view icon="list" name="table" title="Table view">
-					<tu-table-column name="notification">Notification</tu-table-column>
-				</tu-table-view>
+				</co-table-header>
+				<co-table-view icon="list" name="table" title="Table view">
+					<co-table-column name="notification">Notification</co-table-column>
+				</co-table-view>
 				<template is="dom-repeat" items="{{data.Rows}}" as="r" id="rows">
-					<tu-table-row>
-						<tu-table-cell column="notification">
-							<tu-notification data="{{r}}"></tu-notification>
-						</tu-table-cell>
-					</tu-table-row>
+					<co-table-row>
+						<co-table-cell column="notification">
+							<co-notification data="{{r}}"></co-notification>
+						</co-table-cell>
+					</co-table-row>
 				</template>
-			</tu-table>
+			</co-table>
 		</div>
 	</template>
   	<script>
     Polymer({
-      is: 'tu-notifications',
+      is: 'co-notifications',
       properties: {
 		data: {
   			type: Object,

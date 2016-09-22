@@ -1,9 +1,9 @@
-<link href="/tu-common/elements/button/tu-icon.html" rel="import">
-<link href="/tu-common/elements/button/tu-icon-button.html" rel="import">
-<link rel="import" href="/tu-common/css/tu-layout.html">
-<dom-module id="tu-notification">
+<link href="/co-common/elements/button/co-icon.html" rel="import">
+<link href="/co-common/elements/button/co-icon-button.html" rel="import">
+<link rel="import" href="/co-common/css/co-layout.html">
+<dom-module id="co-notification">
   	<template>
-		<style include="tu-layout">
+		<style include="co-layout">
 			:host {
 				font-weight: normal;
 				line-height: 1.2em;
@@ -29,7 +29,7 @@
 			  top: 2px;
 			}
 
-			.fullIcon tu-icon
+			.fullIcon co-icon
 			{
 			  color: #FFF;
 			}
@@ -46,7 +46,7 @@
 			  color: #999;
 			}
 
-			.time tu-icon
+			.time co-icon
 			{
 			  margin-right: 3px;
 			}
@@ -87,9 +87,9 @@
 		</style>
 	    <div on-click="activate" class$="{{_computeClass(data.Viewed$)}}">
 	        <div class="fullIcon">
-	            <!--<tu-avatar size="40" value="{{data.Avatar}}"></tu-avatar>-->
+	            <!--<co-avatar size="40" value="{{data.Avatar}}"></co-avatar>-->
 	            <div id="icon" layout="" horizontal="" center="" center-justified="" class$="{{type}}">
-	                 <tu-icon size="18" icon="{{icon}}" style="color:#fff"></tu-icon>
+	                 <co-icon size="18" icon="{{icon}}" style="color:#fff"></co-icon>
 	            </div>
 	        </div>
 	        <div class="vertical">
@@ -97,18 +97,18 @@
 	              <template is="imported-template" content$="{{data.Message}}"></template>
 	            </span>
 	            <div class="time horizontal center">
-	                <tu-icon size="12" icon="clock-o" style="color:#777"></tu-icon>
+	                <co-icon size="12" icon="clock-o" style="color:#777"></co-icon>
 	                <span>{{time}}</span>
 	            </div>
 	        </div>
 	        <template is="dom-if" if="{{!data.Viewed$}}">
-	          <tu-icon-button title="mark as read" style="color:#555" size="10" class="readButton" icon="crosshairs" on-click="markRead"></tu-icon-button>
+	          <co-icon-button title="mark as read" style="color:#555" size="10" class="readButton" icon="crosshairs" on-click="markRead"></co-icon-button>
 	        </template>
 	    </div>
 	</template>
   	<script>
     Polymer({
-      is: 'tu-notification',
+      is: 'co-notification',
       properties: {
         data: {
 			type: Object,
