@@ -142,7 +142,6 @@
       <Generator>MsBuild:Compile</Generator>
     </TypedJSON>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
     <TypedJSON Include="ViewModels\RegistrationFormPage.json">
@@ -168,11 +167,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Tunity-3\Colab.Common\Colab.Common.csproj">
+    <ProjectReference Include="..\..\..\Colab\Colab.Common\Colab.Common.csproj">
       <Project>{aad408c8-78ed-491e-9184-ad2fb8bf2773}</Project>
       <Name>Colab.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Tunity-3\Concepts.Ring8.Tunity\Concepts.Ring8.Tunity.csproj">
+    <ProjectReference Include="..\..\..\Colab\Concepts.Ring8.Tunity\Concepts.Ring8.Tunity.csproj">
       <Project>{023591a6-3fe7-46d6-816e-970781bc5ca4}</Project>
       <Name>Concepts.Ring8.Tunity</Name>
     </ProjectReference>
