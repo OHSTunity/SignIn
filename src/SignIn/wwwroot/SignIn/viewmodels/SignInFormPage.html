@@ -145,16 +145,16 @@
                     <p class="alert alert-danger">{{model.Message}}</p>
                 </template>
 
-                <tu-input class="with-margin" id="txtUsername" type="text" value="{{model.Username$}}" placeholder="Username" class="form-control"></tu-input>
-                <tu-input class="with-margin" id="txtPassword" type="password" value="{{local.password}}" placeholder="Password" class="form-control"></tu-input>
+                <co-input class="with-margin" id="txtUsername" type="text" value="{{model.Username$}}" placeholder="Username" class="form-control"></co-input>
+                <co-input class="with-margin" id="txtPassword" type="password" value="{{local.password}}" placeholder="Password" class="form-control"></co-input>
 <!--
-                <tu-input class="with-margin" autofocus="autofocus" type="text" name="username" width="100%" value="{{UserName$}}" icon="none" placeholder="Login name"></tu-input>
-                <tu-input class="with-margin" type="password" name="pwd" value="{{Password$}}" icon="none" placeholder="Password"></tu-input>
+                <co-input class="with-margin" autofocus="autofocus" type="text" name="username" width="100%" value="{{UserName$}}" icon="none" placeholder="Login name"></co-input>
+                <co-input class="with-margin" type="password" name="pwd" value="{{Password$}}" icon="none" placeholder="Password"></co-input>
                 -->
-                <tu-button class="btn btn-primary" icon="login" primary=""  on-click="signIn">Sign in</tu-button>
+                <co-button class="btn btn-primary" icon="login" primary=""  on-click="signIn">Sign in</co-button>
                
-                <a class="fpassword" style="margin-top:25px;" href="/tunity_users/forgot_password">Forgot password</a>
-<!--                <tu-button primary class="with-margin" id="loginbtn" onclick="getModel(this).Lo gin$++" icon="arrow-circle-o-right">Login</tu-button> -->
+                <a class="fpassword" style="margin-top:25px;" href="/colab_users/forgot_password">Forgot password</a>
+<!--                <co-button primary class="with-margin" id="loginbtn" onclick="getModel(this).Lo gin$++" icon="arrow-circle-o-right">Login</co-button> -->
             </template>
         </div>
         <signin-element username="{{model.Username$}}" password="{{local.password}}" remember-me="{{model.RememberMe$}}" submit="{{model.Submit}}"></signin-element>

@@ -1,6 +1,6 @@
 using Starcounter;
 using Concepts.Ring8.Tunity;
-using Tunity.Common;
+using Colab.Common;
 
 namespace SignIn {
     partial class MasterPage : Page {
@@ -22,7 +22,7 @@ namespace SignIn {
                 this.Partial = Self.GET(this.url);
             } else if(!string.IsNullOrEmpty(this.OriginalUrl)) {
                 this.Partial = null;
-                Master.SendCommand(TunityCommand.MORPH_URL, this.OriginalUrl);
+                Master.SendCommand(ColabCommand.MORPH_URL, this.OriginalUrl);
                // this.RedirectUrl = this.OriginalUrl;
                 this.OriginalUrl = null;
             } else if (user != null) {

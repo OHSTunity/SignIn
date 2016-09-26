@@ -1,9 +1,9 @@
-<link href="tu-notification.html" rel="import">
-<link rel="import" href="/tu-common/css/tu-layout.html">
-<dom-module id="tu-notifications-popup">
+<link href="co-notification.html" rel="import">
+<link rel="import" href="/co-common/css/co-layout.html">
+<dom-module id="co-notifications-popup">
 
   	<template>
-	  	<style include="tu-layout">
+	  	<style include="co-layout">
 			:host {
 				position: relative;
 			}
@@ -128,7 +128,7 @@
 			  font-weight: bold;
 			}
 	  	</style>
-		<tu-popup>
+		<co-popup>
 		    <div class="vertical popup-trigger" title="{{_computeTitle(data.UnreadCount)}}">
 		      <div id="button" class$="{{_computeClass(data.UnreadCount)}}">
 		        <template is="dom-if" if="{{_computeIf(data.UnreadCount)}}">
@@ -152,18 +152,18 @@
 	              <div class="popupBody">
 	                <template is="dom-repeat" items="{{data.Rows}}" as="noti">
 	                  <div class="notification">
-	                    <tu-notification data="{{noti}}"></tu-notification>
+	                    <co-notification data="{{noti}}"></co-notification>
 	                  </div>
 	                </template>
 	              </div>
 	              <div class="popupFooter"> </div>
 	            </div>
         	</div>
-    	</tu-popup>
+    	</co-popup>
 	</template>
   	<script>
     Polymer({
-      is: 'tu-notifications-popup',
+      is: 'co-notifications-popup',
       properties: {
 		data: {
   			type: Object,
