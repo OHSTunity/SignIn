@@ -85,9 +85,7 @@
     <Compile Include="Api\CommitHooks.cs" />
     <Compile Include="Api\MainHandlers.cs" />
     <Compile Include="Helpers\AssureHelper.cs" />
-    <Compile Include="Helpers\PasswordHash.cs" />
     <Compile Include="Helpers\SignInJwt.cs" />
-    <Compile Include="Helpers\SignInOut.cs" />
     <Compile Include="Helpers\TunityDbHelper.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Program.cs" />

@@ -20,7 +20,7 @@ namespace SignIn
 
             Application.Current.Use((Request req) =>
             {
-               /* Cookie cookie = GetSignInCookie();
+                Cookie cookie = GetSignInCookie();
 
                 if (cookie != null)
                 {
@@ -36,7 +36,7 @@ namespace SignIn
                         RefreshAuthCookie(session);
                     }
                 }
-                */
+                
                 return null;
             });
 
