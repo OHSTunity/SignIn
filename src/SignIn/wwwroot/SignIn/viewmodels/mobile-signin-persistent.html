@@ -1,0 +1,35 @@
+<template>
+  <style>
+    .login-label {
+
+    }
+    .login-label:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
+    <template is="dom-bind">
+      <template is="dom-if" if="{{model.IsSignedIn}}">
+        <co-avatar class="signin" size="22" value="{{model.UserInfo.AvatarString}}"></co-avatar>
+      </template>
+      <template is="dom-if" if="{{!model.IsSignedIn}}">
+        <span class="login-label" on-tap="_gotosigninUrl">Login</span>
+      </template>
+    </template>
+    <script>
+      document.body.classList.remove("loading");
+      setTimeout(function(){
+        var a = document.body.querySelector("#co-splash");
+        if (a)
+          a.remove();
+      }, 200);
+      (function () {
+        // use shimed currentScript if provided
+        var template = (document._currentScript ||  document.currentScript).previousElementSibling;
+        template._gotosigninUrl  = function() {
+          puppet.morphUrl("/signin/mobile/signinoutform");
+        };
+      })();
+   </script>
+
+</template>

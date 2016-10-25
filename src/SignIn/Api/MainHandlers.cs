@@ -16,7 +16,7 @@ namespace SignIn
 
         public void Register()
         {
-            Colab.Common.MainCommon.Register(false);
+            Colab.Common.MainCommon.RegisterWithMobileSupport(false);
 
             Application.Current.Use((Request req) =>
             {
@@ -39,6 +39,48 @@ namespace SignIn
                 
                 return null;
             });
+
+            #region mobile
+            Handle.GET("/signin/mobile/user", () =>
+            {
+                Master m = (Master)Self.GET("/signin/mobile/master");
+                if (!(m.Utils.PersistantApp is SignInPage))
+                {
+                    Db.Scope(() =>
+                    {
+                        var page = new SignInPage()
+                        {
+                            Html = "/SignIn/viewmodels/mobile-signin-persistent.html"
+                        };
+                        m.Utils.PersistantApp = page;
+                        Cookie cookie = GetSignInCookie();
+                        if (cookie != null)
+                        {
+                            var us = TunityUser.SignInUser(cookie.Value);
+                            this.RefreshSignInState();
+                            if (us != null)
+                                RefreshAuthCookie(us);
+                        }
+                    });
+                }
+                return m.Utils;
+            });
+
+            Handle.GET("/signin/mobile/signinoutform", () =>
+            {
+                Master m = (Master)Self.GET("/signin/mobile/master");
+                var p = m.GetApplication<SignInFormPage>();
+                if (p == null)
+                {
+                    p = new SignInFormPage()
+                    {
+                        Html = "/signin/viewmodels/mobile-signin-form.html"
+                    };
+                }
+                m.SetApplication(p);
+                return p;
+            });
+            #endregion
 
             Handle.GET("/signin/user", () =>
             {
@@ -72,52 +114,8 @@ namespace SignIn
 
             Handle.GET("/signin/partial/signin-form", () => new SignInFormPage(), new HandlerOptions() { SelfOnly = true });
            
-            /*
-            Handle.GET("/signin/registration", () =>
-            {
-                MasterPage master = this.GetMaster();
-
-                master.RequireSignIn = false;
-                master.Open("/signin/partial/registration-form");
-
-                return master;
-            });
-
-            Handle.GET("/signin/restore", () =>
-            {
-                MasterPage master = this.GetMaster();
-
-                master.RequireSignIn = false;
-                master.Open("/signin/partial/restore-form");
-
-                return master;
-            });
-
-            Handle.GET("/signin/profile", () => {
-                MasterPage master = this.GetMaster();
-
-                master.RequireSignIn = true;
-                master.Open("/signin/partial/profile-form");
-
-                return master;
-            });
-
-            Handle.GET("/signin/partial/registration-form", () => new RegistrationFormPage(), new HandlerOptions() { SelfOnly = true });
-            Handle.GET("/signin/partial/alreadyin-form", () => new AlreadyInPage() { Data = null }, new HandlerOptions() { SelfOnly = true });
-            Handle.GET("/signin/partial/restore-form", () => new RestorePasswordFormPage(), new HandlerOptions() { SelfOnly = true });
-            Handle.GET("/signin/partial/profile-form", () => new ProfileFormPage() { Data = null }, new HandlerOptions() { SelfOnly = true });
-            Handle.GET("/signin/partial/accessdenied-form", () => new AccessDeniedPage(), new HandlerOptions() { SelfOnly = true });
-
-            //Test handler
-            /*Handle.GET("/signin/deleteadminuser", () => {
-                Db.Transact(() => {
-                    Db.SlowSQL("DELETE FROM Simplified.Ring3.TunityUserGroupMember WHERE TunityUser.Username = ?", SignInOut.AdminUsername);
-                    Db.SlowSQL("DELETE FROM Simplified.Ring3.TunityUser WHERE Username = ?", SignInOut.AdminUsername);
-                });
-                return 200;
-            });*/
-
             UriMapping.Map("/signin/user", UriMapping.MappingUriPrefix + "/user");
+            UriMapping.Map("/signin/mobile/user", UriMapping.MappingUriPrefix + "/mobile/user");
             UriMapping.Map("/signin/signinuser", UriMapping.MappingUriPrefix + "/userform"); //inline form; used in RSE Launcher
         }
 

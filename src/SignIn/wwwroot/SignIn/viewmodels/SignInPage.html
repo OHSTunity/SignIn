@@ -9,7 +9,9 @@
     <script>
         document.body.classList.remove("loading");
         setTimeout(function(){
-          document.body.querySelector("#co-splash").remove();
+          var a = document.body.querySelector("#co-splash");
+          if (a)
+            a.remove();
         }, 200);
     </script>
 
