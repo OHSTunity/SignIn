@@ -16,7 +16,8 @@ namespace SignIn
 
         public void Register()
         {
-            Colab.Common.MainCommon.RegisterWithMobileSupport(false);
+            //Colab.Common.MainCommon.RegisterWithMobileSupport(false);
+            Colab.Common.MainCommon.Register(false);
 
             Application.Current.Use((Request req) =>
             {
