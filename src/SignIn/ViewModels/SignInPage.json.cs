@@ -70,14 +70,6 @@ namespace SignIn
             }
         }
 
-        public TunityUser UserCB
-        {
-            get
-            {
-                return ((Data != null) && (Data.Token != null)) ? Data.Token.User : null;
-            }
-        }
-
         [SignInPage_json.UserInfo]
         partial class UserInfoJson : Json, IBound<TunityUser>
         {

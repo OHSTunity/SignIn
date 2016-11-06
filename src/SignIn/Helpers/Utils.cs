@@ -16,6 +16,9 @@ namespace SignIn {
             MasterPage page = m.GetApplication<MasterPage>();
             if (page != null)
                 page.RefreshSignInState();
+
+            if (page != null)
+                page.RefreshSignInState();
             if (m.Utils.PersistantApp is SignInPage)
                 (m.Utils.PersistantApp as SignInPage).RefreshSignInState();
         }

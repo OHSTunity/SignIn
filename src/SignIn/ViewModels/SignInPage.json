@@ -12,13 +12,15 @@
   "ImageUrl": "",
 
 
-	SessionStarted:"",
+	"SessionStarted": "",
 
-	UserInfo: {
-		FullName: "",
-		AvatarString: "",
-		Lastlogin:"",
-		Tools:{},
+  "SimulatedSession": false,
+  
+	"UserInfo": {
+		"FullName": "",
+		"AvatarString": "",
+		"Lastlogin":"",
+		"Tools":{}
 	},
-	$UserInfo: { bind: "UserCB" },
+	"$UserInfo": { "bind": "User" }
 }

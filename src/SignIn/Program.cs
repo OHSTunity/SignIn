@@ -15,7 +15,7 @@ namespace SignIn {
              hooks.Register();
              handlers.Register();
 
-             SignInOut.AssureAdminTunityUser();
+             Colab.Common.SignInOut.AssureAdminTunityUser();
          }
     }
 }

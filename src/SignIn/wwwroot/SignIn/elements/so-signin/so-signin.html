@@ -80,6 +80,7 @@
 
       div.popup-trigger {
         padding: 5px;
+        position: relative;
       }
 
       #popup-header {
@@ -92,13 +93,38 @@
       #popup-header-name {
         padding-left: 52px;
       }
+
+      #simulated {
+        position: absolute;
+        color: white;
+        z-index: 1;
+        font-style: italic;
+        text-shadow: 0px 0px 4px black;
+        left: 35px;
+        top: -2px;
+        font-size: 12px;
+      }
+
+      #simulated2 {
+        font-weight: bold;
+        margin: 4px;
+      }
+      #small-avatar {
+        font-size: 22px;
+      }
+      #large-avatar {
+        font-size: 50px;
+      }
     </style>
     <co-popup id="popup">
 
       <!-- User signed in -->
       <template is="dom-if" if="{{data.IsSignedIn}}">
         <div class="popup-trigger co-button-style">
-          <co-avatar class="handle" size="22" value="{{data.UserInfo.AvatarString}}"></co-avatar>
+          <template is="dom-if" if="{{data.SimulatedSession}}">
+            <span id="simulated">Simulated</span>
+          </template>
+          <co-avatar id="small-avatar" class="handle" value="{{data.UserInfo.AvatarString}}"></co-avatar>
           <span>{{data.UserInfo.FullName}}</span>
         </div>
         <div class="popup-content loggedin">
@@ -109,8 +135,11 @@
               <co-icon-button title="{{item.Label}}" icon="{{item.Icon}}" on-tap="tapped" tap="{{item.Morph$}}"></co-icon-button>
             </template>
           </div>
-          <co-avatar value="{{data.UserInfo.AvatarString}}" size="50"></co-avatar>
+          <co-avatar id="large-avatar" value="{{data.UserInfo.AvatarString}}"></co-avatar>
           <div class="userinfo">
+            <template is="dom-if" if="{{data.SimulatedSession}}">
+              <span id="simulated2">Simulated session!</span>
+            </template>
             <span>Last login: <span>{{data.UserInfo.Lastlogin}}</span></span>
             <span>This session: <span>{{sessionTime}}</span></span>
           </div>
@@ -161,13 +190,13 @@
             },
             observers: [
               'sessionStartedChanged(data.SessionStarted)',
-              'toolsChanged(data.Tools.*)'
+              'toolsChanged(data.UserInfo.Tools.*)'
             ],
             ready: function () {
               this.puppet = puppet.puppet;
               this.debounce("sessionTimeCounter", this.updateSessionTime.bind(this), 1000);
             },
-            toolsChanged: function() {
+            toolsChanged: function(ev) {
               var tools = [];
               var toolData = this.data && this.data.UserInfo? this.data.UserInfo.Tools: null;
               if (toolData) {

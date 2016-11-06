@@ -13,5 +13,10 @@ namespace SignIn {
 
             this.Submit++;
         }
+
+        void Handle(Input.SignOut action)
+        {
+
+        }
     }
 }
