@@ -109,6 +109,12 @@
         font-weight: bold;
         margin: 4px;
       }
+      #small-avatar {
+        font-size: 22px;
+      }
+      #large-avatar {
+        font-size: 50px;
+      }
     </style>
     <co-popup id="popup">
 
@@ -118,7 +124,7 @@
           <template is="dom-if" if="{{data.SimulatedSession}}">
             <span id="simulated">Simulated</span>
           </template>
-          <co-avatar class="handle" size="22" value="{{data.UserInfo.AvatarString}}"></co-avatar>
+          <co-avatar id="small-avatar" class="handle" value="{{data.UserInfo.AvatarString}}"></co-avatar>
           <span>{{data.UserInfo.FullName}}</span>
         </div>
         <div class="popup-content loggedin">
@@ -129,7 +135,7 @@
               <co-icon-button title="{{item.Label}}" icon="{{item.Icon}}" on-tap="tapped" tap="{{item.Morph$}}"></co-icon-button>
             </template>
           </div>
-          <co-avatar value="{{data.UserInfo.AvatarString}}" size="50"></co-avatar>
+          <co-avatar id="large-avatar" value="{{data.UserInfo.AvatarString}}"></co-avatar>
           <div class="userinfo">
             <template is="dom-if" if="{{data.SimulatedSession}}">
               <span id="simulated2">Simulated session!</span>
