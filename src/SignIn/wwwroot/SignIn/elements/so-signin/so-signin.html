@@ -109,12 +109,6 @@
         font-weight: bold;
         margin: 4px;
       }
-      #small-avatar {
-        font-size: 22px;
-      }
-      #large-avatar {
-        font-size: 50px;
-      }
     </style>
     <co-popup id="popup">
 
@@ -124,26 +118,39 @@
           <template is="dom-if" if="{{data.SimulatedSession}}">
             <span id="simulated">Simulated</span>
           </template>
-          <co-avatar id="small-avatar" class="handle" value="{{data.UserInfo.AvatarString}}"></co-avatar>
+          <co-avatar class="handle" size="22" value="{{data.UserInfo.AvatarString}}"></co-avatar>
           <span>{{data.UserInfo.FullName}}</span>
         </div>
         <div class="popup-content loggedin">
-          <div id="popup-header" class="horizontal center">
+          <!--<div id="popup-header" class="horizontal center">
             <span id="popup-header-name">{{data.UserInfo.FullName}}</span>
             <span class="flex"></span>
             <template is="dom-repeat" items="{{tools}}">
               <co-icon-button title="{{item.Label}}" icon="{{item.Icon}}" on-tap="tapped" tap="{{item.Morph$}}"></co-icon-button>
             </template>
           </div>
-          <co-avatar id="large-avatar" value="{{data.UserInfo.AvatarString}}"></co-avatar>
+        -->
+        <!--<co-avatar value="{{data.UserInfo.AvatarString}}" size="40"></co-avatar>-->
+        <!--
           <div class="userinfo">
             <template is="dom-if" if="{{data.SimulatedSession}}">
               <span id="simulated2">Simulated session!</span>
             </template>
+
             <span>Last login: <span>{{data.UserInfo.Lastlogin}}</span></span>
             <span>This session: <span>{{sessionTime}}</span></span>
+          >
           </div>
-          <co-button primary icon="sign-out" on-click="signOut">Sign out</co-button>
+        -->
+          <div style="height:33px;padding-top:14px;background-color:rgba(24, 141, 249, 0.06);">
+            <co-avatar value="{{data.UserInfo.AvatarString}}" size="25" style="margin-left:10px;margin-top: 5px;"></co-avatar>
+              <span style="padding-left:40px;">{{data.UserInfo.FullName}}</span>
+          </div>
+          <template is="dom-repeat" items="{{tools}}">
+            <co-option icon="{{item.Icon}}" style="padding-left: 0px;" on-tap="{{item.Morph$}}">{{item.Label}}</co-option>
+          </template>
+          <co-option icon="wrench" style="padding-left: 0px;" on-tap="gotoSettings">Settings</co-option>
+          <co-option icon="sign-out" style="padding-left: 0px;" on-tap="signOut">Sign out</co-option>
         </div>
       </template>
 
@@ -238,6 +245,10 @@
             isDomReady: false,
             domReady: function () {
                 this.isDomReady = true;
+            },
+            gotoSettings: function()
+            {
+              console.log("settings");
             },
             signIn: function () {
               this.$.popup.close();
