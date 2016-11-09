@@ -110,6 +110,7 @@
         font-weight: bold;
         margin: 4px;
       }
+
       #small-avatar {
         font-size: 22px;
       }
@@ -136,7 +137,7 @@
           <template is="dom-if" if="{{data.SimulatedSession}}">
             <span id="simulated">Simulated</span>
           </template>
-          <co-avatar id="small-avatar" class="handle" value="{{data.UserInfo.AvatarString}}"></co-avatar>
+          <co-avatar class="handle" size="22" value="{{data.UserInfo.AvatarString}}"></co-avatar>
           <span>{{data.UserInfo.FullName}}</span>
         </div>
         <div class="popup-content loggedin">
@@ -147,7 +148,9 @@
               <co-icon-button title="{{item.Label}}" icon="{{item.Icon}}" on-tap="tapped" tap="{{item.Morph$}}"></co-icon-button>
             </template>
           </div>
-          <co-avatar id="large-avatar" value="{{data.UserInfo.AvatarString}}"></co-avatar>
+
+          <co-avatar value="{{data.UserInfo.AvatarString}}" size="40"></co-avatar>
+
           <div class="userinfo">
             <template is="dom-if" if="{{data.SimulatedSession}}">
               <span id="simulated2">Simulated session!</span>
@@ -159,9 +162,21 @@
               <span>[[_sessionTime]]</span>
             </co-labeled-item>
             <span id="timezone" title="Current detected timezone, all times are shown in this format">GMT [[_timezone]]</span>
+
           </div>
-          <co-button primary icon="sign-out" on-click="signOut">Sign out</co-button>
-        </div>
+        <!--
+          <div style="height:33px;padding-top:14px;background-color:rgba(24, 141, 249, 0.06);">
+            <co-avatar value="{{data.UserInfo.AvatarString}}" size="25" style="margin-left:10px;margin-top: 5px;"></co-avatar>
+              <span style="padding-left:40px;">{{data.UserInfo.FullName}}</span>
+          </div>
+          <template is="dom-repeat" items="{{tools}}">
+            <co-option icon="{{item.Icon}}" style="padding-left: 0px;" on-tap="{{item.Morph$}}">{{item.Label}}</co-option>
+          </template>
+          <co-option icon="wrench" style="padding-left: 0px;" on-tap="gotoSettings">Settings</co-option>
+        -->
+          <div style="width:100%; display:flex; align-items:center; justify-content: center;">
+            <co-option icon="sign-out" style="padding-left: 0px;" on-tap="signOut">Sign out</co-option>
+          </div>
       </template>
 
       <!-- User NOT signed in -->
@@ -271,6 +286,10 @@
             isDomReady: false,
             domReady: function () {
                 this.isDomReady = true;
+            },
+            gotoSettings: function()
+            {
+              console.log("settings");
             },
             signIn: function () {
               this.$.popup.close();

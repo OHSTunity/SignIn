@@ -45,6 +45,7 @@ namespace SignIn
             Handle.GET("/signin/mobile/user", () =>
             {
                 Master m = (Master)Self.GET("/signin/mobile/master");
+                m.Utils.Html = "/co-common/mobile-utils.html";
                 if (!(m.Utils.PersistantApp is SignInPage))
                 {
                     Db.Scope(() =>
