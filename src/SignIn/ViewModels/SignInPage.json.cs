@@ -11,7 +11,7 @@ namespace SignIn
         void Handle(Input.SignInClick Action)
         {
             this.Message = null;
-   
+
             if (string.IsNullOrEmpty(this.Username))
             {
                 this.Message = "Username is required!";
@@ -25,36 +25,19 @@ namespace SignIn
         {
             if (!Db.Equals(Data, session.Token.User))
             {
-              /*  Session.ScheduleTask(session.SessionIdString, (Session s, String sessionId) =>
-                {
-                    try
-                    {*/
-                        this.Message = string.Empty;
-                        SessionStarted = DateTime.Now.ToString();
-                        Data = session;
-                        this.IsSignedIn = true;
-              /*          s.CalculatePatchAndPushOnWebSocket();
-                    }
-                    catch { }
-                });*/
+                this.Message = string.Empty;
+                SessionStarted = DateTime.Now.ToString("o");
+                Data = session;
+                this.IsSignedIn = true;
             }
         }
 
         public void SetAnonymousState()
         {
-         /*   Session.ScheduleTask(Session.Current.SessionId, (Session s, String sessionId) =>
-            {
-                try
-                {*/
-                    this.Username = string.Empty;
-                    this.Data = null;
-                    this.Message = Message;
-                    this.IsSignedIn = false;
-          /*          s.CalculatePatchAndPushOnWebSocket();
-                }
-                catch { }
-            });*/
-
+            this.Username = string.Empty;
+            this.Data = null;
+            this.Message = Message;
+            this.IsSignedIn = false;
         }
 
         public void RefreshSignInState()

@@ -53,6 +53,7 @@
       .loggedin .userinfo {
         margin: 9px;
         margin-left: 55px;
+        margin-top: 5px;
         font-size: 12px;
         display: flex;
         flex-direction: column;
@@ -115,6 +116,17 @@
       #large-avatar {
         font-size: 50px;
       }
+
+      #timezone {
+        position: absolute;
+        right: 10px;
+        top: 40px;
+        font-size: 10px;
+        font-style: italic;
+        background-color: rgba(0,0,0,0.1);
+        border-radius: 2px;
+        padding: 2px;
+      }
     </style>
     <co-popup id="popup">
 
@@ -140,8 +152,13 @@
             <template is="dom-if" if="{{data.SimulatedSession}}">
               <span id="simulated2">Simulated session!</span>
             </template>
-            <span>Last login: <span>{{data.UserInfo.Lastlogin}}</span></span>
-            <span>This session: <span>{{sessionTime}}</span></span>
+            <co-labeled-item style="padding:0px;min-width:200px" label="Last login">
+              <span>[[_lastLogin]]</span>
+            </co-labeled-item>
+            <co-labeled-item style="padding:0px;min-width:200px" label="This session">
+              <span>[[_sessionTime]]</span>
+            </co-labeled-item>
+            <span id="timezone" title="Current detected timezone, all times are shown in this format">GMT [[_timezone]]</span>
           </div>
           <co-button primary icon="sign-out" on-click="signOut">Sign out</co-button>
         </div>
@@ -177,20 +194,29 @@
                 type: String,
                 value: "",
               },
-              sessionTime: {
-                type: String,
-                value: "",
-              },
               tools: {
                 type: Array,
                 value: new function() {
                   return [];
                 }
-              }
+              },
+              _lastLogin: {
+                type: String,
+                value:"",
+              },
+              _sessionTime: {
+                type: String,
+                value: "00:00:00",
+              },
+              _timezone: {
+                type: String,
+                value: "",
+              },
             },
             observers: [
               'sessionStartedChanged(data.SessionStarted)',
-              'toolsChanged(data.UserInfo.Tools.*)'
+              'toolsChanged(data.UserInfo.Tools.*)',
+              'lastLoginChanged(data.UserInfo.Lastlogin)'
             ],
             ready: function () {
               this.puppet = puppet.puppet;
@@ -210,6 +236,13 @@
                 }
               }
               this.set('tools', tools);
+            },
+            lastLoginChanged: function(value) {
+              if (value) {
+                var local = moment.utc(value).local();
+                this._lastLogin = local.format('ddd, Do MMM YYYY, HH:mm:ss');
+                this._timezone = local.format('Z');
+              }
             },
             sessionStartedChanged: function(value) {
               this.stime = moment(value);
@@ -231,7 +264,7 @@
                 var minutes = Math.floor(diff/60);
                 diff = diff-60*minutes;
                 var seconds = Math.floor(diff);
-                this.set('sessionTime', this.pad(hours,2) + ":" + this.pad(minutes,2) + ":" + this.pad(seconds,2));
+                this.set('_sessionTime', this.pad(hours,2) + ":" + this.pad(minutes,2) + ":" + this.pad(seconds,2));
               }
               this.debounce("sessionTimeCounter", this.updateSessionTime.bind(this), 1000);
             },
