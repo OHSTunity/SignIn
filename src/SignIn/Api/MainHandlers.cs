@@ -115,8 +115,9 @@ namespace SignIn
             Handle.GET<string>("/signin/signinuser?{?}", HandleSignInForm);
 
             Handle.GET("/signin/partial/signin-form", () => new SignInFormPage(), new HandlerOptions() { SelfOnly = true });
-           
+
             UriMapping.Map("/signin/user", UriMapping.MappingUriPrefix + "/user");
+            UriMapping.Map("/signin/partial/signin-form", UriMapping.MappingUriPrefix + "/signin");
             UriMapping.Map("/signin/mobile/user", UriMapping.MappingUriPrefix + "/mobile/user");
             UriMapping.Map("/signin/signinuser", UriMapping.MappingUriPrefix + "/userform"); //inline form; used in RSE Launcher
         }
