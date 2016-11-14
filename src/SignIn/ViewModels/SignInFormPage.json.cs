@@ -4,14 +4,15 @@ using Colab.Common;
 
 namespace SignIn {
     partial class SignInFormPage : Page {
+
+        protected override void OnData()
+        {
+            base.OnData();
+        }
+
         void Handle(Input.SignInClick Action) {
             this.Message = null;
          
-            if (string.IsNullOrEmpty(this.Username)) {
-                this.Message = "Username is required!";
-                return;
-            }
-
             this.Submit++;
         }
 

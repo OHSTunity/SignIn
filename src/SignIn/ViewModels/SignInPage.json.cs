@@ -29,6 +29,7 @@ namespace SignIn
                 SessionStarted = DateTime.Now.ToString("o");
                 Data = session;
                 this.IsSignedIn = true;
+                Master.SendCommand(ColabCommand.REREQUEST_URL, "");
             }
         }
 
@@ -38,6 +39,7 @@ namespace SignIn
             this.Data = null;
             this.Message = Message;
             this.IsSignedIn = false;
+            Master.SendCommand(ColabCommand.REREQUEST_URL, "");
         }
 
         public void RefreshSignInState()

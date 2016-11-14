@@ -1,5 +1,7 @@
 ﻿<link rel="import" href="/sys/puppet-redirect/puppet-redirect.html" />
+<link rel="import" href="/sys/gold-email-input/gold-email-input.html" />
 ﻿<link rel="import" href="/SignIn/elements/signin-element.html" />
+
 
 <template>
   <style>
@@ -93,7 +95,7 @@
         }
 
 
-        div.form {
+        form {
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -148,11 +150,11 @@
               <div id="logologin"></div>
               <span id="headertxt">[[_calcHeaderText(model.Message, model.ForgotPassword$)]]</span>
             </div>
-            <div class="form" hidden$="[[model.ForgotPassword$]]">
+            <form on-submit="preventSubmit" hidden$="[[model.ForgotPassword$]]">
               <template is="dom-if" if="[[model.Message]]">
                 <p class="alert alert-danger">[[model.Message]]</p>
               </template>
-              <paper-input autofocus tabindex="1" id="txtUsername" type="text" on-keydown="checkForNameEnter" value="{{model.Username$}}" label="Email or username">
+              <paper-input autofocus tabindex="1" id="txtUsername" type="text" on-keydown="checkForNameEnter" value="{{local.username}}" label="Email or username">
                 <co-icon prefix style="margin-right:5px" icon="envelope"></co-icon>
               </paper-input>
               <paper-input tabindex="2" id="txtPassword" type="password" on-keydown="checkForPassEnter" value="{{local.password}}" label="Password">
@@ -166,14 +168,14 @@
                   Sign in
                 </paper-button>
               </div>
-            </div>
-            <div class="form" hidden$="[[_shallSend(model.Message, model.ForgotPassword$)]]">
+            </form>
+            <form on-submit="preventSubmit" hidden$="[[_shallSend(model.Message, model.ForgotPassword$)]]">
               <template is="dom-if" if="{{model.Message}}">
                 <p class="alert alert-danger">{{model.Message}}</p>
               </template>
-              <paper-input autofocus tabindex="1" id="txtEmail" type="text" on-keydown="checkForForgotNameEnter" value="{{model.Username$}}" label="Email">
+              <gold-email-input autofocus tabindex="1" id="txtEmail" required error-message="Please enter a valid email address" type="text" on-keydown="checkForForgotNameEnter" value="{{local.username}}" label="Email">
                 <co-icon prefix style="margin-right:5px" icon="envelope"></co-icon>
-              </paper-input>
+              </gold-email-input>
               <div class="formButtonRow">
                 <paper-button tabindex="4" on-tap="toggleForgotPassword" class="secondary">Back to login</paper-button>
                 <div class="spacer"></div>
@@ -182,7 +184,7 @@
                   Request
                 </paper-button>
               </div>
-            </div>
+            </form>
             <div class="form" hidden$="[[_sendSuccess(model.Message, model.ForgotPassword$)]]">
               <span>A request for a new password has been sent to your email account.<br>Note that depending on the email server it might take up to a few minutes before the email arrives<span>
               <div class="formButtonRow">
@@ -191,7 +193,7 @@
               </div>
             </div>
         </div>
-        <signin-element username="{{model.Username$}}" password="{{local.password}}" remember-me="{{model.RememberMe$}}" submit="{{model.Submit}}"></signin-element>
+        <signin-element username="{{local.username}}" password="{{local.password}}" remember-me="{{local.RememberMe$}}" submit="{{model.Submit}}" session-uri="{{model.SessionUri}}"></signin-element>
       </div>
     </template>
     <script>
@@ -200,7 +202,13 @@
             var template = script.previousElementSibling;
 
             template.local = {
-                password: ""
+                password: "",
+                username:"",
+                rememberMe: false
+            };
+
+            template.preventSubmit = function(e) {
+              e.preventDefault();
             };
 
             template.txtKeypress = function (e) {
@@ -248,10 +256,14 @@
             };
 
             template.requestPassword = function() {
-              setTimeout(function () {
-                  template.set("model.SubmitForgotPassword$", template.model.SubmitForgotPassword$ + 1);
-                  window.tu.puppetDirtyCheck();
-              });
+              var valid = this.$.txtEmail.validate();
+              if (valid) {
+                setTimeout(function () {
+                    template.set('model.Username$', template.local.username);
+                    template.set("model.SubmitForgotPassword$", template.model.SubmitForgotPassword$ + 1);
+                    window.tu.puppetDirtyCheck();
+                });
+              };
            };
 
             template.toggleForgotPassword = function() {
@@ -260,6 +272,7 @@
                 this.$.txtUsername.focus();
               }
               else {
+                this.$.txtEmail.validate();
                 this.$.txtEmail.focus();
               }
             };
