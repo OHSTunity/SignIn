@@ -181,13 +181,13 @@ namespace SignIn
             if (token == "")
             {
                 //to delete a cookie, explicitly use a date in the past
-                cookie.Expires = DateTime.Now.AddDays(-1).ToUniversalTime();
+                cookie.Expires = DateTime.UtcNow.AddDays(-1);
             }
             else if (RememberMe)
             {
                 //cookie with expiration date is persistent until that date
                 //cookie without expiration date expires when the browser is closed
-                cookie.Expires = DateTime.Now.AddDays(rememberMeDays).ToUniversalTime();
+                cookie.Expires = DateTime.UtcNow.AddDays(rememberMeDays);
             }
 
             Handle.AddOutgoingCookie(cookie.Name, cookie.GetFullValueString());
