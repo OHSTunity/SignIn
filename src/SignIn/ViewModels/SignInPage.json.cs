@@ -63,7 +63,7 @@ namespace SignIn
                 base.OnData();
                 if (Data != null)
                 {
-                    Tools = Self.GET(UriMapping.MappingUriPrefix + "/user-shortcuts/" + Data.DbIDString, () =>
+                    Tools = Self.GET(UriMapping.MappingUriPrefix + "/tunityuser/shortcuts/" + Data.DbIDString, () =>
                     {
                         var p = new Page();
                         return p;
