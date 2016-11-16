@@ -47,8 +47,8 @@
 
       .loggedin co-avatar {
         position: absolute;
-        left: 0px;
-        top: 5px;
+        left: 9px;
+        top: 56px;
       }
       .loggedin .userinfo {
         margin: 9px;
@@ -87,12 +87,12 @@
       #popup-header {
         width: 100%;
         height: 30px;
-        background-color: var(--bar-background-color,  #4b5c68);
-        color: var(--bar-color, #fff);
+        background-color: #e0e3ee;
+        color: #000;
       }
 
       #popup-header-name {
-        padding-left: 52px;
+        padding-left: 10px;
       }
 
       #simulated {
@@ -120,14 +120,15 @@
 
       #timezone {
         position: absolute;
-        right: 10px;
-        top: 40px;
+        right: 14px;
+        top: 15px;
         font-size: 10px;
         font-style: italic;
-        background-color: rgba(0,0,0,0.1);
+        /* background-color: rgba(0,0,0,0.1); */
         border-radius: 2px;
         padding: 2px;
       }
+
     </style>
     <co-popup id="popup">
 
@@ -144,9 +145,7 @@
           <div id="popup-header" class="horizontal center">
             <span id="popup-header-name">{{data.UserInfo.FullName}}</span>
             <span class="flex"></span>
-            <template is="dom-repeat" items="{{tools}}">
-              <co-icon-button title="{{item.Label}}" icon="{{item.Icon}}" on-tap="tapped" tap="{{item.Morph$}}"></co-icon-button>
-            </template>
+
           </div>
 
           <co-avatar value="{{data.UserInfo.AvatarString}}" size="40"></co-avatar>
@@ -174,8 +173,13 @@
           </template>
           <co-option icon="wrench" style="padding-left: 0px;" on-tap="gotoSettings">Settings</co-option>
         -->
-          <div style="width:100%; display:flex; align-items:center; justify-content: center;">
-            <co-option icon="sign-out" style="padding-left: 0px;" on-tap="signOut">Sign out</co-option>
+          <div style="width:100%;align-items:center; justify-content: center;">
+
+            <template is="dom-repeat" items="{{tools}}">
+              <co-option icon="{{item.Icon}}" on-tap="morphit">{{item.Label}}</co-option>
+            </template>
+            <co-option icon="wrench" on-tap="gotoSettings">Global settings</co-option>
+            <co-option icon="sign-out" on-tap="signOut">Sign out</co-option>
           </div>
       </template>
 
@@ -237,6 +241,10 @@
               this.puppet = puppet.puppet;
               this.debounce("sessionTimeCounter", this.updateSessionTime.bind(this), 1000);
             },
+            morphit: function(e){
+              this.$.popup.close();
+              e.model.get('item').Morph$+=1;
+            },
             toolsChanged: function(ev) {
               var tools = [];
               var toolData = this.data && this.data.UserInfo? this.data.UserInfo.Tools: null;
@@ -289,7 +297,8 @@
             },
             gotoSettings: function()
             {
-              console.log("settings");
+              this.$.popup.close();
+              puppet.network.changeState("/colab_organizer/settings");
             },
             signIn: function () {
               this.$.popup.close();
