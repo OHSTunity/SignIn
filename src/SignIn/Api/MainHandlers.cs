@@ -194,18 +194,6 @@ namespace SignIn
         }
 
 
-        protected MasterPage GetMainPage()
-        {
-            MasterPage m = Master.Current.GetApplication<MasterPage>();
-           
-            if (m == null)
-            {
-                m = Master.Current.SetApplication(new MasterPage()) as MasterPage;
-            }
-
-            return m;
-        }
-
         protected void RefreshSignInState()
         {
             Utils.RefreshSignInState();
@@ -237,27 +225,10 @@ namespace SignIn
 
         protected Response HandleSignInForm(string query)
         {
-            MasterPage main = this.GetMainPage();
-
-            main.RequireSignIn = false;
-            main.OriginalUrl = GetOriginalUrl(query);
-            main.Open("/signin/partial/signin-form");
-
-            return main;
+             return null;
         }
 
-        protected String GetOriginalUrl(String query)
-        {
-            var collection = HttpUtility.ParseQueryString(query);
-            try
-            {
-                return collection.Get("originurl");
-            }
-            catch
-            {
-                return "";
-            }
-        }
+
       
         protected Response HandleSignOut()
         {

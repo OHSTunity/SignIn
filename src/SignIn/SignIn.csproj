@@ -96,9 +96,6 @@
     <Compile Include="ViewModels\AlreadyInPage.json.cs">
       <DependentUpon>AlreadyInPage.json</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\MasterPage.json.cs">
-      <DependentUpon>MasterPage.json</DependentUpon>
-    </Compile>
     <Compile Include="ViewModels\ProfileFormPage.json.cs">
       <DependentUpon>ProfileFormPage.json</DependentUpon>
     </Compile>
@@ -143,9 +140,6 @@
   <ItemGroup>
     <None Include="packages.config" />
     <TypedJSON Include="ViewModels\RegistrationFormPage.json">
-      <Generator>MsBuild:Compile</Generator>
-    </TypedJSON>
-    <TypedJSON Include="ViewModels\MasterPage.json">
       <Generator>MsBuild:Compile</Generator>
     </TypedJSON>
     <TypedJSON Include="ViewModels\AlreadyInPage.json">

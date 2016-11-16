@@ -13,12 +13,7 @@ namespace SignIn {
         public static void RefreshSignInState()
         {
             Master m = Master.Current;
-            MasterPage page = m.GetApplication<MasterPage>();
-            if (page != null)
-                page.RefreshSignInState();
-
-            if (page != null)
-                page.RefreshSignInState();
+            
             if (m.Utils.PersistantApp is SignInPage)
                 (m.Utils.PersistantApp as SignInPage).RefreshSignInState();
         }
