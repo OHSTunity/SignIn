@@ -37,7 +37,7 @@ namespace SignIn
                         RefreshAuthCookie(session);
                     }
                 }
-                
+
                 return null;
             });
 
@@ -106,24 +106,50 @@ namespace SignIn
                 return m.Utils;
             });
 
-            Handle.GET<string, string, string>("/signin/partial/signin/{?}/{?}/{?}", HandleSignIn, new HandlerOptions() { SkipRequestFilters = true });
-            Handle.GET("/signin/partial/signin/", HandleSignIn, new HandlerOptions() { SkipRequestFilters = true });
-            Handle.GET("/signin/partial/signin", HandleSignIn, new HandlerOptions() { SkipRequestFilters = true });
+
+            Handle.POST("/signin/partial/signin", (Request request) =>
+            {
+                NameValueCollection values = HttpUtility.ParseQueryString(request.Body);
+                string username = values["username"];
+                string password = values["password"];
+                string rememberMe = values["rememberMe"];
+
+                HandleSignIn(username, password, rememberMe);
+                Session.Current.CalculatePatchAndPushOnWebSocket();
+
+                return 200;
+            }, new HandlerOptions() { SkipRequestFilters = true });
+
+
+            Handle.GET("/signin/partial/signin-form", (Request request) =>
+            {
+                Master m = (Master)Self.GET("/signin/mobile/master");
+                var p = m.GetApplication<SignInFormPage>();
+                if (p == null)
+                {
+                    p = new SignInFormPage() { SessionUri = Session.Current.SessionUri };
+                }
+                m.SetApplication(p);
+                return p;
+            
+            }, new HandlerOptions() { SelfOnly = true });
+            
+
+
             Handle.GET("/signin/partial/signout", HandleSignOut, new HandlerOptions() { SkipRequestFilters = true });
 
             Handle.GET("/signin/signinuser", HandleSignInForm);
             Handle.GET<string>("/signin/signinuser?{?}", HandleSignInForm);
 
-            Handle.GET("/signin/partial/signin-form", () => new SignInFormPage(), new HandlerOptions() { SelfOnly = true });
-           
+
             UriMapping.Map("/signin/user", UriMapping.MappingUriPrefix + "/user");
+            UriMapping.Map("/signin/partial/signin-form", UriMapping.MappingUriPrefix + "/signin");
             UriMapping.Map("/signin/mobile/user", UriMapping.MappingUriPrefix + "/mobile/user");
-            UriMapping.Map("/signin/signinuser", UriMapping.MappingUriPrefix + "/userform"); //inline form; used in RSE Launcher
         }
 
         protected void ClearAuthCookie()
         {
-            this.SetAuthCookie(null, false);
+            this.SetAuthCookie("", false);
         }
 
         protected void RefreshAuthCookie(UserSession session)
@@ -144,59 +170,37 @@ namespace SignIn
             Handle.AddOutgoingCookie(cookie.Name, cookie.GetFullValueString());
         }
 
-        protected void SetAuthCookie(UserSession session, bool RememberMe)
+        protected void SetAuthCookie(string token, bool RememberMe)
         {
             Cookie cookie = new Cookie()
             {
-                Name = AuthCookieName
+                Name = AuthCookieName,
+                Value = token
             };
 
-            if (session != null && session.Token != null)
+            if (token == "")
             {
-                cookie.Value = session.Token.Name;
-            }
-
-            if (session == null)
-            {
-                cookie.Expires = DateTime.Today;
+                //to delete a cookie, explicitly use a date in the past
+                cookie.Expires = DateTime.UtcNow.AddDays(-1);
             }
             else if (RememberMe)
             {
-                cookie.Expires = DateTime.Now.AddDays(rememberMeDays);
-            }
-            else
-            {
-                cookie.Expires = DateTime.Now.AddDays(1);
+                //cookie with expiration date is persistent until that date
+                //cookie without expiration date expires when the browser is closed
+                cookie.Expires = DateTime.UtcNow.AddDays(rememberMeDays);
             }
 
             Handle.AddOutgoingCookie(cookie.Name, cookie.GetFullValueString());
         }
 
 
-
-        protected MasterPage GetMainPage()
-        {
-            MasterPage m = Master.Current.GetApplication<MasterPage>();
-           
-            if (m == null)
-            {
-                m = Master.Current.SetApplication(new MasterPage()) as MasterPage;
-            }
-
-            return m;
-        }
-
         protected void RefreshSignInState()
         {
             Utils.RefreshSignInState();
         }
 
-        protected Response HandleSignIn()
-        {
-            return HandleSignIn(null, null, null);
-        }
 
-        protected Response HandleSignIn(string Username, string Password, string RememberMe)
+        protected void HandleSignIn(string Username, string Password, string RememberMe)
         {
             Username = Uri.UnescapeDataString(Username);
 
@@ -206,11 +210,12 @@ namespace SignIn
             {
                 Utils.SetMessage("Invalid username or password!");
             }
-
-            SetAuthCookie(session, RememberMe == "true");
+            else
+            {
+                SetAuthCookie(session.Token.Name, RememberMe == "true");
+            }
 
             RefreshSignInState();
-            return Master.Current;
         }
 
         protected Response HandleSignInForm()
@@ -220,27 +225,10 @@ namespace SignIn
 
         protected Response HandleSignInForm(string query)
         {
-            MasterPage main = this.GetMainPage();
-
-            main.RequireSignIn = false;
-            main.OriginalUrl = GetOriginalUrl(query);
-            main.Open("/signin/partial/signin-form");
-
-            return main;
+             return null;
         }
 
-        protected String GetOriginalUrl(String query)
-        {
-            var collection = HttpUtility.ParseQueryString(query);
-            try
-            {
-                return collection.Get("originurl");
-            }
-            catch
-            {
-                return "";
-            }
-        }
+
       
         protected Response HandleSignOut()
         {

@@ -1,5 +1,4 @@
-﻿<script src="/SignIn/scripts/sha1.js"></script>
-
+<script src="/SignIn/scripts/sha1.js"></script>
 <dom-module id="signin-element">
     <template>
         <style>
@@ -15,8 +14,9 @@
                 username: { type: String },
                 password: { type: String, notify: true },
                 rememberMe: { type: Boolean, value: false },
-                url: { type: String, value: "/signin/partial/signin/" },
-                submit: { type: Number, value: 0, observer: "submitChanged" }
+                url: { type: String, value: "/signin/partial/signin" },
+                submit: { type: Number, value: 0, observer: "submitChanged" },
+                sessionUri: { type: String }
             },
             attached: function () {
                 this.attachedCalled = true;
@@ -25,14 +25,21 @@
                 if (!this.attachedCalled || !newVal) {
                     return;
                 }
-
                 setTimeout(function () {
-                    var password = Sha1.hash(this.password);
-                    var url = this.url + this.username + "/" + password + "/" + this.rememberMe;
-
-                    this.set("password", "");
-                    document.querySelector("puppet-client").network.changeState(url);
+                    this._signIn();
                 }.bind(this));
+            },
+            _signIn: function () {
+                var http = new XMLHttpRequest();
+                var url = this.url;
+                var password = Sha1.hash(this.password);
+                var params = ["username=" , escape(this.username), "&password=", escape(password), "&rememberMe=", this.rememberMe].join("");
+                http.open("POST", url, true);
+                http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                http.setRequestHeader("X-Referer", this.sessionUri);
+                http.onreadystatechange = function () {
+                };
+                http.send(params);
             }
         });
     </script>

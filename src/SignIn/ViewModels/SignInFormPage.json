@@ -1,15 +1,20 @@
 {
   "Uri": "",
+  "Html": "/SignIn/viewmodels/SignInFormPage.html",
+  "SessionUri": "",
 
   "IsSignedIn": false,
 
-  "Html": "/SignIn/viewmodels/SignInFormPage.html",
   "Submit": 0,
+  "SubmitForgotPassword$": 0,
+  "SignOut$": 0,
   "SignInClick$": 0,
+
+  "ForgotPassword$": false,
+
   "Username$": "",
   "RememberMe$": true,
-  "Message": "",
+  "Message": ""
 
-  "SignOut$": 0
- 
+
 }

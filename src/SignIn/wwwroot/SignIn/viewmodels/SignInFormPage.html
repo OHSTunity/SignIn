@@ -1,36 +1,45 @@
 ﻿<link rel="import" href="/sys/puppet-redirect/puppet-redirect.html" />
+<link rel="import" href="/sys/gold-email-input/gold-email-input.html" />
 ﻿<link rel="import" href="/SignIn/elements/signin-element.html" />
+
 
 <template>
   <style>
     #loginBackground {
-      position: absolute;
-      left: 0px;
-      top: 0px;
-      bottom: 0px;
-      right: 0px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
     }
 
     #loginBox {
-      width: 400px;
-      border-radius: 5px;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 30px;
-      background-image: linear-gradient(-195deg, #1eaef8 25%, #1782fa 65%);
     }
 
+    #header {
+      width: 100%;
+      background-image: linear-gradient(-195deg, #1eaef8 25%, #1782fa 65%);
+      border-radius: 5px;
+      padding: 10px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    #headertxt {
+      color: white;
+      font-size: 20px;
+      margin-left: 35px;
+    }
 
     #logologin {
       width: 63px;
       height: 56px;
       background: url(/SignIn/images/cl-logo-fff.png);
       background-size: contain;
-      margin-bottom: 30px;
       background-repeat: no-repeat;
       transition: all 300ms ease-in 0s;
     }
@@ -85,79 +94,106 @@
           display: block
         }
 
-        input {
-            padding: 8px;
-            margin: 5px;
-			  font-family: "Lato", Helvetica, Arial, sans-serif;
-			  font-size: 12px;
-			  line-height: 1.467;
-			  color: #34495e;
-			  border: 1px #d9d9d9 solid;
-			  border-radius: 5px;
-			  box-shadow: none;
 
-			  -webkit-transition: border .25s linear, color .25s linear, background-color .25s linear;
-			  transition: border .25s linear, color .25s linear, background-color .25s linear;
-		  }
-        button
-        {
-	        /*width: inherit;*/
-	        min-width: 36px;
-	        padding: 6px 12px;
-	        margin:10px 5px;
-	        font-size: 15px;
-	        font-weight: normal;
-	        line-height: 1.4;
-	        border: 1px solid;
-	        border-radius: 18px;
-	        -webkit-transition: border .25s linear, color .25s linear, background-color .25s linear;
-	        transition: border .25s linear, color .25s linear, background-color .25s linear;
-	        -webkit-font-smoothing: subpixel-antialiased;
-	        color: #fff;
-	        background-color: rgba(170, 170, 170, 1);
-  	        cursor: pointer;
-  	        white-space: nowrap;
-  	        border-color: rgba(0, 0, 0, 0.1);
-    	        outline: none;
-        }
-        button.btn-primary
-        {
-	        color: #fff;
-	        background-color: rgba(76, 145, 202, 1);
+        form {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
 
-        button.btn-primary:hover
-        {
-	        background-color: rgba(76, 145, 202, .75);
+        #txtUsername {
+          min-width: 250px;
+        }
+        #txtPassword {
+          min-width: 250px;
+        }
+        #txtEmail {
+          min-width: 250px;
         }
 
-        .fpassword {
-            color: beige;
+        div.formButtonRow {
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          align-items: center;
+          margin-top: 15px;
         }
 
-     </style>
+        paper-button {
+          font-family: roboto;
+        }
+
+        paper-button.primary {
+          background-color: #1782fa;
+          color: white;
+          padding: 5px 5px;
+          margin: 0px;
+        }
+
+        paper-button.secondary {
+          color: #1782fa;
+          opacity: 0.7;
+          font-size: 12px;
+          padding-left: 0px;
+          margin-left: 0px;
+        }
+
+        div.spacer {
+          flex:1;
+        }
+
+    </style>
     <template is="dom-bind">
       <div id="loginBackground">
-        <div class$="{{calculateClass(model.Message, model.FailedLoginCount)}}" id="loginBox">
-            <template is="dom-if" if="{{!model.IsSignedIn}}">
-                <div id="logologin"></div>
-                 <template is="dom-if" if="{{model.Message}}">
-                    <p class="alert alert-danger">{{model.Message}}</p>
-                </template>
-
-                <co-input class="with-margin" id="txtUsername" type="text" value="{{model.Username$}}" placeholder="Username" class="form-control"></co-input>
-                <co-input class="with-margin" id="txtPassword" type="password" value="{{local.password}}" placeholder="Password" class="form-control"></co-input>
-<!--
-                <co-input class="with-margin" autofocus="autofocus" type="text" name="username" width="100%" value="{{UserName$}}" icon="none" placeholder="Login name"></co-input>
-                <co-input class="with-margin" type="password" name="pwd" value="{{Password$}}" icon="none" placeholder="Password"></co-input>
-                -->
-                <co-button class="btn btn-primary" icon="login" primary=""  on-click="signIn">Sign in</co-button>
-               
-                <a class="fpassword" style="margin-top:25px;" href="/colab_users/forgot_password">Forgot password</a>
-<!--                <co-button primary class="with-margin" id="loginbtn" onclick="getModel(this).Lo gin$++" icon="arrow-circle-o-right">Login</co-button> -->
-            </template>
+        <div class$="[[calculateClass(model.Message, model.FailedLoginCount)]]" id="loginBox" hidden="[[model.IsSignedIn]]">
+            <div id="header">
+              <div id="logologin"></div>
+              <span id="headertxt">[[_calcHeaderText(model.Message, model.ForgotPassword$)]]</span>
+            </div>
+            <form on-submit="preventSubmit" hidden$="[[model.ForgotPassword$]]">
+              <template is="dom-if" if="[[model.Message]]">
+                <p class="alert alert-danger">[[model.Message]]</p>
+              </template>
+              <paper-input autofocus tabindex="1" id="txtUsername" type="text" on-keydown="checkForNameEnter" value="{{local.username}}" label="Email or username">
+                <co-icon prefix style="margin-right:5px" icon="envelope"></co-icon>
+              </paper-input>
+              <paper-input tabindex="2" id="txtPassword" type="password" on-keydown="checkForPassEnter" value="{{local.password}}" label="Password">
+                <co-icon prefix style="margin-right:5px" icon="lock"></co-icon>
+              </paper-input>
+              <div class="formButtonRow">
+                <paper-button tabindex="4" on-tap="toggleForgotPassword" class="secondary">Forgot password</paper-button>
+                <div class="spacer"></div>
+                <paper-button tabindex="3" id="signinButton" raised class="primary" on-tap="signIn">
+                  <co-icon style="margin-right:5px" icon="sign-in"></co-icon>
+                  Sign in
+                </paper-button>
+              </div>
+            </form>
+            <form on-submit="preventSubmit" hidden$="[[_shallSend(model.Message, model.ForgotPassword$)]]">
+              <template is="dom-if" if="{{model.Message}}">
+                <p class="alert alert-danger">{{model.Message}}</p>
+              </template>
+              <gold-email-input autofocus tabindex="1" id="txtEmail" required error-message="Please enter a valid email address" type="text" on-keydown="checkForForgotNameEnter" value="{{local.username}}" label="Email">
+                <co-icon prefix style="margin-right:5px" icon="envelope"></co-icon>
+              </gold-email-input>
+              <div class="formButtonRow">
+                <paper-button tabindex="4" on-tap="toggleForgotPassword" class="secondary">Back to login</paper-button>
+                <div class="spacer"></div>
+                <paper-button tabindex="3" id="requestButton" raised class="primary" on-tap="requestPassword">
+                  <co-icon style="margin-right:5px" icon="envelope-square"></co-icon>
+                  Request
+                </paper-button>
+              </div>
+            </form>
+            <div class="form" hidden$="[[_sendSuccess(model.Message, model.ForgotPassword$)]]">
+              <span>A request for a new password has been sent to your email account.<br>Note that depending on the email server it might take up to a few minutes before the email arrives<span>
+              <div class="formButtonRow">
+                <div class="spacer"></div>
+                <paper-button tabindex="4" on-tap="toggleForgotPassword" class="primary">Back to login</paper-button>
+              </div>
+            </div>
         </div>
-        <signin-element username="{{model.Username$}}" password="{{local.password}}" remember-me="{{model.RememberMe$}}" submit="{{model.Submit}}"></signin-element>
+        <signin-element username="{{local.username}}" password="{{local.password}}" remember-me="{{local.RememberMe$}}" submit="{{model.Submit}}" session-uri="{{model.SessionUri}}"></signin-element>
       </div>
     </template>
     <script>
@@ -166,7 +202,13 @@
             var template = script.previousElementSibling;
 
             template.local = {
-                password: ""
+                password: "",
+                username:"",
+                rememberMe: false
+            };
+
+            template.preventSubmit = function(e) {
+              e.preventDefault();
             };
 
             template.txtKeypress = function (e) {
@@ -189,11 +231,67 @@
             };
 
             template.signIn = function () {
-                console.log('click');
                 setTimeout(function () {
                     template.set("model.SignInClick$", template.model.SignInClick$ + 1);
                     window.tu.puppetDirtyCheck();
                 });
+            }
+
+            template.checkForNameEnter = function(e) {
+              if (e.keyCode === 13) {
+                this.$.txtPassword.focus();
+              }
+            };
+
+            template.checkForPassEnter = function(e) {
+              if (e.keyCode === 13) {
+                this.signIn();
+              }
+            };
+
+            template.checkForForgotNameEnter = function(e) {
+              if (e.keyCode === 13) {
+                this.requestPassword();
+              }
+            };
+
+            template.requestPassword = function() {
+              var valid = this.$.txtEmail.validate();
+              if (valid) {
+                setTimeout(function () {
+                    template.set('model.Username$', template.local.username);
+                    template.set("model.SubmitForgotPassword$", template.model.SubmitForgotPassword$ + 1);
+                    window.tu.puppetDirtyCheck();
+                });
+              };
+           };
+
+            template.toggleForgotPassword = function() {
+              template.set('model.ForgotPassword$', !template.model.ForgotPassword$);
+              if (template.model.ForgotPassword$) {
+                this.$.txtUsername.focus();
+              }
+              else {
+                this.$.txtEmail.validate();
+                this.$.txtEmail.focus();
+              }
+            };
+
+            template._sendSuccess = function(msg, fp) {
+              return !fp || msg != "success";
+            };
+
+            template._shallSend = function(msg, fp) {
+              return !fp || msg == "success";
+            };
+
+            template._calcHeaderText = function(msg, fp) {
+              if (!fp)
+                return "Sign in";
+              else if (msg == "success")
+                return "Request sent!";
+              else
+                return "New password";
             };
         })();
     </script>
