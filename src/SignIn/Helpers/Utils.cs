@@ -27,6 +27,17 @@ namespace SignIn {
 
         }
 
+        public static void MorphToOriginUri()
+        {
+            Master m = Master.Current;
+            if (m.Utils.PersistantApp is SignInPage)
+            {
+                var uri = (m.Utils.PersistantApp as SignInPage).OriginUri;
+                Master.SendCommand(ColabCommand.MORPH_URL, uri != null ? uri : "/");
+            }
+
+        }
+
         public static void SetMessage(String message)
         {
             Master m = Master.Current;

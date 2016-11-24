@@ -31,7 +31,6 @@ namespace SignIn
                 SessionStarted = DateTime.UtcNow.ToString("o");
                 Data = session;
                 this.IsSignedIn = true;
-                Master.SendCommand(ColabCommand.MORPH_URL, OriginUri != null ? OriginUri : "/");
             }
         }
 

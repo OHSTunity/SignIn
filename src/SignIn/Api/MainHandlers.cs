@@ -114,7 +114,10 @@ namespace SignIn
                 string password = values["password"];
                 string rememberMe = values["rememberMe"];
 
-                HandleSignIn(username, password, rememberMe);
+                if (HandleSignIn(username, password, rememberMe))
+                {
+                    Utils.MorphToOriginUri();
+                }
                 Session.Current.CalculatePatchAndPushOnWebSocket();
 
                 return 200;
@@ -216,7 +219,7 @@ namespace SignIn
         }
 
 
-        protected void HandleSignIn(string Username, string Password, string RememberMe)
+        protected Boolean HandleSignIn(string Username, string Password, string RememberMe)
         {
             Username = Uri.UnescapeDataString(Username);
 
@@ -232,6 +235,8 @@ namespace SignIn
             }
 
             RefreshSignInState();
+
+            return session != null;
         }
 
       
