@@ -18,6 +18,15 @@ namespace SignIn {
                 (m.Utils.PersistantApp as SignInPage).RefreshSignInState();
         }
 
+        public static void SetOriginUri(String origin)
+        {
+            Master m = Master.Current;
+
+            if (m.Utils.PersistantApp is SignInPage)
+                (m.Utils.PersistantApp as SignInPage).OriginUri = origin;
+
+        }
+
         public static void SetMessage(String message)
         {
             Master m = Master.Current;
@@ -26,7 +35,6 @@ namespace SignIn {
                 page.Message = message;
             if (m.Utils.PersistantApp is SignInPage)
                 (m.Utils.PersistantApp as SignInPage).Message = message;
-            Master.SendUserError(message);
         }
 
         /// <summary>

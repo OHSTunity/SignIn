@@ -8,6 +8,8 @@ namespace SignIn
 {
     partial class SignInPage : Page, IBound<UserSession>
     {
+        public string OriginUri;
+
         void Handle(Input.SignInClick Action)
         {
             this.Message = null;
@@ -29,7 +31,7 @@ namespace SignIn
                 SessionStarted = DateTime.UtcNow.ToString("o");
                 Data = session;
                 this.IsSignedIn = true;
-                Master.SendCommand(ColabCommand.REREQUEST_URL, "");
+                Master.SendCommand(ColabCommand.MORPH_URL, OriginUri != null ? OriginUri : "/");
             }
         }
 

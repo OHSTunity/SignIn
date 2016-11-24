@@ -121,7 +121,7 @@ namespace SignIn
             }, new HandlerOptions() { SkipRequestFilters = true });
 
 
-            Handle.GET("/signin/partial/signin-form", (Request request) =>
+            Handle.GET("/signin/signinuser", (Request request) =>
             {
                 Master m = (Master)Self.GET("/signin/mobile/master");
                 var p = m.GetApplication<SignInFormPage>();
@@ -129,21 +129,37 @@ namespace SignIn
                 {
                     p = new SignInFormPage() { SessionUri = Session.Current.SessionUri };
                 }
+                Utils.SetOriginUri("/");
                 m.SetApplication(p);
                 return p;
             
-            }, new HandlerOptions() { SelfOnly = true });
-            
+            });
+
+            Handle.GET("/signin/signinuser?{?}", (Request request, string pars) =>
+            {
+                Master m = (Master)Self.GET("/signin/mobile/master");
+                var p = m.GetApplication<SignInFormPage>();
+                if (p == null)
+                {
+                    p = new SignInFormPage() { SessionUri = Session.Current.SessionUri };
+                }
+                if (pars != null)
+                {
+                    NameValueCollection values = HttpUtility.ParseQueryString(pars);
+                    Utils.SetOriginUri(values["originurl"]);
+                }
+                m.SetApplication(p);
+                return p;
+
+            });
+
 
 
             Handle.GET("/signin/partial/signout", HandleSignOut, new HandlerOptions() { SkipRequestFilters = true });
 
-            Handle.GET("/signin/signinuser", HandleSignInForm);
-            Handle.GET<string>("/signin/signinuser?{?}", HandleSignInForm);
-
-
+            UriMapping.Map("/signin/signinuser", UriMapping.MappingUriPrefix + "/signin");
+            UriMapping.Map("/signin/signinuser?@w", UriMapping.MappingUriPrefix + "/signin/@w");
             UriMapping.Map("/signin/user", UriMapping.MappingUriPrefix + "/user");
-            UriMapping.Map("/signin/partial/signin-form", UriMapping.MappingUriPrefix + "/signin");
             UriMapping.Map("/signin/mobile/user", UriMapping.MappingUriPrefix + "/mobile/user");
         }
 
@@ -217,17 +233,6 @@ namespace SignIn
 
             RefreshSignInState();
         }
-
-        protected Response HandleSignInForm()
-        {
-            return this.HandleSignInForm(string.Empty);
-        }
-
-        protected Response HandleSignInForm(string query)
-        {
-             return null;
-        }
-
 
       
         protected Response HandleSignOut()
