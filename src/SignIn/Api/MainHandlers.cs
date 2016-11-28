@@ -123,6 +123,34 @@ namespace SignIn
                 return 200;
             }, new HandlerOptions() { SkipRequestFilters = true });
 
+            Handle.GET("/signin/tunityuser/shortcuts/{?}", (Request request, String userid) =>
+            {
+                var menu = new Menu();
+                var user = ColabDbHelper.FromIDString<TunityUser>(userid);
+                if (user != null && Db.Equals(user, SessionData.Current.User))
+                {
+                    if (AccessHelper.IsHeadAdmin())
+                    {
+                        menu.Items.Add(new MenuItem()
+                        {
+                            Label = "Global settings",
+                            Icon = "wrench",
+                            Url = "/settings"
+                        });
+                    }
+                    if (AccessHelper.IsSuperUser())
+                    {
+                        menu.Items.Add(new MenuItem()
+                        {
+                            Label = "Configurations",
+                            Icon = "database",
+                            Url = "/configs"
+                        });
+
+                    }
+                }
+                return menu;
+            });
 
             Handle.GET("/signin/signinuser", (Request request) =>
             {
@@ -160,6 +188,7 @@ namespace SignIn
 
             Handle.GET("/signin/partial/signout", HandleSignOut, new HandlerOptions() { SkipRequestFilters = true });
 
+            UriMapping.Map("/signin/tunityuser/shortcuts/@w", UriMapping.MappingUriPrefix + "/tunityuser/shortcuts/@w");
             UriMapping.Map("/signin/signinuser", UriMapping.MappingUriPrefix + "/signin");
             UriMapping.Map("/signin/signinuser?@w", UriMapping.MappingUriPrefix + "/signin/@w");
             UriMapping.Map("/signin/user", UriMapping.MappingUriPrefix + "/user");

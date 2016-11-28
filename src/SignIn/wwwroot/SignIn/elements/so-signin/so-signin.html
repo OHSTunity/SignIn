@@ -178,7 +178,6 @@
             <template is="dom-repeat" items="{{tools}}">
               <co-option icon="{{item.Icon}}" on-tap="morphit">{{item.Label}}</co-option>
             </template>
-            <co-option icon="wrench" on-tap="gotoSettings">Global settings</co-option>
             <co-option icon="sign-out" on-tap="signOut">Sign out</co-option>
           </div>
       </template>
@@ -294,11 +293,6 @@
             isDomReady: false,
             domReady: function () {
                 this.isDomReady = true;
-            },
-            gotoSettings: function()
-            {
-              this.$.popup.close();
-              puppet.network.changeState("/colab_organizer/settings");
             },
             signIn: function () {
               this.$.popup.close();
