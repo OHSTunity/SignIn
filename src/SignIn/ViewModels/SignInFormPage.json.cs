@@ -1,4 +1,4 @@
-using Concepts.Ring8;
+using Concepts.Ring8.Tunity;
 using Starcounter;
 using Colab.Common;
 
@@ -15,6 +15,14 @@ namespace SignIn {
          
             this.Submit++;
         }
+
+        public void RefreshSignInState()
+        {
+            UserSession session = TunityUser.GetCurrentUserSession();
+            IsSignedIn = session != null;
+        }
+
+
 
         void Handle(Input.SignOut action)
         {

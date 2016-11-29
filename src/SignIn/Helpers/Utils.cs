@@ -16,6 +16,10 @@ namespace SignIn {
             
             if (m.Utils.PersistantApp is SignInPage)
                 (m.Utils.PersistantApp as SignInPage).RefreshSignInState();
+
+            SignInFormPage page = m.GetApplication<SignInFormPage>();
+            if (page != null)
+                page.RefreshSignInState();
         }
 
         public static void SetOriginUri(String origin)
