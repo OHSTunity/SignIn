@@ -1,0 +1,405 @@
+﻿<link rel="import" href="/SignIn/elements/signin-element.html" />
+<link rel="import" href="/co-common/elements/app/co-logo.html">
+<link rel="import" href="/co-common/css/co-layout.html">
+<link rel="import" href="/sys/gold-email-input/gold-email-input.html" />
+<link rel="import" href="/sys/puppet-redirect/puppet-redirect.html" />
+<link rel="import" href="/sys/iron-pages/iron-pages.html">
+
+<dom-module id="so-signin-form">
+  <template>
+    <style include="co-layout">
+      #background {
+        position: absolute;
+        display: flex;
+        flex-direction:row;
+        left: 0px;
+        right: 0px;
+        top: 0px;
+        bottom: 0px;
+      }
+
+      :host(.smallscreen) #background {
+        flex-direction: column;
+      }
+
+      #titlebar {
+        flex: 0.15;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background-image: linear-gradient(-195deg, #1eaef8 25%, #1782fa 65%);
+
+        transform-origin: left 50% 0;
+        -moz-animation-name: widthOut;
+        -moz-animation-iteration-count: 1;
+        -moz-animation-timing-function: ease-out;
+        -moz-animation-duration: 1s;
+
+        -webkit-animation-name: widthOut;
+        -webkit-animation-iteration-count: 1;
+        -webkit-animation-timing-function: ease-out;
+        -webkit-animation-duration: 1s;
+
+        animation-name: widthOut;
+        animation-iteration-count: 1;
+        animation-timing-function: ease-out;
+        animation-duration: 1s;
+      }
+
+      :host(.smallscreen) #titlebar {
+        height: 100px;
+        width: 100%;
+        flex-direction: row;
+        flex:none;
+      }
+
+      #titleName {
+        color: white;
+        font-size: 3vw;
+        padding: 20px;
+      }
+
+      :host(.smallscreen) #titleName {
+        font-size: 10vw;
+      }
+
+      #logo {
+        height: 50px;
+        width: 50px;
+        margin-left: 10px;
+        margin-top: 10px;
+        color:white;
+      }
+
+      #loginBackground {
+        position: relative;
+        flex:0.85;
+        height: 100%;
+      }
+
+      :host(.smallscreen) #loginBackground {
+        flex:1;
+        width: 100%;
+      }
+
+      .header {
+        width: 100%;
+        height: 30%;
+        display: flex;
+      }
+
+      :host(.smallscreen) .header {
+        height: 20%;
+      }
+
+      #backgroundHeader {
+        align-items: center;
+      /*  border-bottom: 4px solid #1782fa;*/
+      }
+
+      #backgroundDivider {
+        background-image: linear-gradient(-195deg, #1eaef8 25%, #1782fa 65%);
+        height: 2px;
+        width: 100%;
+        -moz-animation-name: widthOut;
+        -moz-animation-iteration-count: 1;
+        -moz-animation-timing-function: ease-out;
+        -moz-animation-duration: 1s;
+
+        -webkit-animation-name: widthOut;
+        -webkit-animation-iteration-count: 1;
+        -webkit-animation-timing-function: ease-out;
+        -webkit-animation-duration: 1s;
+
+        animation-name: widthOut;
+        animation-iteration-count: 1;
+        animation-timing-function: ease-out;
+        animation-duration: 1s;
+      }
+
+      @keyframes widthOut {
+        0% {
+          transform: scaleX(0.0);
+        }
+        100% {
+          transform: scaleX(1.0);
+        }
+      }
+
+      .header.page {
+        justify-content: center;
+        align-items: flex-end;
+      }
+
+      .header.page span {
+        font-weight: bold;
+        color: #1782fA;
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      section {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 0px;
+        bottom: 0px;
+      }
+
+      .content.page {
+        display: flex;
+        justify-content: center;
+      }
+
+      #txtUsername {
+        min-width: 250px;
+      }
+      #txtPassword {
+        min-width: 250px;
+      }
+      #txtEmail {
+        min-width: 250px;
+      }
+
+      div.formButtonRow {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        align-items: center;
+        margin-top: 15px;
+      }
+
+      paper-button {
+        font-family: roboto;
+      }
+
+      paper-button.primary {
+        background-color: #1782fa;
+        color: white;
+        padding: 5px 5px;
+        margin: 0px;
+      }
+
+      paper-button.secondary {
+        color: #1782fa;
+        opacity: 0.7;
+        font-size: 12px;
+        padding-left: 0px;
+        margin-left: 0px;
+      }
+
+      div.spacer {
+        flex:1;
+      }
+
+      #spinner {
+        margin-top: 20px;
+        color: #1782fA;
+        font-size: 34px;
+      }
+
+      #spinner[hidden] {
+        display: none;
+      }
+
+      .alert {
+          color: red;
+      }
+
+    </style>
+    <div id="background">
+      <div id="titlebar">
+        <co-logo id="logo"></co-logo>
+        <!--<span id="titleName">Intranet</span>-->
+      </div>
+      <div id="loginBackground">
+        <div id="backgroundHeader" class="header"></div>
+        <div id="backgroundDivider"></div>
+        <div id="content">
+          <iron-pages selected="[[_activePage]]" attr-for-selected="page">
+
+            <section page="login">
+              <div class="header page">
+                <span>Sign in</span>
+              </div>
+              <div class="content page">
+                <form on-submit="preventSubmit" hidden$="[[_waiting]]">
+                  <template is="dom-if" if="[[_message]]">
+                    <p class="alert alert-danger">[[_message]]</p>
+                  </template>
+                  <paper-input autofocus tabindex="1" id="txtUsername" type="text" on-keydown="checkForNameEnter" value="{{_user}}" label="Email or username">
+                    <co-icon prefix style="margin-right:5px" icon="envelope"></co-icon>
+                  </paper-input>
+                  <paper-input tabindex="2" id="txtPassword" type="password" on-keydown="checkForPassEnter" value="{{_password}}" label="Password">
+                    <co-icon prefix style="margin-right:5px" icon="lock"></co-icon>
+                  </paper-input>
+                  <div class="formButtonRow">
+                    <paper-button tabindex="4" on-tap="toggleForgotPassword" class="secondary">Forgot password</paper-button>
+                    <div class="spacer"></div>
+                    <paper-button tabindex="3" id="signinButton" raised class="primary" on-tap="signIn">
+                      <co-icon style="margin-right:5px" icon="sign-in"></co-icon>
+                      Sign in
+                    </paper-button>
+                  </div>
+                </form>
+                <co-icon id="spinner" spin icon="spinner" hidden$="[[!_waiting]]"></co-icon>
+              </div>
+            </section>
+
+            <section page="forgotpassword">
+              <div class="header page">
+                <span>Request new password</span>
+              </div>
+              <div class="content page">
+                <form on-submit="preventSubmit" hidden$="[[_waiting]]">
+                  <template is="dom-if" if="[[_message]]">
+                    <p class="alert alert-danger">[[_message]]</p>
+                  </template>
+                  <gold-email-input autofocus tabindex="1" id="txtEmail" required error-message="Please enter a valid email address" type="text" on-keydown="checkForForgotNameEnter" value="{{_user}}" label="Email">
+                    <co-icon prefix style="margin-right:5px" icon="envelope"></co-icon>
+                  </gold-email-input>
+                  <div class="formButtonRow">
+                    <paper-button tabindex="3" on-tap="toggleForgotPassword" class="secondary">Back to login</paper-button>
+                    <div class="spacer"></div>
+                    <paper-button tabindex="2" id="requestButton" raised class="primary" on-tap="requestPassword">
+                      <co-icon style="margin-right:5px" icon="envelope-square"></co-icon>
+                      Request
+                    </paper-button>
+                  </div>
+                </form>
+                <co-icon id="spinner" spin icon="spinner" hidden$="[[!_waiting]]"></co-icon>
+              </div>
+            </section>
+
+            <section page="forgotpasswordsent">
+              <div class="header page">
+                <span>Request sent!</span>
+              </div>
+              <div class="content page">
+                <div class="form">
+                  <span>A request for a new password has been sent to your email account.<br>Note that depending on the email server it might take up to a few minutes before the email arrives<span>
+                  <div class="formButtonRow">
+                    <div class="spacer"></div>
+                    <paper-button id="backtologinButton" tabindex="1" autofocus on-tap="toggleForgotPassword" raised class="primary">Back to login</paper-button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+          <iron-pages>
+        </div>
+      </div>
+      <signin-element username="{{_user}}" password="{{_password}}" remember-me="{{_rememberMe}}" submit="{{data.Submit}}" session-uri="{{data.SessionUri}}"></signin-element>
+      <iron-media-query query="(max-width: 600px)" query-matches="{{_smallScreen}}"></iron-media-query>
+    </div>
+  </template>
+  <script>
+        Polymer({
+            is: 'so-signin-form',
+            properties: {
+              data: {
+                type: Object,
+                value: {},
+                notify: true,
+              },
+              _smallScreen: {
+                type: Boolean,
+                value: false,
+                observer: "smallScreenChanged"
+              },
+              _activePage: {
+                type:"String",
+                value:"login"
+              },
+              _message: {
+                type: String,
+                value: "",
+              },
+              _user: {
+                type: String,
+                value: "",
+              },
+              _password: {
+                type: String,
+                value:"",
+              },
+              _rememberMe: {
+                type: Boolean,
+                value: true,
+              },
+              _waiting: {
+                type: Boolean,
+                value: false,
+              }
+            },
+            observers: [
+              "messageChanged(data.Message$)",
+            ],
+            ready: function () {
+            },
+            preventSubmit: function(e) {
+              e.preventDefault();
+            },
+            toggleForgotPassword: function() {
+              this._message = "";
+              if (this._activePage == "login") {
+                this._activePage = "forgotpassword";
+                this.set('data.ForgotPassword$', true);
+                this.$.txtEmail.validate();
+                this.$.txtEmail.focus();
+              }
+              else {
+                this._activePage = "login";
+                this.set('data.ForgotPassword$', false);
+                this.$.txtUsername.focus();
+              }
+            },
+            messageChanged: function(msg) {
+              if (msg) {
+                this._waiting = false;
+                this._message = (msg == "success")? "": msg;
+                if (this._activePage != "login") {
+                  if (msg == "success") {
+                    this._activePage = "forgotpasswordsent";
+                    this.$.backtologinButton.focus();
+                  }
+                }
+              }
+              //Always reset
+              this.set("data.Message$", "");
+            },
+            signIn: function () {
+              this._waiting = true;
+              this.set("data.SignInClick$", this.data.SignInClick$ + 1);
+              window.tu.puppetDirtyCheck();
+            },
+            requestPassword: function() {
+              this._waiting = true;
+              var valid = this.$.txtEmail.validate();
+              if (valid) {
+                this.set('data.Username$', this._user);
+                this.set("data.SubmitForgotPassword$", this.data.SubmitForgotPassword$ + 1);
+                window.tu.puppetDirtyCheck();
+              }
+            },
+            checkForNameEnter: function(e) {
+              if (e.keyCode === 13) {
+                this.$.txtPassword.focus();
+              }
+            },
+            checkForPassEnter: function(e) {
+              if (e.keyCode === 13) {
+                this.signIn();
+              }
+            },
+            checkForForgotNameEnter: function(e) {
+              if (e.keyCode === 13) {
+                this.requestPassword();
+              }
+            },
+            smallScreenChanged: function() {
+              this.toggleClass("smallscreen", this._smallScreen);
+            },
+        });
+    </script>
+</dom-module>

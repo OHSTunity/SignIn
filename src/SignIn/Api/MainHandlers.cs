@@ -178,7 +178,9 @@ namespace SignIn
                 {
                     NameValueCollection values = HttpUtility.ParseQueryString(pars);
                     Utils.SetOriginUri(values["originurl"]);
+                    p.Uri = values["originurl"];
                 }
+                p.RefreshSignInState();
                 m.SetApplication(p);
                 return p;
 
@@ -260,6 +262,7 @@ namespace SignIn
             }
             else
             {
+                Utils.SetMessage("success");
                 SetAuthCookie(session.Token.Name, RememberMe == "true");
             }
 
