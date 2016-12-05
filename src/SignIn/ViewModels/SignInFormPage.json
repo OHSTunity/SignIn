@@ -1,6 +1,7 @@
 {
   "Uri": "",
   "Html": "/SignIn/viewmodels/SignInFormPage.html",
+  "Title":  "",
   "SessionUri": "",
 
   "IsSignedIn": false,

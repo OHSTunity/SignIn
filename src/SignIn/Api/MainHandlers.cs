@@ -158,7 +158,11 @@ namespace SignIn
                 var p = m.GetApplication<SignInFormPage>();
                 if (p == null)
                 {
-                    p = new SignInFormPage() { SessionUri = Session.Current.SessionUri };
+                    p = new SignInFormPage()
+                    {
+                        SessionUri = Session.Current.SessionUri,
+                        Title = ColabConfiguration.Get<String>(ColabConfig.TITLE)
+                    };
                 }
                 Utils.SetOriginUri("/");
                 m.SetApplication(p);
@@ -172,7 +176,11 @@ namespace SignIn
                 var p = m.GetApplication<SignInFormPage>();
                 if (p == null)
                 {
-                    p = new SignInFormPage() { SessionUri = Session.Current.SessionUri };
+                    p = new SignInFormPage()
+                    {
+                        SessionUri = Session.Current.SessionUri,
+                        Title = ColabConfiguration.Get<String>(ColabConfig.TITLE)
+                    };
                 }
                 if (pars != null)
                 {
