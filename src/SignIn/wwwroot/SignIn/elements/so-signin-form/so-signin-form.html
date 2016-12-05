@@ -53,15 +53,34 @@
         flex:none;
       }
 
+      #titleNameHolder {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
       #titleName {
         color: white;
         font-size: 3vw;
+        line-height: 3vw;
+        width: 0.7em;
+        word-break: break-all;
+        word-wrap: break-word;
         padding: 20px;
       }
 
+      :host(.smallscreen) #titleNameHolder {
+        position: absolute;
+        height: 100px;
+      }
+
       :host(.smallscreen) #titleName {
+        width: initial;
         font-size: 10vw;
       }
+
 
       #logo {
         height: 50px;
@@ -210,7 +229,9 @@
     <div id="background">
       <div id="titlebar">
         <co-logo id="logo"></co-logo>
-        <!--<span id="titleName">Intranet</span>-->
+        <div id="titleNameHolder">
+          <span id="titleName">[[data.Title]]</span>
+        </div>
       </div>
       <div id="loginBackground">
         <div id="backgroundHeader" class="header"></div>
