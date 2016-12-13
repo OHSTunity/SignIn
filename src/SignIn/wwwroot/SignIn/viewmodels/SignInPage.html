@@ -2,7 +2,7 @@
 <link rel="import" href="/sys/puppet-redirect/puppet-redirect.html" />
 <template>
     <template is="dom-bind">
-        <so-signin data="{{model}}"></so-signin>
+        <so-signin signin data="{{model}}"></so-signin>
         <link is="puppet-redirect" history url$="{{model.RedirectUrl}}" />
     </template>
 
