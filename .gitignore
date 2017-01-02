@@ -10,6 +10,17 @@
 *.user
 *.sln.docstates
 
+# OS generated files #
+######################
+*DS_Store
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
 # Build results
 [Dd]ebug/
 [Rr]elease/
@@ -57,7 +68,7 @@ _ReSharper*
 *.ncrunch*
 .*crunch*.local.xml
 
-# Installshield output folder 
+# Installshield output folder
 [Ee]xpress
 
 # DocProject is a documentation generator add-in
