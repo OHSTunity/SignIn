@@ -90,26 +90,14 @@
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\AccessDeniedPage.json.cs">
-      <DependentUpon>AccessDeniedPage.json</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModels\AlreadyInPage.json.cs">
-      <DependentUpon>AlreadyInPage.json</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModels\ProfileFormPage.json.cs">
-      <DependentUpon>ProfileFormPage.json</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModels\RegistrationFormPage.json.cs">
-      <DependentUpon>RegistrationFormPage.json</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModels\RestorePasswordFormPage.json.cs">
-      <DependentUpon>RestorePasswordFormPage.json</DependentUpon>
+    <Compile Include="ViewModels\TermsOfServicePage.json.cs">
+      <DependentUpon>TermsOfServicePage.json</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\SignInFormPage.json.cs">
       <DependentUpon>SignInFormPage.json</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\SignInPage.json.cs">
-      <DependentUpon>SignInPage.json</DependentUpon>
+    <Compile Include="ViewModels\SignInPersistent.json.cs">
+      <DependentUpon>SignInPersistent.json</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -133,25 +121,13 @@
     </TypedJSON>
   </ItemGroup>
   <ItemGroup>
-    <TypedJSON Include="ViewModels\SignInPage.json">
+    <TypedJSON Include="ViewModels\SignInPersistent.json">
       <Generator>MsBuild:Compile</Generator>
     </TypedJSON>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <TypedJSON Include="ViewModels\RegistrationFormPage.json">
-      <Generator>MsBuild:Compile</Generator>
-    </TypedJSON>
-    <TypedJSON Include="ViewModels\AlreadyInPage.json">
-      <Generator>MsBuild:Compile</Generator>
-    </TypedJSON>
-    <TypedJSON Include="ViewModels\RestorePasswordFormPage.json">
-      <Generator>MsBuild:Compile</Generator>
-    </TypedJSON>
-    <TypedJSON Include="ViewModels\ProfileFormPage.json">
-      <Generator>MsBuild:Compile</Generator>
-    </TypedJSON>
-    <TypedJSON Include="ViewModels\AccessDeniedPage.json">
+    <TypedJSON Include="ViewModels\TermsOfServicePage.json">
       <Generator>MsBuild:Compile</Generator>
     </TypedJSON>
     <None Include="weaver.ignore">

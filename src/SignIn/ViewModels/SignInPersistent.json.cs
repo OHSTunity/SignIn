@@ -6,7 +6,7 @@ using System;
 
 namespace SignIn
 {
-    partial class SignInPage : Page, IBound<UserSession>
+    partial class SignInPersistent : Page, IBound<UserSession>
     {
         public string OriginUri;
 
@@ -49,6 +49,15 @@ namespace SignIn
             if (session != null)
             {
                 this.SetAuthorizedState(session);
+                //Check if user accepted terms of service
+                var tosr = TermsOfServiceResponse.For(session.User, TermsOfService.Version);
+                if (tosr == null || tosr.Accepted == false)
+                {
+                    Db.Scope(() =>
+                    {
+                        Master.AddModal(new TermsOfServicePage() { Data = session.User });
+                    });
+                }
             }
             else
             {
@@ -56,7 +65,7 @@ namespace SignIn
             }
         }
 
-        [SignInPage_json.UserInfo]
+        [SignInPersistent_json.UserInfo]
         partial class UserInfoJson : Json, IBound<TunityUser>
         {
             protected override void OnData()

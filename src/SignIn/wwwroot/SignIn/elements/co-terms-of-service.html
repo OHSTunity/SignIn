@@ -1,0 +1,83 @@
+﻿<dom-module id="co-terms-of-service">
+  <template>
+    <style >
+      header {
+        align-items: center;
+        display: flex;
+        /* justify-content: center; */
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+      }
+
+      footer {
+        margin: 10px;
+        display: flex;
+        width: 100%;
+      }
+
+      #terms {
+        width: 100%;
+        max-height: 500px;
+        margin:0px;
+        padding: 15px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        overflow-y: scroll;
+      }
+
+      P { margin-left: 0.39in; margin-right: 0.39in; margin-top: 0.08in; margin-bottom: 0.17in; direction: ltr; text-align: justify; widows: 2; orphans: 2 }
+      P.western { font-size: 11pt }
+      P.cjk { font-size: 11pt }
+      P.ctl { font-size: 12pt }
+      H1 { margin-bottom: 0.04in; direction: ltr; text-transform: uppercase; line-height: 110%; widows: 2; orphans: 2 }
+      H1.western { font-family: "Arial", sans-serif; font-size: 11pt }
+      H1.cjk { font-family: "Arial"; font-size: 11pt }
+      H1.ctl { font-family: "Noto Sans Devanagari"; font-size: 12pt; font-weight: normal }
+      H2 { margin-top: 0.08in; margin-bottom: 0.04in; direction: ltr; line-height: 110%; text-align: justify; widows: 2; orphans: 2 }
+      H2.western { font-family: "Arial", sans-serif; font-size: 11pt }
+      H2.cjk { font-size: 11pt }
+      H2.ctl { font-family: "Noto Sans Devanagari"; font-size: 14pt; font-weight: normal }
+      H5 { margin-bottom: 0.17in; direction: ltr; line-height: 120%; text-align: justify; widows: 2; orphans: 2 }
+      H5.western { font-family: "Arial", sans-serif; font-size: 12pt; font-weight: normal }
+      H5.cjk { font-size: 12pt; font-weight: normal }
+      H5.ctl { font-family: "Noto Sans Devanagari"; font-size: 14pt; font-weight: normal }
+      A:link { color: #0000ff; so-language: zxx }
+    </style>
+    <co-modal width="800px"show="true" closeattr="{{Cancel$}}">
+        <header class="horizontal center">
+             <co-icon icon="file-text-o" ></co-icon>
+            <span>Terms of Service</span>
+        </header>
+        <div id="terms" class="vertical">
+        </div>
+        <footer class="horizontal center" on-tap="test">
+            <div style="flex:1"></div>
+            <co-button icon="ban" tap="{{data.NotAccept$}}">Cancel</co-button>
+            <co-button icon="check" primary tap="{{data.Accept$}}">Accept</co-button>
+        </footer>
+     </co-modal>
+  </template>
+
+  <script>
+        Polymer({
+            is: 'co-terms-of-service',
+            properties: {
+              data: {
+                type: Object
+              }
+
+            },
+            observers: [
+              'termsChanged(data.Message)'
+            ],
+            ready: function () {
+            },
+            termsChanged: function(value) {
+              console.log(this.data.Message);
+              Polymer.dom(this.$.terms).node.innerHTML = this.data.Message;
+            },
+
+        });
+    </script>
+</dom-module>

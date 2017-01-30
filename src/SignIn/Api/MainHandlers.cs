@@ -46,11 +46,11 @@ namespace SignIn
             {
                 Master m = (Master)Self.GET("/signin/mobile/master");
                 m.Utils.Html = "/co-common/mobile-utils.html";
-                if (!(m.Utils.PersistantApp is SignInPage))
+                if (!(m.Utils.PersistantApp is SignInPersistent))
                 {
                     Db.Scope(() =>
                     {
-                        var page = new SignInPage()
+                        var page = new SignInPersistent()
                         {
                             Html = "/SignIn/viewmodels/mobile-signin-persistent.html"
                         };
@@ -87,11 +87,11 @@ namespace SignIn
             Handle.GET("/signin/user", () =>
             {
                 Master m = (Master)Self.GET("/signin/master");
-                if (!(m.Utils.PersistantApp is SignInPage))
+                if (!(m.Utils.PersistantApp is SignInPersistent))
                 {
                     Db.Scope(() =>
                     {
-                        var page = new SignInPage();
+                        var page = new SignInPersistent();
                         m.Utils.PersistantApp = page;
                         Cookie cookie = GetSignInCookie();
                         if (cookie != null)

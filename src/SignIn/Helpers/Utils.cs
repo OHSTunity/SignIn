@@ -14,8 +14,8 @@ namespace SignIn {
         {
             Master m = Master.Current;
             
-            if (m.Utils.PersistantApp is SignInPage)
-                (m.Utils.PersistantApp as SignInPage).RefreshSignInState();
+            if (m.Utils.PersistantApp is SignInPersistent)
+                (m.Utils.PersistantApp as SignInPersistent).RefreshSignInState();
 
             SignInFormPage page = m.GetApplication<SignInFormPage>();
             if (page != null)
@@ -26,17 +26,17 @@ namespace SignIn {
         {
             Master m = Master.Current;
 
-            if (m.Utils.PersistantApp is SignInPage)
-                (m.Utils.PersistantApp as SignInPage).OriginUri = origin;
+            if (m.Utils.PersistantApp is SignInPersistent)
+                (m.Utils.PersistantApp as SignInPersistent).OriginUri = origin;
 
         }
 
         public static void MorphToOriginUri()
         {
             Master m = Master.Current;
-            if (m.Utils.PersistantApp is SignInPage)
+            if (m.Utils.PersistantApp is SignInPersistent)
             {
-                var uri = (m.Utils.PersistantApp as SignInPage).OriginUri;
+                var uri = (m.Utils.PersistantApp as SignInPersistent).OriginUri;
                 Master.SendCommand(ColabCommand.MORPH_URL, uri != null ? uri : "/");
             }
 
@@ -48,8 +48,8 @@ namespace SignIn {
             SignInFormPage page = m.GetApplication<SignInFormPage>();
             if (page != null)
                 page.Message = message;
-            if (m.Utils.PersistantApp is SignInPage)
-                (m.Utils.PersistantApp as SignInPage).Message = message;
+            if (m.Utils.PersistantApp is SignInPersistent)
+                (m.Utils.PersistantApp as SignInPersistent).Message = message;
         }
 
         /// <summary>

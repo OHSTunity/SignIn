@@ -1,0 +1,10 @@
+{
+  "Html": "/SignIn/viewmodels/terms_of_service.html",
+
+  "Message": "",
+
+  "AlreadyAccepted":  false,
+
+  "Accept$": 0,
+  "NotAccept$":  0
+}
