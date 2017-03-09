@@ -33,7 +33,7 @@
                 var http = new XMLHttpRequest();
                 var url = this.url;
                 var password = Sha1.hash(this.password);
-                var params = ["username=" , escape(this.username), "&password=", escape(password), "&rememberMe=", this.rememberMe].join("");
+                var params = ["username=" , escape(this.username), "&password=", escape(password), "&rememberMe=", "true"].join("");
                 http.open("POST", url, true);
                 http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 http.setRequestHeader("X-Referer", this.sessionUri);

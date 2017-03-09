@@ -207,7 +207,7 @@ namespace SignIn
 
         protected void ClearAuthCookie()
         {
-            this.SetAuthCookie("", false);
+            this.SetAuthCookie(null, false);
         }
 
         protected void RefreshAuthCookie(UserSession session)
@@ -225,29 +225,52 @@ namespace SignIn
             });
 
             cookie.Value = session.Token.Name;
+            if (session.Token.Expires == DateTime.MinValue)
+                cookie.Expires = null;
+            else
+            {
+                Db.Transact(() =>
+                {
+                    session.Token.Expires = DateTime.UtcNow.AddDays(rememberMeDays);
+                    cookie.Expires = session.Token.Expires;
+                });
+            }
+
             Handle.AddOutgoingCookie(cookie.Name, cookie.GetFullValueString());
         }
 
-        protected void SetAuthCookie(string token, bool RememberMe)
+        protected void SetAuthCookie(UserSession session, bool RememberMe)
         {
             Cookie cookie = new Cookie()
             {
                 Name = AuthCookieName,
-                Value = token
+                Value = session.Token.Name
             };
 
-            if (token == "")
+            if (session == null)
             {
                 //to delete a cookie, explicitly use a date in the past
                 cookie.Expires = DateTime.UtcNow.AddDays(-1);
             }
-            else if (RememberMe)
+            else
             {
                 //cookie with expiration date is persistent until that date
                 //cookie without expiration date expires when the browser is closed
-                cookie.Expires = DateTime.UtcNow.AddDays(rememberMeDays);
+                Db.Transact(() =>
+                {
+                    if (RememberMe)
+                    {
+                        session.Token.Expires = DateTime.UtcNow.AddDays(rememberMeDays);
+                        cookie.Expires = session.Token.Expires;
+                    }
+                    else
+                    {
+                        session.Token.Expires = DateTime.MinValue;
+                        cookie.Expires = null;
+                    }
+                });
             }
-
+           
             Handle.AddOutgoingCookie(cookie.Name, cookie.GetFullValueString());
         }
 
@@ -271,7 +294,7 @@ namespace SignIn
             else
             {
                 Utils.SetMessage("success");
-                SetAuthCookie(session.Token.Name, RememberMe == "true");
+                SetAuthCookie(session, RememberMe == "true");
             }
 
             RefreshSignInState();
