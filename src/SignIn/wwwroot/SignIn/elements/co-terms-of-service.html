@@ -25,20 +25,49 @@
         overflow-x: hidden;
         overflow-y: scroll;
       }
+      ol {
+        counter-reset: item;
+      }
 
+      ol > li {
+        counter-increment: item;
+      }
+
+      ol > li {
+        display: block;
+        padding: 10px;
+      }
+
+      ol > li:before {
+        font-weight: bold;
+        content: counters(item, ".") ". ";
+        margin-left: -25px;
+      }
+
+      ol ol ol > li::before {
+        content: none;
+      }
+
+      ol ol ol > li {
+        display: list-item;
+      }
+      
+     /* OL { counter-reset: item }
+      LI { display: block }
+      LI:before { content: counters(item, "."); display: inline-block; font-weight: bold; counter-increment: item }*/
       P { margin-left: 0.39in; margin-right: 0.39in; margin-top: 0.08in; margin-bottom: 0.17in; direction: ltr; text-align: justify; widows: 2; orphans: 2 }
       P.western { font-size: 11pt }
       P.cjk { font-size: 11pt }
       P.ctl { font-size: 12pt }
-      H1 { margin-bottom: 0.04in; direction: ltr; text-transform: uppercase; line-height: 110%; widows: 2; orphans: 2 }
+      H1 { display: inline; margin-bottom: 0.04in; direction: ltr; text-transform: uppercase; line-height: 110%; widows: 2; orphans: 2 }
       H1.western { font-family: "Arial", sans-serif; font-size: 11pt }
       H1.cjk { font-family: "Arial"; font-size: 11pt }
       H1.ctl { font-family: "Noto Sans Devanagari"; font-size: 12pt; font-weight: normal }
-      H2 { margin-top: 0.08in; margin-bottom: 0.04in; direction: ltr; line-height: 110%; text-align: justify; widows: 2; orphans: 2 }
+      H2 { display: inline; margin-top: 0.08in; margin-bottom: 0.04in; direction: ltr; line-height: 110%; text-align: justify; widows: 2; orphans: 2 }
       H2.western { font-family: "Arial", sans-serif; font-size: 11pt }
       H2.cjk { font-size: 11pt }
       H2.ctl { font-family: "Noto Sans Devanagari"; font-size: 14pt; font-weight: normal }
-      H5 { margin-bottom: 0.17in; direction: ltr; line-height: 120%; text-align: justify; widows: 2; orphans: 2 }
+      H5 { display: inline; margin-bottom: 0.08in; direction: ltr; line-height: 120%; text-align: justify; widows: 2; orphans: 2 }
       H5.western { font-family: "Arial", sans-serif; font-size: 12pt; font-weight: normal }
       H5.cjk { font-size: 12pt; font-weight: normal }
       H5.ctl { font-family: "Noto Sans Devanagari"; font-size: 14pt; font-weight: normal }
