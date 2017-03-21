@@ -135,7 +135,7 @@ namespace SignIn
                         {
                             Label = "Global settings",
                             Icon = "wrench",
-                            Url = "/settings"
+                            Url = "/launcher/settings"
                         });
                     }
                     if (AccessHelper.IsSuperUser())
@@ -144,7 +144,7 @@ namespace SignIn
                         {
                             Label = "Configurations",
                             Icon = "database",
-                            Url = "/configs"
+                            Url = "/launcher/configs"
                         });
 
                     }
@@ -244,10 +244,10 @@ namespace SignIn
             Cookie cookie = new Cookie()
             {
                 Name = AuthCookieName,
-                Value = session.Token.Name
+                Value = session?.Token?.Name
             };
 
-            if (session == null)
+            if (session == null || session.Token == null)
             {
                 //to delete a cookie, explicitly use a date in the past
                 cookie.Expires = DateTime.UtcNow.AddDays(-1);
@@ -306,7 +306,13 @@ namespace SignIn
         protected Response HandleSignOut()
         {
             TunityUser.SignOutUser();
-            ClearAuthCookie();
+            try
+            {
+                ClearAuthCookie();
+            }
+            catch
+            { }
+
             RefreshSignInState();
             Master.SendCommand(ColabCommand.REREQUEST_URL);
             return Master.Current;
