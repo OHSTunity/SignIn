@@ -51,7 +51,7 @@
       ol ol ol > li {
         display: list-item;
       }
-      
+
      /* OL { counter-reset: item }
       LI { display: block }
       LI:before { content: counters(item, "."); display: inline-block; font-weight: bold; counter-increment: item }*/
@@ -103,7 +103,6 @@
             ready: function () {
             },
             termsChanged: function(value) {
-              console.log(this.data.Message);
               Polymer.dom(this.$.terms).node.innerHTML = this.data.Message;
             },
 

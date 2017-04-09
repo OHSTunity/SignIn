@@ -1,12 +1,8 @@
 ﻿<link rel="import" href="/SignIn/elements/so-signin-form/so-signin-form.html" />
-<link rel="import" href="/sys/puppet-redirect/puppet-redirect.html" />
 <template>
   <template is="dom-bind">
     <template is="dom-if" if="[[!model.IsSignedIn]]">
       <so-signin-form data="{{model}}"></so-signin-form>
-    </template>
-    <template is="dom-if" if="[[model.IsSignedIn]]">
-      <link is="puppet-redirect" history url$="[[model.Uri]]" />
     </template>
   </template>
 </template>

@@ -164,6 +164,7 @@ namespace SignIn
                         Title = ColabConfiguration.Get<String>(ColabConfig.TITLE)
                     };
                 }
+                p.ClearPassword++;
                 Utils.SetOriginUri("/");
                 m.SetApplication(p);
                 return p;
@@ -186,8 +187,8 @@ namespace SignIn
                 {
                     NameValueCollection values = HttpUtility.ParseQueryString(pars);
                     Utils.SetOriginUri(values["originurl"]);
-                    p.Uri = values["originurl"];
                 }
+                p.ClearPassword++;
                 p.RefreshSignInState();
                 m.SetApplication(p);
                 return p;

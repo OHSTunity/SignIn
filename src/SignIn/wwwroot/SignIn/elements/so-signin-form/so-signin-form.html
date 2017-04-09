@@ -2,7 +2,6 @@
 <link rel="import" href="/co-common/elements/app/co-logo.html">
 <link rel="import" href="/co-common/css/co-layout.html">
 <link rel="import" href="/sys/gold-email-input/gold-email-input.html" />
-<link rel="import" href="/sys/puppet-redirect/puppet-redirect.html" />
 <link rel="import" href="/sys/iron-pages/iron-pages.html">
 
 <dom-module id="so-signin-form">
@@ -359,8 +358,15 @@
             },
             observers: [
               "messageChanged(data.Message$)",
+              "clearPassword(data.clearPassword)"
             ],
             ready: function () {
+            },
+            clearPassword: function() {
+              if (this._password)
+                this._password = "";
+              if (this.data.Username$)
+                this.$.txtPassword.focus();
             },
             preventSubmit: function(e) {
               e.preventDefault();
@@ -380,7 +386,6 @@
               }
             },
             messageChanged: function(msg) {
-
               if (msg) {
                 this._waiting = false;
                 this._message = (msg == "success")? "": msg;

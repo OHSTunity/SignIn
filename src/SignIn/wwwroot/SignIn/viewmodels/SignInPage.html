@@ -1,9 +1,7 @@
 ﻿<link rel="import" href="/SignIn/elements/so-signin/so-signin.html" />
-<link rel="import" href="/sys/puppet-redirect/puppet-redirect.html" />
 <template>
     <template is="dom-bind">
         <so-signin signin data="{{model}}"></so-signin>
-        <link is="puppet-redirect" history url$="{{model.RedirectUrl}}" />
     </template>
 
     <script>

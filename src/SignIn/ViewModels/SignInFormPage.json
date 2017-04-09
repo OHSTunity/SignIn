@@ -1,5 +1,4 @@
 {
-  "Uri": "",
   "Html": "/SignIn/viewmodels/SignInFormPage.html",
   "Title":  "",
   "SessionUri": "",
@@ -8,6 +7,7 @@
 
   "Submit": 0,
   "SubmitForgotPassword$": 0,
+  "ClearPassword": 0,
   "SignOut$": 0,
   "SignInClick$": 0,
 

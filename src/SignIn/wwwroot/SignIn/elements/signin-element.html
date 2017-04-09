@@ -39,6 +39,7 @@
                 http.setRequestHeader("X-Referer", this.sessionUri);
                 http.onreadystatechange = function () {
                 };
+                this.password = "";
                 http.send(params);
             }
         });

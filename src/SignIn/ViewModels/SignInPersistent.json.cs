@@ -40,7 +40,7 @@ namespace SignIn
             this.Data = null;
             this.Message = Message;
             this.IsSignedIn = false;
-            Master.SendCommand(ColabCommand.REREQUEST_URL, "");
+            Master.SendCommand(ColabCommand.MORPH_URL, "/");
         }
 
         public void RefreshSignInState()
