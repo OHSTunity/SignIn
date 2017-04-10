@@ -16,8 +16,7 @@ namespace SignIn
 
         public void Register()
         {
-            Colab.Common.MainCommon.RegisterWithMobileSupport(false);
-            //Colab.Common.MainCommon.Register(false);
+            Colab.Common.MainCommon.Register(false);
 
             Application.Current.Use((Request req) =>
             {
@@ -40,49 +39,6 @@ namespace SignIn
 
                 return null;
             });
-
-            #region mobile
-            Handle.GET("/signin/mobile/user", () =>
-            {
-                Master m = (Master)Self.GET("/signin/mobile/master");
-                m.Utils.Html = "/co-common/mobile-utils.html";
-                if (!(m.Utils.PersistantApp is SignInPersistent))
-                {
-                    Db.Scope(() =>
-                    {
-                        var page = new SignInPersistent()
-                        {
-                            Html = "/SignIn/viewmodels/mobile-signin-persistent.html"
-                        };
-                        m.Utils.PersistantApp = page;
-                        Cookie cookie = GetSignInCookie();
-                        if (cookie != null)
-                        {
-                            var us = TunityUser.SignInUser(cookie.Value);
-                            this.RefreshSignInState();
-                            if (us != null)
-                                RefreshAuthCookie(us);
-                        }
-                    });
-                }
-                return m.Utils;
-            });
-
-            Handle.GET("/signin/mobile/signinoutform", () =>
-            {
-                Master m = (Master)Self.GET("/signin/mobile/master");
-                var p = m.GetApplication<SignInFormPage>();
-                if (p == null)
-                {
-                    p = new SignInFormPage()
-                    {
-                        Html = "/signin/viewmodels/mobile-signin-form.html"
-                    };
-                }
-                m.SetApplication(p);
-                return p;
-            });
-            #endregion
 
             Handle.GET("/signin/user", () =>
             {
@@ -154,7 +110,7 @@ namespace SignIn
 
             Handle.GET("/signin/signinuser", (Request request) =>
             {
-                Master m = (Master)Self.GET("/signin/mobile/master");
+                Master m = (Master)Self.GET("/signin/master");
                 var p = m.GetApplication<SignInFormPage>();
                 if (p == null)
                 {
@@ -173,7 +129,7 @@ namespace SignIn
 
             Handle.GET("/signin/signinuser?{?}", (Request request, string pars) =>
             {
-                Master m = (Master)Self.GET("/signin/mobile/master");
+                Master m = (Master)Self.GET("/signin/master");
                 var p = m.GetApplication<SignInFormPage>();
                 if (p == null)
                 {
@@ -203,7 +159,6 @@ namespace SignIn
             UriMapping.Map("/signin/signinuser", UriMapping.MappingUriPrefix + "/signin");
             UriMapping.Map("/signin/signinuser?@w", UriMapping.MappingUriPrefix + "/signin/@w");
             UriMapping.Map("/signin/user", UriMapping.MappingUriPrefix + "/user");
-            UriMapping.Map("/signin/mobile/user", UriMapping.MappingUriPrefix + "/mobile/user");
         }
 
         protected void ClearAuthCookie()
