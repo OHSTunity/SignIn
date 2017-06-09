@@ -1,7 +1,6 @@
 <link rel="import" href="/SignIn/elements/signin-element.html" />
 <link rel="import" href="/co-common/elements/app/co-logo.html">
 <link rel="import" href="/co-common/css/co-layout.html">
-<link rel="import" href="/sys/gold-email-input/gold-email-input.html" />
 <link rel="import" href="/sys/iron-pages/iron-pages.html">
 
 <dom-module id="so-signin-form">
@@ -190,13 +189,12 @@
       }
 
       paper-button.secondary {
-        background-color: #353537;
-        color: white;
+        /*background-color: #353537;*/
+        color: black;
         opacity: 0.8;
         margin-top: 10px;    
         width: 100%;
         font-weight: bold;
-        box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.4);
       }
 
       div.spacer {
@@ -260,7 +258,7 @@
                       <!--<co-icon style="margin-right:5px" icon="sign-in"></co-icon>-->
                       Sign in
                     </paper-button>
-                    <paper-button tabindex="4" on-tap="toggleForgotPassword"raised class="secondary">Forgot password?</paper-button>
+                    <paper-button tabindex="4" on-tap="toggleForgotPassword" class="secondary">Forgot password?</paper-button>
                   </div>
                 </form>
                 <co-icon id="spinner" spin icon="spinner" hidden$="[[!_waiting]]"></co-icon>
@@ -290,7 +288,7 @@
                       <!--<co-icon style="margin-right:5px" icon="envelope"></co-icon>-->
                       Reset password
                     </paper-button>
-                    <paper-button tabindex="3" on-tap="toggleForgotPassword" raised class="secondary"><co-icon style="color:white" icon="arrow-left"></co-icon>Back to sign in</paper-button>
+                    <paper-button tabindex="3" on-tap="toggleForgotPassword" class="secondary"><co-icon style="color:white" icon="arrow-left"></co-icon>Back to sign in</paper-button>
                   </div>
                 </form>
                 <co-icon id="spinner" spin icon="spinner" hidden$="[[!_waiting]]"></co-icon>

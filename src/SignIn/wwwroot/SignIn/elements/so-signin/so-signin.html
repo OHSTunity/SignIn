@@ -1,5 +1,6 @@
 ﻿<link rel="import" href="/SignIn/elements/signin-element.html" />
 <link rel="import" href="/co-common/css/co-layout.html">
+<link rel="import" href="/sys/paper-toggle-button/paper-toggle-button.html"/>
 <dom-module id="so-signin">
   <template>
     <style include="co-layout">
@@ -132,6 +133,16 @@
       :host(.small) .popup-trigger span {
         display: none;
       }
+      #rights-disabled {
+          position: absolute;
+          color: white;
+          z-index: 1;
+          font-style: italic;
+          text-shadow: 0px 0px 4px black;
+          left: -55px;
+          top: -4px;
+          font-size: 12px;
+      }
 
     </style>
     <co-popup id="popup">
@@ -139,51 +150,61 @@
       <!-- User signed in -->
       <template is="dom-if" if="{{data.IsSignedIn}}">
         <div class="popup-trigger co-button-style">
-          <template is="dom-if" if="{{data.SimulatedSession}}">
-            <span id="simulated">Simulated</span>
-          </template>
+            <template is="dom-if" if="{{data.SimulatedSession}}">
+                <span id="simulated">Simulated</span>
+            </template>
+            <template is="dom-if" if="{{_displayDisabledMessage(data.IsAdmin,data.AdminRightsEnabled$)}}">
+                <span id="rights-disabled">Admin rights disabled</span>
+            </template>
           <co-avatar class="handle" size="22" value="{{data.UserInfo.AvatarString}}"></co-avatar>
           <span>{{data.UserInfo.FullName}}</span>
         </div>
-        <div class="popup-content loggedin">
-          <div id="popup-header" class="horizontal center">
-            <span id="popup-header-name">{{data.UserInfo.FullName}}</span>
-            <span class="flex"></span>
+          <div class="popup-content loggedin">
+              <div id="popup-header" class="horizontal center">
+                  <span id="popup-header-name">{{data.UserInfo.FullName}}</span>
+                  <span class="flex"></span>
 
-          </div>
-
-          <co-avatar value="{{data.UserInfo.AvatarString}}" size="40"></co-avatar>
+              </div>
+              <co-avatar value="{{data.UserInfo.AvatarString}}" size="40"></co-avatar>
 
           <div class="userinfo">
-            <template is="dom-if" if="{{data.SimulatedSession}}">
-              <span id="simulated2">Simulated session!</span>
-            </template>
-            <co-labeled-item style="padding:0px;min-width:200px" label="Last login">
-              <span>[[_lastLogin]]</span>
-            </co-labeled-item>
-            <co-labeled-item style="padding:0px;min-width:200px" label="This session">
-              <span>[[_sessionTime]]</span>
-            </co-labeled-item>
-            <span id="timezone" title="Current detected timezone, all times are shown in this format">GMT [[_timezone]]</span>
+              <template is="dom-if" if="{{data.SimulatedSession}}">
+                  <span id="simulated2">Simulated session!</span>
+              </template>
 
+              <co-labeled-item style="padding:0px;min-width:200px" label="Last login">
+                  <span>[[_lastLogin]]</span>
+              </co-labeled-item>
+              <co-labeled-item style="padding:0px;min-width:200px" label="This session">
+                  <span>[[_sessionTime]]</span>
+              </co-labeled-item>
+              
+              <span id="timezone" title="Current detected timezone, all times are shown in this format">GMT [[_timezone]]</span>
           </div>
-        <!--
-          <div style="height:33px;padding-top:14px;background-color:rgba(24, 141, 249, 0.06);">
-            <co-avatar value="{{data.UserInfo.AvatarString}}" size="25" style="margin-left:10px;margin-top: 5px;"></co-avatar>
-              <span style="padding-left:40px;">{{data.UserInfo.FullName}}</span>
-          </div>
-          <template is="dom-repeat" items="{{tools}}">
-            <co-option icon="{{item.Icon}}" style="padding-left: 0px;" on-tap="{{item.Morph$}}">{{item.Label}}</co-option>
-          </template>
-          <co-option icon="wrench" style="padding-left: 0px;" on-tap="gotoSettings">Settings</co-option>
-        -->
+          <span style="display: flex; padding-left:8px; margin-top: -8px; margin-bottom: 12px;">
+              <template is="dom-if" if="{{data.IsAdmin}}" restamp>
+                  <paper-toggle-button checked="{{data.AdminRightsEnabled$}}" style="float: left;"></paper-toggle-button>
+                  <co-labeled-item label="Admin rights {{_computeEnabledDisabled(data.AdminRightsEnabled$)}}" style="padding: 0px;min-width: 200px;">
+                  </co-labeled-item>
+              </template>
+          </span>
+              <!--
+              <div style="height:33px;padding-top:14px;background-color:rgba(24, 141, 249, 0.06);">
+                  <co-avatar value="{{data.UserInfo.AvatarString}}" size="25" style="margin-left:10px;margin-top: 5px;"></co-avatar>
+                  <span style="padding-left:40px;">{{data.UserInfo.FullName}}</span>
+              </div>
+              <template is="dom-repeat" items="{{tools}}">
+                  <co-option icon="{{item.Icon}}" style="padding-left: 0px;" on-tap="{{item.Morph$}}">{{item.Label}}</co-option>
+              </template>
+              <co-option icon="wrench" style="padding-left: 0px;" on-tap="gotoSettings">Settings</co-option>
+              -->
           <div style="width:100%;align-items:center; justify-content: center;">
-
-            <template is="dom-repeat" items="{{tools}}">
-              <co-option icon="{{item.Icon}}" on-tap="morphit">{{item.Label}}</co-option>
-            </template>
-            <co-option icon="sign-out" on-tap="signOut">Sign out</co-option>
+              <template is="dom-repeat" items="{{tools}}">
+                  <co-option icon="{{item.Icon}}" on-tap="morphit">{{item.Label}}</co-option>
+              </template>
+              <co-option icon="sign-out" on-tap="signOut">Sign out</co-option>
           </div>
+              </div>
       </template>
 
       <!-- User NOT signed in -->
@@ -228,13 +249,13 @@
               },
               _sessionTime: {
                 type: String,
-                value: "00:00:00",
+                value: "00:00:00"
               },
               _timezone: {
                 type: String,
-                value: "",
+                value: ""
+              }
               },
-            },
             observers: [
               'sessionStartedChanged(data.SessionStarted)',
               'toolsChanged(data.UserInfo.Tools.*)',
@@ -323,6 +344,15 @@
                     this.blur();
                     this.signIn();
                 }
+            },
+            _computeEnabledDisabled(enabled) {
+                return enabled ? "enabled" : "disabled";
+            },
+            _displayDisabledMessage(isAdmin, checked) {
+                if (isAdmin && !checked) {
+                    return true;
+                }
+                return false;
             }
         });
     </script>

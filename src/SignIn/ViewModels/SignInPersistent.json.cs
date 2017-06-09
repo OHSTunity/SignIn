@@ -10,6 +10,18 @@ namespace SignIn
     {
         public string OriginUri;
 
+        public bool IsAdmin => Data?.User?.HeadAdmin ?? false;
+
+        public bool AdminRightsEnabled => Data?.User?.ShouldDisplayAdminView ?? false;
+
+        void Handle(Input.AdminRightsEnabled input)
+        {
+            Data.User.ShouldDisplayAdminView = !input.Value;
+            Transaction.Commit();
+            ColabX.PublishMessage(ColabAPI.Messages.UserRights);
+            UserInfo.Tools = Self.GET("/signin/tunityuser/shortcuts/"+ Data.User.DbIDString);
+        }
+
         void Handle(Input.SignInClick Action)
         {
             this.Message = null;

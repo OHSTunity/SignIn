@@ -9,8 +9,8 @@
   "Message": "",
   "FullName": "",
   "ImageUrl": "",
-
-
+  "IsAdmin": false, 
+  "AdminRightsEnabled$":  false, 
 	"SessionStarted": "",
 
   "SimulatedSession": false,
