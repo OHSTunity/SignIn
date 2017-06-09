@@ -192,7 +192,7 @@
         /*background-color: #353537;*/
         color: black;
         opacity: 0.8;
-        margin-top: 10px;    
+        margin-top: 10px;
         width: 100%;
         font-weight: bold;
       }
@@ -274,11 +274,7 @@
                   <template is="dom-if" if="[[_message]]">
                     <p class="alert alert-danger">[[_message]]</p>
                   </template>
-                  <!--
-                  <gold-email-input autofocus tabindex="1" id="txtEmail" required error-message="Please enter a valid email address" type="text" on-keydown="checkForForgotNameEnter" value="{{_user}}" label="Email">
-                    <co-icon suffix style="margin-right:5px;color:#087bbc" icon="envelope"></co-icon>
-                  </gold-email-input>
-                -->
+
                   <paper-input autofocus tabindex="1" id="txtEmail" type="text" on-keydown="checkForNameEnter" value="{{_user}}" label="Email">
                     <co-icon suffix icon="envelope"></co-icon>
                   </paper-input>
