@@ -16,7 +16,7 @@ namespace SignIn
 
         void Handle(Input.AdminRightsEnabled input)
         {
-            Data.User.ShouldDisplayAdminView = !input.Value;
+            Data.User.ShouldDisplayAdminView = input.Value;
             Transaction.Commit();
             ColabX.PublishMessage(ColabAPI.Messages.UserRights);
             UserInfo.Tools = Self.GET("/signin/tunityuser/shortcuts/"+ Data.User.DbIDString);
